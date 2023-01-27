@@ -31,7 +31,6 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
-import org.jax.mgi.mgd.api.model.seq.domain.SeqSummaryDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -933,52 +932,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}		
 
 		return domain;
-	}
-	
-	@Transactional	
-	public List<SeqSummaryDomain> getSequenceByMarker(String accid) {
-		// return list of sequence summary domains by marker accid
-
-		List<SeqSummaryDomain> results = new ArrayList<SeqSummaryDomain>();
-		
-		String cmd = "\nselect distinct s._sequence_key, s.accid, t1.term as sequenceType, ss.length, ss.description, m.symbol, pss.strain, aa.accid as markerAccid" + 
-				"\nfrom seq_marker_cache s, voc_term t1, seq_sequence ss, mrk_marker m, seq_source_assoc sr, prb_source pso, prb_strain pss, acc_accession aa" + 
-				"\nwhere s._sequencetype_key = t1._term_key" + 
-				"\nand s._sequence_key = ss._sequence_key" + 
-				"\nand s._marker_key = m._marker_key" + 
-				"\nand s._organism_key = 1" + 
-				"\nand s._sequence_key = sr._sequence_key" + 
-				"\nand sr._source_key = pso._source_key" +
-				"\nand pso._strain_key = pss._strain_key" +
-				"\nand m._marker_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 2" + 
-				"\nand aa.accid = '" + accid + "'" + 
-				"\norder by s._sequence_key";
-				//"\norder by s.accid";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SeqSummaryDomain domain = new SeqSummaryDomain();
-				domain.setAccID(rs.getString("accid"));
-				domain.setSequenceType(rs.getString("sequenceType"));
-				domain.setLength(rs.getString("length"));
-				domain.setStrain(rs.getString("strain"));
-				domain.setMarkerSymbol(rs.getString("symbol"));
-				domain.setMarkerAccID(rs.getString("markerAccid"));				
-				domain.setDescription(rs.getString("description"));
-				results.add(domain);
-				markerDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
 	}
 	
 	@Transactional	

@@ -22,7 +22,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SummaryMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
-import org.jax.mgi.mgd.api.model.seq.domain.SeqSummaryDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -190,22 +189,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 
 		try {
 			results = markerService.getMarkerByRef(jnumid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-	
-	@POST
-	@ApiOperation(value = "Get list of sequence domains by marker acc id")
-	@Path("/getSequenceByMarker")
-	public List<SeqSummaryDomain> getSequenceByMarker(String accid) {
-		
-		List<SeqSummaryDomain> results = new ArrayList<SeqSummaryDomain>();
-
-		try {
-			results = markerService.getSequenceByMarker(accid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

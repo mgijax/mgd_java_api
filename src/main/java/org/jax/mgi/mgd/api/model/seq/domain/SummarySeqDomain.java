@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class SeqSummaryDomain extends BaseDomain {
+public class SummarySeqDomain extends BaseDomain {
 		
 	private String accID;
 	private String sequenceType;

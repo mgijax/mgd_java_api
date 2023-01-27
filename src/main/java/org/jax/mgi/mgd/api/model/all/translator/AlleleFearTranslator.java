@@ -56,7 +56,7 @@ public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, All
 				}
 			}
 			// if allele is not 'Recombinase', then load any driver components that exist
-			if (!isRecombinase) {
+			if (isRecombinase == false) {
 				RelationshipFearTranslator fearTranslator = new RelationshipFearTranslator();	
 				Iterable<RelationshipFearDomain> t = fearTranslator.translateEntities(entity.getDriverComponents());
 				domain.setDriverComponents(IteratorUtils.toList(t.iterator()));

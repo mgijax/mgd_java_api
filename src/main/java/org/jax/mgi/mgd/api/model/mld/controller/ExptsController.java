@@ -123,19 +123,10 @@ public class ExptsController extends BaseController<ExptsDomain> {
     protected String formatTsv (String endpoint, Object obj) {   
     	if (endpoint.startsWith("getExptsBy")) {
             String[][] cols = {
-                {"Assay ID",        "jnumid"},
-                {"Marker Symbol",   "markerSymbol"},
-                {"Assay Type",      "assayType"},
-                {"Specimen Label",  "specimenLabel"},
-                {"Age",             "age"},
-                {"Age Note",        "ageNote"},
-                {"Sex",             "sex"},
-                {"Hybridization",   "hybridization"},
-                {"Fixation",        "fixationMethod"},
-                {"Embedding",       "embeddingMethod"},
-                {"Background",      "genotypeBackground"},
-                {"Allele(s)",       "alleleDetailNote"},
-                {"Specimen Note",   "specimenNote"}
+                {"Experiment Type",     "exptType"},
+                {"Chromosome",   		"chromosome"},
+                {"Reference J Num",     "jnumid"},
+                {"Reference Citation",  "short_citation"}
                 };
             return formatTsvHelper(obj, cols);
         } else {

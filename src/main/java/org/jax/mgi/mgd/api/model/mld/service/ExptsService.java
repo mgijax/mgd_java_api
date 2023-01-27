@@ -313,12 +313,22 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	}
 
 	@Transactional	
-	public List<SlimExptsDomain> getExptsByMarker(String accid) {
+	public SearchResults<SlimExptsDomain> getExptsByMarker(String accid, int offset, int limit) {
 		// return list of assay domains by marker acc id
 
-		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+		SearchResults<SlimExptsDomain> results = new SearchResults<SlimExptsDomain>();
+		List<SlimExptsDomain> summaryResults = new ArrayList<SlimExptsDomain>();
 		
-		String cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart" + 
+		String cmd = "\nselect count(*) as total_count" + 
+				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em" + 
+				"\nwhere m._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" +
+				"\nand aa.accid = '" + accid + "'" +
+				"\nand m._marker_key = em._marker_key" +
+				"\nand em._expt_key = e._expt_key";	
+		results.total_count = processSummaryExptsCount(cmd);
+		
+		cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart" + 
 				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c" + 
 				"\nwhere m._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" +
@@ -326,53 +336,84 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				"\nand m._marker_key = em._marker_key" +
 				"\nand em._expt_key = e._expt_key" +
 				"\nand e._refs_key = c._refs_key" +
-				"\nand e.exptType in " + exptTypes + 
-				"" +
-				"\norder by expttype, numericpart";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimExptsDomain domain = new SlimExptsDomain();
-				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
-				exptsDAO.clear();
-				results.add(domain);
-				exptsDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
+				"\nand e.exptType in " + exptTypes;
+		summaryResults = processSummaryExptsDomain(accid, offset, limit, cmd);
+		results.items = summaryResults;
 		return results;
 	}
 
 	@Transactional	
-	public List<SlimExptsDomain> getExptsByRef(String jnumid) {
+	public SearchResults<SlimExptsDomain> getExptsByRef(String accid, int offset, int limit) {
 		// return list of assay domains by reference jnum id
 
-		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+		SearchResults<SlimExptsDomain> results = new SearchResults<SlimExptsDomain>();
+		List<SlimExptsDomain> summaryResults = new ArrayList<SlimExptsDomain>();
+
+		String cmd = "\nselect count(*) as total_count" + 
+					"\nfrom bib_citation_cache aa, mld_expts e" + 
+					"\nwhere aa.jnumid = '" + accid + "'" +
+					"\nand aa._refs_key = e._refs_key" +
+					"\nand e.exptType in " + exptTypes;
+		results.total_count = processSummaryExptsCount(cmd);
 		
-		String cmd = "\nselect distinct e._expt_key, e.expttype, aa.numericpart" + 
+		cmd = "\nselect distinct e._expt_key, e.expttype, aa.numericpart" + 
 				"\nfrom bib_citation_cache aa, mld_expts e" + 
-				"\nwhere aa.jnumid = '" + jnumid + "'" +
+				"\nwhere aa.jnumid = '" + accid + "'" +
 				"\nand aa._refs_key = e._refs_key" +
-				"\nand e.exptType in " + exptTypes + 
-				"\norder by expttype, numericpart";
+				"\nand e.exptType in " + exptTypes;
+		summaryResults = processSummaryExptsDomain(accid, offset, limit, cmd);
+		results.items = summaryResults;
+		return results;
+	}
+	
+	@Transactional	
+	public Long processSummaryExptsCount(String cmd) {
+		// return count of summary experiment domains using search cmd
+
+		Long total_count = null;
 		
-		log.info(cmd);	
-		
+		log.info(cmd);
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
+				total_count = rs.getLong("total_count");
+				referenceDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+
+		return total_count;
+	}
+	
+	@Transactional	
+	public List<SlimExptsDomain> processSummaryExptsDomain(String accid, int offset, int limit, String cmd) {
+		// return list of reference domains by acc id
+
+		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+		
+		cmd = cmd + "\norder by numericpart desc";
+		
+		if (offset >= 0) {
+            cmd = cmd + "\noffset " + offset;
+		}
+        if (limit >= 0) {
+        	cmd = cmd + "\nlimit " + limit;
+        }		
+        
+        cmd = cmd + "\norder by expttype, numericpart";
+        log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {				
 				SlimExptsDomain domain = new SlimExptsDomain();
 				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
 				exptsDAO.clear();
 				results.add(domain);
-				exptsDAO.clear();
+				exptsDAO.clear();				referenceDAO.clear();
 			}
 			sqlExecutor.cleanup();
 		}
@@ -381,6 +422,5 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		}		
 
 		return results;
-	}
-	
+	}	
 }

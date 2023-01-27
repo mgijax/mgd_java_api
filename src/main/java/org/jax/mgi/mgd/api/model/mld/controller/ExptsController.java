@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
@@ -79,15 +80,39 @@ public class ExptsController extends BaseController<ExptsDomain> {
 		return results;
 	}
 
-	@POST
-	@ApiOperation(value = "Get list of experiments domains by marker accession id")
+	@GET
+	@ApiOperation(value = "Get list of experiments domains by marker id")
 	@Path("/getExptsByMarker")
-	public List<SlimExptsDomain> getExptsByMarker(String accid) {
-		
-		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+	public SearchResults<SlimExptsDomain> getExptsByMarker(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+		) {
+
+		SearchResults<SlimExptsDomain> results = new SearchResults<SlimExptsDomain>();
 
 		try {
-			results = exptsService.getExptsByMarker(accid);
+			results = exptsService.getExptsByMarker(accid, offset, limit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+	
+	@GET
+	@ApiOperation(value = "Get list of experiments domains by jnum id")
+	@Path("/getExptsByRef")
+	public SearchResults<SlimExptsDomain> getExptsByRef(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+		) {
+
+		SearchResults<SlimExptsDomain> results = new SearchResults<SlimExptsDomain>();
+
+		try {
+			results = exptsService.getExptsByRef(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -95,19 +120,26 @@ public class ExptsController extends BaseController<ExptsDomain> {
 		return results;
 	}
 	
-	@POST
-	@ApiOperation(value = "Get list of experiments domains by reference jnumid")
-	@Path("/getExptsByRef")
-	public List<SlimExptsDomain> getExptsByRef(String jnumid) {
-		
-		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
-
-		try {
-			results = exptsService.getExptsByRef(jnumid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}	
+    protected String formatTsv (String endpoint, Object obj) {   
+    	if (endpoint.startsWith("getExptsBy")) {
+            String[][] cols = {
+                {"Assay ID",        "jnumid"},
+                {"Marker Symbol",   "markerSymbol"},
+                {"Assay Type",      "assayType"},
+                {"Specimen Label",  "specimenLabel"},
+                {"Age",             "age"},
+                {"Age Note",        "ageNote"},
+                {"Sex",             "sex"},
+                {"Hybridization",   "hybridization"},
+                {"Fixation",        "fixationMethod"},
+                {"Embedding",       "embeddingMethod"},
+                {"Background",      "genotypeBackground"},
+                {"Allele(s)",       "alleleDetailNote"},
+                {"Specimen Note",   "specimenNote"}
+                };
+            return formatTsvHelper(obj, cols);
+        } else {
+            return null;
+        } 	
+    }	
 }

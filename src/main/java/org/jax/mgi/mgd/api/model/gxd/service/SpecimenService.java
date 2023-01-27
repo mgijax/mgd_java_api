@@ -327,9 +327,16 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			"\nand s._fixation_key = t2._term_key" +
 			"\nand g._assaytype_key = t3._assaytype_key" +
 			"\nand s._genotype_key = gs._genotype_key" +
-			"\nand gs._strain_key = ss._strain_key" +
-			"\norder by specimenLabel, symbol, accid";
-
+			"\nand gs._strain_key = ss._strain_key";
+		
+		if (offset >= 0) {
+            cmd = cmd + "\noffset " + offset;
+		}
+        if (limit >= 0) {
+        	cmd = cmd + "\nlimit " + limit;
+        }
+	
+        cmd = cmd + "\norder by specimenLabel, symbol, accid";
 		log.info(cmd);	
 		
 		try {

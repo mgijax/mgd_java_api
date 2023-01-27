@@ -64,7 +64,7 @@ public class SequenceService extends BaseService<SequenceDomain> {
     @Transactional
     public SearchResults<SequenceDomain> getResults(Integer key) {
         SearchResults<SequenceDomain> results = new SearchResults<SequenceDomain>();
-//        results.setItem(translator.translate(sequenceDAO.get(key)));
+		results.setError(Constants.LOG_NOT_IMPLEMENTED, null, Constants.HTTP_SERVER_ERROR);
         sequenceDAO.clear();
         return results;
     }
@@ -133,12 +133,12 @@ public class SequenceService extends BaseService<SequenceDomain> {
 				"\nand aa._mgitype_key = 2" + 
 				"\nand aa.accid = '" + accid + "'"; 
 		
-        cmd = cmd + "\norder by s.sequence_key";
+        cmd = cmd + "\norder by s._sequence_key";
 
 		if (offset >= 0) {
             cmd = cmd + "\noffset " + offset;
 		}
-        if (limit >= 0) {
+        if (limit > 0) {
         	cmd = cmd + "\nlimit " + limit;
         }
 	

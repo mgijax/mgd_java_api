@@ -2178,37 +2178,41 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	}
 
 	@Transactional	
-	public List<SummaryReferenceDomain> getRefByAllele(SummaryReferenceDomain searchDomain) {
+	public SearchResults<SummaryReferenceDomain> getRefByAllele(String accid, int offset, int limit) {
 		// return list of reference domains by allele acc id
 
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
+		List<SummaryReferenceDomain> summaryResults = new ArrayList<SummaryReferenceDomain>();
 		
 		String cmd = "\nselect a.accid, r.*" + 
 				"\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r" + 
-				"\nwhere a.accid = '" + searchDomain.getAccID() + "'" + 
+				"\nwhere a.accid = '" + accid + "'" + 
 				"\nand a._mgitype_key = 11" + 
 				"\nand a._object_key = ar._object_key" + 
 				"\nand ar._mgitype_key = 11" + 				
 				"\nand ar._refs_key = r._refs_key";
 		
-		results = processSummaryReferenceDomain(searchDomain, cmd);	
+		summaryResults = processSummaryReferenceDomain(accid, offset, limit, cmd);
+		results.items = summaryResults;
 		return results;
 	}
 	
 	@Transactional	
-	public List<SummaryReferenceDomain> getRefByMarker(SummaryReferenceDomain searchDomain) {
+	public SearchResults<SummaryReferenceDomain> getRefByMarker(String accid, int offset, int limit) {
 		// return list of reference domains by marker acc id
 
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
+		List<SummaryReferenceDomain> summaryResults = new ArrayList<SummaryReferenceDomain>();
 		
 		String cmd = "\nselect a.accid, r.*" + 
 				"\nfrom mrk_reference mr, acc_accession a, bib_summary_view r" + 
 				"\nwhere mr._marker_key = a._object_key" + 
 				"\nand a._mgitype_key = 2" + 
-				"\nand a.accid = '" + searchDomain.getAccID() + "'" + 
+				"\nand a.accid = '" + accid + "'" + 
 				"\nand mr._refs_key = r._refs_key";
 		
-		results = processSummaryReferenceDomain(searchDomain, cmd);
+		summaryResults = processSummaryReferenceDomain(accid, offset, limit, cmd);
+		results.items = summaryResults;
 		return results;
 	}	
 	
@@ -2270,36 +2274,32 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}
 		
 		cmd = cmd + where;
-		results = processSummaryReferenceDomain(searchDomain, cmd);	
+		results = processSummaryReferenceDomain(searchDomain.getAccID(), searchDomain.getOffset(), searchDomain.getLimit(), cmd);	
 		return results;
 	}
 	
 	@Transactional	
-	public List<SummaryReferenceDomain> processSummaryReferenceDomain(SummaryReferenceDomain searchDomain, String cmd) {
+	public List<SummaryReferenceDomain> processSummaryReferenceDomain(String accid, int offset, int limit, String cmd) {
 		// return list of reference domains by acc id
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
-		String offset = "0";
-		String limit = "250";
-		
-		if (searchDomain.getOffset() != null && !searchDomain.getOffset().isEmpty()) {
-			offset = searchDomain.getOffset();
-		}
-		
-		if (searchDomain.getLimit() != null && !searchDomain.getLimit().isEmpty()) {
-			limit = searchDomain.getLimit();
-		}
-		
 		cmd = cmd + "\norder by numericpart desc";
-		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
-		log.info(cmd);	
+		
+		if (offset >= 0) {
+            cmd = cmd + "\noffset " + offset;
+		}
+        if (limit >= 0) {
+        	cmd = cmd + "\nlimit " + limit;
+        }		
+        
+        log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryReferenceDomain domain = new SummaryReferenceDomain();
-				domain.setAccID(searchDomain.getAccID());
+				domain.setAccID(accid);
 				domain.setOffset(offset);
 				domain.setLimit(limit);
 				domain.setRefsKey(rs.getString("_refs_key"));

@@ -197,15 +197,19 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.validateJnumImage(domain);
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get list of reference domains by allele accession id")
 	@Path("/getRefByAllele")
-	public List<SummaryReferenceDomain> getRefByAllele(SummaryReferenceDomain searchDomain) {
-		
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+	public SearchResults<SummaryReferenceDomain> getRefByAllele(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+    ) {
+
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 
 		try {
-			results = referenceService.getRefByAllele(searchDomain);
+			results = referenceService.getRefByAllele(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -213,15 +217,19 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get list of reference domains by marker accession id")
 	@Path("/getRefByMarker")
-	public List<SummaryReferenceDomain> getRefByMarker(SummaryReferenceDomain searchDomain) {
-		
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+	public SearchResults<SummaryReferenceDomain> getRefByMarker(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+    ) {
+
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 
 		try {
-			results = referenceService.getRefByMarker(searchDomain);
+			results = referenceService.getRefByMarker(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -243,5 +251,22 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		}
 		
 		return results;
-	}	
+	}
+	
+    protected String formatTsv (String endpoint, Object obj) {   
+    	if (endpoint.startsWith("getRefBy")) {
+            String[][] cols = {
+                {"J:#",       	"jnumID"},
+                {"PubMed ID",   "pubmedid"},
+                {"RefType",     "referencetype"},
+                {"Title",       "title"},
+                {"Authors",     "authors"},
+                {"Journal",     "journal"},
+                {"Abstract",    "referenceAbstract"}
+                };
+            return formatTsvHelper(obj, cols);
+        } else {
+            return null;
+        }
+    }	
 }

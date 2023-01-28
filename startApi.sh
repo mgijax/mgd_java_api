@@ -21,6 +21,11 @@ fi
 echo "Clean up temp files and making package"
 make all
 
+if [ $? -ne 0 ] ; then
+    echo "Error during make all. Exiting."
+    exit 1
+fi
+
 echo "Starting Java API"
 echo "log file: " ${LOG_FILE}
 rm -f ${LOG_FILE}

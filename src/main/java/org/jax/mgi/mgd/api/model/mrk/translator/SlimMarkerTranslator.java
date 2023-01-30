@@ -1,12 +1,8 @@
 package org.jax.mgi.mgd.api.model.mrk.translator;
 
-import java.util.Comparator;
-
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipMarkerTSSDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
@@ -43,7 +39,7 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 			domain.setAccID("");
 		}
 
-		// accession ids editable for mouse
+		// accession ids editable for non-mouse
 		if (domain.getAccID().isEmpty() && entity.getOrganism().get_organism_key() != 1 && entity.getEditAccessionIdsNonMouse() != null && !entity.getEditAccessionIdsNonMouse().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsNonMouse());
 			for (AccessionDomain i : acc) {
@@ -53,7 +49,7 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 			}
 		}
 		
-		// accession ids non-editable for mouse
+		// accession ids non-editable for non-mouse
 		if (domain.getAccID().isEmpty() && entity.getOrganism().get_organism_key() != 1 && entity.getNonEditAccessionIdsNonMouse() != null && !entity.getEditAccessionIdsNonMouse().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIdsNonMouse());
 			for (AccessionDomain i : acc) {

@@ -131,12 +131,19 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
-	// editable only accession ids
+	// editable only accession ids for mouse
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` in (8,9)")
+	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` in (8,9,114)")
 	@OrderBy(clause ="accid")
-	private List<Accession> editAccessionIds;
+	private List<Accession> editAccessionIdsMouse;
+	
+	// editable only accession ids for non-mouse
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` in (8,9,114,55)")
+	@OrderBy(clause ="accid")
+	private List<Accession> editAccessionIdsNonMouse;
 	
 	// non-editable accession ids
 	@OneToMany()

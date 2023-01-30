@@ -32,16 +32,29 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
-		
-		// determine primary accession id to return per organism
-		// _organism_key = 2, human -> _logicaldb_key = 55, Entrez Gene
-		else if (entity.getNonEditAccessionIdsNonMouse() != null){
-			for (int i = 0; i < entity.getNonEditAccessionIdsNonMouse().size(); i++) {
-				if (entity.getNonEditAccessionIdsNonMouse().get(i).getLogicaldb().get_logicaldb_key() == 55) {
-					domain.setAccID(entity.getNonEditAccessionIdsNonMouse().get(i).getAccID());
+
+		// determine primary accession id to return per non-mouse organism
+		// check editable/entrez gene/55 first
+		if (domain.getAccID().isEmpty()) {
+			if (entity.getEditAccessionIdsNonMouse() != null){
+				for (int i = 0; i < entity.getEditAccessionIdsNonMouse().size(); i++) {
+					if (entity.getNonEditAccessionIdsNonMouse().get(i).getLogicaldb().get_logicaldb_key() == 55) {
+						domain.setAccID(entity.getEditAccessionIdsNonMouse().get(i).getAccID());
+					}
 				}
 			}
 		}
+		// check non-editable/entrez gene/55
+		if (domain.getAccID().isEmpty()) {
+			if (entity.getNonEditAccessionIdsNonMouse() != null){
+				for (int i = 0; i < entity.getNonEditAccessionIdsNonMouse().size(); i++) {
+					if (entity.getNonEditAccessionIdsNonMouse().get(i).getLogicaldb().get_logicaldb_key() == 55) {
+						domain.setAccID(entity.getNonEditAccessionIdsNonMouse().get(i).getAccID());
+					}
+				}
+			}
+		}
+
 
 		// marker detail clip
 		if (entity.getDetailClipNote() != null && !entity.getDetailClipNote().isEmpty()) {

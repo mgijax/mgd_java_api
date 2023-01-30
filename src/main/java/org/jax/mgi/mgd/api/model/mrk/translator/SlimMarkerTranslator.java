@@ -35,10 +35,10 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 		
 		// determine primary accession id to return per organism
 		// _organism_key = 2, human -> _logicaldb_key = 55, Entrez Gene
-		else if (entity.getOrganism().get_organism_key() == 2 && entity.getNonEditAccessionIds() != null){
-			for (int i = 0; i < entity.getNonEditAccessionIds().size(); i++) {
-				if (entity.getNonEditAccessionIds().get(i).getLogicaldb().get_logicaldb_key() == 55) {
-					domain.setAccID(entity.getNonEditAccessionIds().get(i).getAccID());
+		else if (entity.getOrganism().get_organism_key() == 2 && entity.getNonEditAccessionIdsNonMouse() != null){
+			for (int i = 0; i < entity.getNonEditAccessionIdsNonMouse().size(); i++) {
+				if (entity.getNonEditAccessionIdsNonMouse().get(i).getLogicaldb().get_logicaldb_key() == 55) {
+					domain.setAccID(entity.getNonEditAccessionIdsNonMouse().get(i).getAccID());
 				}
 			}
 		}

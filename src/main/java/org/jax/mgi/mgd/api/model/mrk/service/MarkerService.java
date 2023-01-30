@@ -1022,7 +1022,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean hasChromosome = false;
 		
 		String cmd = "";
-		String select = "select m._marker_key ";
+		String select = "select distinct m._marker_key ";
 		String from = "from mrk_marker m";
 		String where = "where m._marker_status_key not in (2,3)";
 		
@@ -1071,6 +1071,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			if (searchDomain.getOrganismKey() == null || searchDomain.getOrganismKey().isEmpty()) {
 				where = where + "\nand acc._logicaldb_key = 1";
 			}
+			else if (searchDomain.getOrganismKey().equals("1")) {
+				where = where + "\nand acc._logicaldb_key = 1";
+			}			
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where;

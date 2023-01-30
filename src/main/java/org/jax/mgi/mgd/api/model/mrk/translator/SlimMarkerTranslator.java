@@ -32,6 +32,9 @@ public class SlimMarkerTranslator extends BaseEntityDomainTranslator<Marker, Sli
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
 		}
+		else {
+			domain.setAccID(null);
+		}
 
 		// determine primary accession id to return per non-mouse organism
 		// check editable/entrez gene/55 first

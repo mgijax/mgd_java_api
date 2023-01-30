@@ -126,6 +126,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// execute persist/insert/send to database
 		markerDAO.persist(entity);
 
+		// process marker accession ids that can be edited
+		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
+			accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user);
+		}
+		
 		// mouse only stuff		
 		if (domain.getOrganismKey().equals("1")) {		
 
@@ -224,6 +229,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			entity.setCmOffset(Double.valueOf(domain.getCmOffset()));
 		}
 
+		// process marker accession ids that can be edited
+		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
+			if (accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
+				modified = true;
+			}
+		}
+		
 		// mouse only stuff		
 		log.info("processMarker/getOrganism");		
 		if (domain.getOrganismKey().equals("1")) {			
@@ -272,13 +284,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			// process marker reference
 			if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
 				if (referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
-					modified = true;
-				}
-			}
-			
-			// process marker nucleotide accession ids
-			if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
-				if (accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
 					modified = true;
 				}
 			}

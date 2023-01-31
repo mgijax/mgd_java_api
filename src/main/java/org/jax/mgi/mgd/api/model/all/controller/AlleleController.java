@@ -259,6 +259,7 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return results;
 	}	
 
+/*
         protected String formatTsv (String endpoint, Object obj) {
             if (endpoint.startsWith("getAlleleBy")) {
                 String [][] cols = {
@@ -278,4 +279,5 @@ public class AlleleController extends BaseController<AlleleDomain> {
                 return "Not-Implemented";
             }
         }
+	*/
 }

@@ -253,7 +253,18 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
-		else if (entity.getOrganism().get_organism_key() != 1 && entity.getEditAccessionIdsNonMouse() != null && !entity.getEditAccessionIdsNonMouse().isEmpty()) {
+		else if (entity.getOrganism().get_organism_key() != 1
+				&& entity.getOrganism().get_organism_key() != 2
+				&& entity.getOrganism().get_organism_key() != 10
+				&& entity.getOrganism().get_organism_key() != 11
+				&& entity.getOrganism().get_organism_key() != 13
+				&& entity.getOrganism().get_organism_key() != 40
+				&& entity.getOrganism().get_organism_key() != 63
+				&& entity.getOrganism().get_organism_key() != 84
+				&& entity.getOrganism().get_organism_key() != 94
+				&& entity.getOrganism().get_organism_key() != 95
+				&& entity.getEditAccessionIdsNonMouse() != null 
+				&& !entity.getEditAccessionIdsNonMouse().isEmpty()) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsNonMouse());
 			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));

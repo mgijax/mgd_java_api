@@ -253,6 +253,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
+		// accession ids editable for non-mouse;  exclude organisms used in entrezload
 		else if (entity.getOrganism().get_organism_key() != 1
 				&& entity.getOrganism().get_organism_key() != 2
 				&& entity.getOrganism().get_organism_key() != 10

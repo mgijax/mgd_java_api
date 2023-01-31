@@ -278,18 +278,17 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		// accession ids non-editable for non-mouse; include organisms used in entrezload
-		else if ((entity.getOrganism().get_organism_key() == 2
-					|| entity.getOrganism().get_organism_key() == 10
-					|| entity.getOrganism().get_organism_key() == 11
-					|| entity.getOrganism().get_organism_key() == 13
-					|| entity.getOrganism().get_organism_key() == 40
-					|| entity.getOrganism().get_organism_key() == 63
-					|| entity.getOrganism().get_organism_key() == 84
-					|| entity.getOrganism().get_organism_key() == 94
-					|| entity.getOrganism().get_organism_key() == 95
-				)
-				&& entity.getNonEditAccessionIdsNonMouse() != null 
-				&& !entity.getNonEditAccessionIdsNonMouse().isEmpty()) {		
+//		else if ((entity.getOrganism().get_organism_key() == 2
+//					|| entity.getOrganism().get_organism_key() == 10
+//					|| entity.getOrganism().get_organism_key() == 11
+//					|| entity.getOrganism().get_organism_key() == 13
+//					|| entity.getOrganism().get_organism_key() == 40
+//					|| entity.getOrganism().get_organism_key() == 63
+//					|| entity.getOrganism().get_organism_key() == 84
+//					|| entity.getOrganism().get_organism_key() == 94
+//					|| entity.getOrganism().get_organism_key() == 95
+//				)
+		else if (entity.getOrganism().get_organism_key() != 1 && entity.getNonEditAccessionIdsNonMouse() != null && !entity.getNonEditAccessionIdsNonMouse().isEmpty()) {		
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIdsNonMouse());
 			domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));

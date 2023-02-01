@@ -535,7 +535,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						        "\nwhere a._allele_key = vr._object_key" +
 						        "\nand vr._annottype_key = 1014" +
 						        "\nand vr._term_key = 11025588)";
-				cmdEC = "\n" + select + "\n" + from +"\n" + where;
+				cmdDC = "\n" + select + "\n" + from +"\n" + where;
 			}
 		}
 		

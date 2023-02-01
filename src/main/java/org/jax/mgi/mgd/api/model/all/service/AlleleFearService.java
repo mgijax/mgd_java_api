@@ -541,25 +541,20 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			where = where + "\nand v._relationship_key = p._relationship_key";
 		}
 		
-		log.info("from_mi:" + from_mi);
-		log.info("from_ec:" + from_ec);
-		log.info("from_dc:" + from_dc);
+//		log.info("from_mi:" + from_mi);
+//		log.info("from_ec:" + from_ec);
+//		log.info("from_dc:" + from_dc);
 		
 		// if searching all tables, then add "union"
-//		if (from_mi == true) {
-//			if (from_ec == true) {
-//				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
-//			}
-//			if (from_dc == true) {
-//				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
-//			}			
-//		}
-//		else if (from_ec == true) {
-//			cmd = select + "\n" + from + "\n" + where;		
-//		}
-//		else if (from_dc == true) {
-//			cmd = select + "\n" + from + "\n" + where;		
-//		}		
+		if (from_mi == true || from_ec == true || from_dc == true) {
+			if (from_ec == true) {
+				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
+			}
+			if (from_dc == true) {
+				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
+			}			
+		}
+		
 		if (from_mi == false && from_ec == false && from_dc == false) {
 			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
 		}

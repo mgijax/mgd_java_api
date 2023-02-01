@@ -544,7 +544,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		log.info("from_mi:" + from_mi);
 		log.info("from_ec:" + from_ec);
 		log.info("from_dc:" + from_dc);
-		log.info(cmd);
 		
 		// if searching all tables, then add "union" + expresses component part
 		if (from_mi == true) {
@@ -561,9 +560,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 //		else if (from_dc == true) {
 //			cmd = select + "\n" + from + "\n" + where;		
 //		}		
-		else if (from_mi == false) {
-			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
-		}
+//		else if (from_mi == false) {
+//			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
+//		}
 		
 		cmd = "\n(" + cmd + "\n" + orderBy;
 		log.info(cmd);

@@ -541,7 +541,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						        "\nwhere v3._object_key_1 = vr._object_key" +
 						        "\nand vr._annottype_key = 1014" +
 						        "\nand vr._term_key = 11025588)";
-				cmdDC = "\n" + select + "\n" + from +"\n" + where;
+				//cmdDC = "\n" + select + "\n" + from +"\n" + where;
 			}
 		}
 		
@@ -553,12 +553,16 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 //		}
 //		if (from_dc == true) {
 //				cmd = cmd + "\nunion\n" + cmdDC;
-//		}			
-//		if (from_mi == false && from_ec == false && from_dc == false) {
-//			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
-//		}
+//		}	
 		
-		cmd = "\n(" + cmd + "\n" + orderBy;
+		if (from_mi == false && from_ec == false && from_dc == false) {
+			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere + "\n" + orderBy;
+		}
+		else {
+			cmd = select + "\n" + from + "\n" + where + "\n" + orderBy;
+		}
+		
+		//cmd = "\n(" + cmd + "\n" + orderBy;
 		log.info(cmd);
 
 		try {

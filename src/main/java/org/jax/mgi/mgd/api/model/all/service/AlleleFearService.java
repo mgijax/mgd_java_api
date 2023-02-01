@@ -560,9 +560,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 //		else if (from_dc == true) {
 //			cmd = select + "\n" + from + "\n" + where;		
 //		}		
-//		else if (from_mi == false) {
-//			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
-//		}
+		if (from_mi == false && from_ec == false && from_dc == false) {
+			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
+		}
 		
 		cmd = "\n(" + cmd + "\n" + orderBy;
 		log.info(cmd);

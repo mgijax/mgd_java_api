@@ -545,15 +545,15 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		log.info("from_ec:" + from_ec);
 		log.info("from_dc:" + from_dc);
 		
-		// if searching all tables, then add "union" + expresses component part
-		if (from_mi == true) {
-			if (from_ec == true) {
-				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
-			}
-			if (from_dc == true) {
-				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
-			}			
-		}
+		// if searching all tables, then add "union"
+//		if (from_mi == true) {
+//			if (from_ec == true) {
+//				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
+//			}
+//			if (from_dc == true) {
+//				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
+//			}			
+//		}
 //		else if (from_ec == true) {
 //			cmd = select + "\n" + from + "\n" + where;		
 //		}

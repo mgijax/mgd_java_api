@@ -555,12 +555,12 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
 			}			
 		}
-		else if (from_ec == true) {
-			cmd = select + "\n" + from + "\n" + where;		
-		}
-		else if (from_dc == true) {
-			cmd = select + "\n" + from + "\n" + where;		
-		}		
+//		else if (from_ec == true) {
+//			cmd = select + "\n" + from + "\n" + where;		
+//		}
+//		else if (from_dc == true) {
+//			cmd = select + "\n" + from + "\n" + where;		
+//		}		
 		else if (from_mi == false) {
 			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
 		}

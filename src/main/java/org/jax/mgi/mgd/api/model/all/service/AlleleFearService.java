@@ -356,7 +356,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			}
 			
 			if (from_mi == true) {
-				from = from + ",mgi_relationship_fear_view v1" + from;						
+				from = from + ",mgi_relationship_fear_view v1";						
 				where = where + "\nand a._allele_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey();			
 			}			
 		}

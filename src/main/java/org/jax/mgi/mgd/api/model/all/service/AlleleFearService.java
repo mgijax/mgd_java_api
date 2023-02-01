@@ -302,8 +302,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getMutationInvolves() != null) {
 
 			relationshipDomain = searchDomain.getMutationInvolves().get(0);
-			from = "";
-			where = "";
+			//from = "";
+			//where = "";
 			
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
 				relationshipDomain.getCreatedBy(), 
@@ -321,26 +321,26 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			value = relationshipDomain.getMarkerKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._object_key_2 = " + value;
+				where = where + "\nand v1._object_key_2 = " + value;
 				from_mi = true;			
 			}
 				
 			value = relationshipDomain.getMarkerSymbol();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v.markersymbol ilike '" + value + "'";
+				where = where + "\nand v1.markersymbol ilike '" + value + "'";
 				from_mi = true;			
 			}
 	
 			value = relationshipDomain.getRelationshipTermKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._relationshipterm_key = " + value;
+				where = where + "\nand v1._relationshipterm_key = " + value;
 				from_mi = true;			
 			}
 										
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._Refs_key = " + value;
+				where = where + "\nand v1._Refs_key = " + value;
 				from_mi = true;									
 			}
 				else if (jnumid != null && !jnumid.isEmpty()) {
@@ -348,14 +348,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					if (!jnumid.contains("J:")) {
 							jnumid = "J:" + jnumid;
 					}
-					where = where + "\nand v.jnumid = '" + jnumid + "'";
+					where = where + "\nand v1.jnumid = '" + jnumid + "'";
 					from_mi = true;									
 			}
 			
 			value = relationshipDomain.getNote().getNoteChunk();
 			if (value != null && !value.isEmpty()) {
 				from = from + ",mgi_note n";
-				where = where + "\nand v._relationship_key = n._object_key"
+				where = where + "\nand v1._relationship_key = n._object_key"
 						+ "\nand n._mgitype_key = 40"
 						+ "\nand n._notetype_key = 1042"
 						+ "\nand n.note ilike '" + value + "'";
@@ -364,9 +364,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			// save search cmd for mutation involves
 			if (from_mi == true) {
-				from = alleleFrom + ",mgi_relationship_fear_view v" + from;						
-				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;			
-				cmdMI = "\n" + select + "\n" + from +"\n" + where;
+				from = alleleFrom + ",mgi_relationship_fear_view v1" + from;						
+				where = alleleWhere + "\nand a._allele_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey() + where;			
+				//cmdMI = "\n" + select + "\n" + from +"\n" + where;
 			}
 		}
 		
@@ -375,8 +375,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getExpressesComponents() != null) {
 		
 			relationshipDomain = searchDomain.getExpressesComponents().get(0);
-			from = "";
-			where = "";
+			//from = "";
+			//where = "";
 
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
 					relationshipDomain.getCreatedBy(), 
@@ -394,26 +394,26 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				
 			value = relationshipDomain.getMarkerKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._object_key_2 = " + value;
+				where = where + "\nand v2._object_key_2 = " + value;
 				from_ec = true;								
 			}
 					
 			value = relationshipDomain.getMarkerSymbol();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v.markersymbol ilike '" + value + "'";
+				where = where + "\nand v2.markersymbol ilike '" + value + "'";
 				from_ec = true;								
 			}
 		
 			value = relationshipDomain.getRelationshipTermKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._relationshipterm_key = " + value;
+				where = where + "\nand v2._relationshipterm_key = " + value;
 				from_ec = true;							
 			}
 											
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._Refs_key = " + value;
+				where = where + "\nand v2._Refs_key = " + value;
 				from_ec = true;									
 			}
 				else if (jnumid != null && !jnumid.isEmpty()) {
@@ -421,7 +421,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					if (!jnumid.contains("J:")) {
 							jnumid = "J:" + jnumid;
 					}
-					where = where + "\nand v.jnumid = '" + jnumid + "'";
+					where = where + "\nand v2.jnumid = '" + jnumid + "'";
 					from_ec = true;									
 			}	
 			
@@ -446,18 +446,24 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			value = relationshipDomain.getNote().getNoteChunk();
 			if (value != null && !value.isEmpty()) {
 				from = from + ",mgi_note n";
-				where = where + "\nand v._relationship_key = n._object_key"
+				where = where + "\nand v2._relationship_key = n._object_key"
 						+ "\nand n._mgitype_key = 40"
 						+ "\nand n._notetype_key = 1042"
 						+ "\nand n.note ilike '" + value + "'";
 				from_ec = true;	
 			}
-
-			if ((from_ec == true) || (from_property == true)) {
-				from = alleleFrom + ",mgi_relationship_fear_view v" + from;		
-				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;							
-				cmdEC = "\n" + select + "\n" + from +"\n" + where;
-			}		
+			
+			
+			if ((from_ec == true) || (from_property == true)) {				
+				from = alleleFrom + ",mgi_relationship_fear_view v2" + from;		
+				where = alleleWhere + "\nand a._allele_key = v2._object_key_1 and v2._category_key = " + relationshipDomain.getCategoryKey() + where;	
+				if (from_property == true) {
+					from = from + ",mgi_relationship_property p";
+					where = where + "\nand v2._relationship_key = p._relationship_key";
+				}					
+				//cmdEC = "\n" + select + "\n" + from +"\n" + where;
+			}
+			
 		}
 		
 		// driver components
@@ -465,8 +471,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getDriverComponents() != null) {
 
 			relationshipDomain = searchDomain.getDriverComponents().get(0);
-			from = "";
-			where = "";
+			//from = "";
+			//where = "";
 			
 			cmResults = DateSQLQuery.queryByCreationModification("v", 
 				relationshipDomain.getCreatedBy(), 
@@ -484,26 +490,26 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			value = relationshipDomain.getMarkerKey();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._object_key_2 = " + value;
+				where = where + "\nand v3._object_key_2 = " + value;
 				from_dc = true;			
 			}
 				
 			value = relationshipDomain.getMarkerSymbol();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v.markersymbol ilike '" + value + "'";
+				where = where + "\nand v3.markersymbol ilike '" + value + "'";
 				from_dc = true;			
 			}
 	
 //			value = relationshipDomain.getRelationshipTermKey();
 //			if (value != null && !value.isEmpty()) {
-//				where = where + "\nand v._relationshipterm_key = " + value;
+//				where = where + "\nand v3._relationshipterm_key = " + value;
 //				from_dc = true;			
 //			}
 										
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v._Refs_key = " + value;
+				where = where + "\nand v3._Refs_key = " + value;
 				from_dc = true;									
 			}
 				else if (jnumid != null && !jnumid.isEmpty()) {
@@ -511,14 +517,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					if (!jnumid.contains("J:")) {
 							jnumid = "J:" + jnumid;
 					}
-					where = where + "\nand v.jnumid = '" + jnumid + "'";
+					where = where + "\nand v3.jnumid = '" + jnumid + "'";
 					from_mi = true;									
 			}
 			
 			value = relationshipDomain.getNote().getNoteChunk();
 			if (value != null && !value.isEmpty()) {
 				from = from + ",mgi_note n";
-				where = where + "\nand v._relationship_key = n._object_key"
+				where = where + "\nand v3._relationship_key = n._object_key"
 						+ "\nand n._mgitype_key = 40"
 						+ "\nand n._notetype_key = 1042"
 						+ "\nand n.note ilike '" + value + "'";
@@ -528,39 +534,29 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			// save search cmd for driver components
 			// make sure to exclude driver components that use recombinase alleles
 			if (from_dc == true) {
-				from = alleleFrom + ",mgi_relationship_fear_view v" + from;						
-				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;	
+				from = alleleFrom + ",mgi_relationship_fear_view v3" + from;						
+				where = alleleWhere + "\nand a._allele_key = v3._object_key_1 and v3._category_key = " + relationshipDomain.getCategoryKey() + where;	
 				where = where +
 						"\nand not exists (select 1 from voc_annot vr" +
-						        "\nwhere a._allele_key = vr._object_key" +
+						        "\nwhere v3._object_key_1 = vr._object_key" +
 						        "\nand vr._annottype_key = 1014" +
 						        "\nand vr._term_key = 11025588)";
 				cmdDC = "\n" + select + "\n" + from +"\n" + where;
 			}
 		}
 		
-		if (from_property == true) {
-			from = from + ", mgi_relationship_property p";
-			where = where + "\nand v._relationship_key = p._relationship_key";
-		}
-		
-//		log.info("from_mi:" + from_mi);
-//		log.info("from_ec:" + from_ec);
-//		log.info("from_dc:" + from_dc);
-		
-		// if searching all tables, then add "union"
-		if (from_mi == true) {
-			cmd = cmdMI;
-		}
-		if (from_ec == true) {
-				cmd = cmd + "\nunion\n" + cmdEC;
-		}
-		if (from_dc == true) {
-				cmd = cmd + "\nunion\n" + cmdDC;
-		}			
-		if (from_mi == false && from_ec == false && from_dc == false) {
-			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
-		}
+//		if (from_mi == true) {
+//			cmd = cmdMI;
+//		}
+//		if (from_ec == true) {
+//				cmd = cmd + "\nunion\n" + cmdEC;
+//		}
+//		if (from_dc == true) {
+//				cmd = cmd + "\nunion\n" + cmdDC;
+//		}			
+//		if (from_mi == false && from_ec == false && from_dc == false) {
+//			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
+//		}
 		
 		cmd = "\n(" + cmd + "\n" + orderBy;
 		log.info(cmd);

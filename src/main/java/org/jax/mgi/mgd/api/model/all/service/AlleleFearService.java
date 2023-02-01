@@ -254,6 +254,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
 		String cmd = "";
+		String cmdMI = "";
+		String cmdEC = "";
+		String cmdDC = "";
 		String select = "select distinct a._allele_key, a.symbol";
 		String alleleFrom = "from all_allele a, acc_accession aa";		
 		String alleleWhere = "where a.isWildType = 0 and a._allele_key = aa._object_key and aa._mgitype_key = 11";
@@ -363,7 +366,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (from_mi == true) {
 				from = alleleFrom + ",mgi_relationship_fear_view v" + from;						
 				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;			
-				cmd = "\n" + select + "\n" + from +"\n" + where;
+				cmdMI = "\n" + select + "\n" + from +"\n" + where;
 			}
 		}
 		
@@ -453,7 +456,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if ((from_ec == true) || (from_property == true)) {
 				from = alleleFrom + ",mgi_relationship_fear_view v" + from;		
 				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;							
-				cmd = "\n" + select + "\n" + from +"\n" + where;
+				cmdEC = "\n" + select + "\n" + from +"\n" + where;
 			}		
 		}
 		
@@ -532,7 +535,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						        "\nwhere a._allele_key = vr._object_key" +
 						        "\nand vr._annottype_key = 1014" +
 						        "\nand vr._term_key = 11025588)";
-				cmd = "\n" + select + "\n" + from +"\n" + where;
+				cmdEC = "\n" + select + "\n" + from +"\n" + where;
 			}
 		}
 		
@@ -546,15 +549,15 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 //		log.info("from_dc:" + from_dc);
 		
 		// if searching all tables, then add "union"
-		if (from_mi == true || from_ec == true || from_dc == true) {
-			if (from_ec == true) {
-				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
-			}
-			if (from_dc == true) {
-				cmd = cmd + "\nunion\n" + select + "\n" + from + "\n" + where;
-			}			
+		if (from_mi == true) {
+			cmd = cmdMI;
 		}
-		
+		if (from_ec == true) {
+				cmd = cmd + "\nunion\n" + cmdEC;
+		}
+		if (from_dc == true) {
+				cmd = cmd + "\nunion\n" + cmdDC;
+		}			
 		if (from_mi == false && from_ec == false && from_dc == false) {
 			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;
 		}

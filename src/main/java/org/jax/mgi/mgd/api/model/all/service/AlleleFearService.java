@@ -450,6 +450,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from_ec = true;	
 			}
 			
+			log.info("from_ec:" + from_ec);
+			log.info("from_property:" + from_property);
+
 			if ((from_ec == true) || (from_property == true)) {
 				from = alleleFrom + ",mgi_relationship_fear_view v" + from;		
 				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;							

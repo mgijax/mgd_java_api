@@ -453,7 +453,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (from_ec == true || from_property == true) {
 				from = alleleFrom + ",mgi_relationship_fear_view v" + from;		
 				where = alleleWhere + "\nand a._allele_key = v._object_key_1 and v._category_key = " + relationshipDomain.getCategoryKey() + where;							
-			}			
+				cmd = "\n" + select + "\n" + from +"\n" + where;
+			}		
 		}
 		
 		// driver components
@@ -558,8 +559,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			log.info("from_ec:" + cmd);
 		}
 		else if (from_dc == true) {
-			log.info("from_dc:" + from_dc);			
-			cmd = select + "\n" + from + "\n" + where;			
+			cmd = select + "\n" + from + "\n" + where;		
+			log.info("from_dc:" + cmd);						
 		}		
 		else if (from_mi == false) {
 			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere;

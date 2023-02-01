@@ -254,15 +254,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
 		String cmd = "";
-		String cmdMI = "";
-		String cmdEC = "";
-		String cmdDC = "";
 		String select = "select distinct a._allele_key, a.symbol";
-		String alleleFrom = "from all_allele a, acc_accession aa";		
-		String alleleWhere = "where a.isWildType = 0 and a._allele_key = aa._object_key and aa._mgitype_key = 11";
-		String from = "";
-		String where = "";
-		String orderBy = ") order by symbol";
+		String from = "from all_allele a, acc_accession aa";		
+		String where = "where a.isWildType = 0 and a._allele_key = aa._object_key and aa._mgitype_key = 11";
+		String orderBy = "order by symbol";
 		
 		String value;
 		String cmResults[];
@@ -279,12 +274,12 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		value = searchDomain.getAlleleKey();
 		if (value != null && !value.isEmpty()) {
-			alleleWhere = alleleWhere + "\nand a._allele_key in (" + value + ")";
+			where = where + "\nand a._allele_key in (" + value + ")";
 		}
 		
 		value = searchDomain.getAlleleSymbol();
 		if (value != null && !value.isEmpty()) {
-			alleleWhere = alleleWhere + "\nand a.symbol ilike '" + value + "'";
+			where = where + "\nand a.symbol ilike '" + value + "'";
 		}
 		
 		// accession id
@@ -294,7 +289,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			if (!mgiid.contains("MGI:")) {
 				mgiid = "MGI:" + mgiid;
 			}
-			alleleWhere = alleleWhere + "\nand lower(aa.accID) = '" + mgiid.toLowerCase() + "'";
+			where = where + "\nand lower(aa.accID) = '" + mgiid.toLowerCase() + "'";
 		}
 
 		// mutation involves
@@ -302,10 +297,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getMutationInvolves() != null) {
 
 			relationshipDomain = searchDomain.getMutationInvolves().get(0);
-			//from = "";
-			//where = "";
 			
-			cmResults = DateSQLQuery.queryByCreationModification("v", 
+			cmResults = DateSQLQuery.queryByCreationModification("v1", 
 				relationshipDomain.getCreatedBy(), 
 				relationshipDomain.getModifiedBy(), 
 				relationshipDomain.getCreation_date(), 
@@ -362,12 +355,10 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from_mi = true;	
 			}
 			
-			// save search cmd for mutation involves
 			if (from_mi == true) {
-				from = alleleFrom + ",mgi_relationship_fear_view v1" + from;						
-				where = alleleWhere + "\nand a._allele_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey() + where;			
-				//cmdMI = "\n" + select + "\n" + from +"\n" + where;
-			}
+				from = from + ",mgi_relationship_fear_view v1" + from;						
+				where = where + "\nand a._allele_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey();			
+			}			
 		}
 		
 		// expresses components
@@ -375,10 +366,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getExpressesComponents() != null) {
 		
 			relationshipDomain = searchDomain.getExpressesComponents().get(0);
-			//from = "";
-			//where = "";
 
-			cmResults = DateSQLQuery.queryByCreationModification("v", 
+			cmResults = DateSQLQuery.queryByCreationModification("v2", 
 					relationshipDomain.getCreatedBy(), 
 					relationshipDomain.getModifiedBy(), 
 					relationshipDomain.getCreation_date(), 
@@ -455,13 +444,12 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			
 			if ((from_ec == true) || (from_property == true)) {				
-				from = alleleFrom + ",mgi_relationship_fear_view v2" + from;		
-				where = alleleWhere + "\nand a._allele_key = v2._object_key_1 and v2._category_key = " + relationshipDomain.getCategoryKey() + where;	
+				from = from + ",mgi_relationship_fear_view v2";		
+				where = where + "\nand a._allele_key = v2._object_key_1 and v2._category_key = " + relationshipDomain.getCategoryKey();	
 				if (from_property == true) {
 					from = from + ",mgi_relationship_property p";
 					where = where + "\nand v2._relationship_key = p._relationship_key";
 				}					
-				//cmdEC = "\n" + select + "\n" + from +"\n" + where;
 			}
 			
 		}
@@ -471,10 +459,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		if (searchDomain.getDriverComponents() != null) {
 
 			relationshipDomain = searchDomain.getDriverComponents().get(0);
-			//from = "";
-			//where = "";
 			
-			cmResults = DateSQLQuery.queryByCreationModification("v", 
+			cmResults = DateSQLQuery.queryByCreationModification("v3", 
 				relationshipDomain.getCreatedBy(), 
 				relationshipDomain.getModifiedBy(), 
 				relationshipDomain.getCreation_date(), 
@@ -534,35 +520,17 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			// save search cmd for driver components
 			// make sure to exclude driver components that use recombinase alleles
 			if (from_dc == true) {
-				from = alleleFrom + ",mgi_relationship_fear_view v3" + from;						
-				where = alleleWhere + "\nand a._allele_key = v3._object_key_1 and v3._category_key = " + relationshipDomain.getCategoryKey() + where;	
+				from = from + ",mgi_relationship_fear_view v3";						
+				where = where + "\nand a._allele_key = v3._object_key_1 and v3._category_key = " + relationshipDomain.getCategoryKey();	
 				where = where +
 						"\nand not exists (select 1 from voc_annot vr" +
 						        "\nwhere v3._object_key_1 = vr._object_key" +
 						        "\nand vr._annottype_key = 1014" +
 						        "\nand vr._term_key = 11025588)";
-				//cmdDC = "\n" + select + "\n" + from +"\n" + where;
 			}
 		}
 		
-//		if (from_mi == true) {
-//			cmd = cmdMI;
-//		}
-//		if (from_ec == true) {
-//				cmd = cmd + "\nunion\n" + cmdEC;
-//		}
-//		if (from_dc == true) {
-//				cmd = cmd + "\nunion\n" + cmdDC;
-//		}	
-		
-		if (from_mi == false && from_ec == false && from_dc == false) {
-			cmd = select + "\n" + alleleFrom + "\n" + alleleWhere + "\n" + orderBy;
-		}
-		else {
-			cmd = select + "\n" + from + "\n" + where + "\n" + orderBy;
-		}
-		
-		//cmd = "\n(" + cmd + "\n" + orderBy;
+		cmd = select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 
 		try {

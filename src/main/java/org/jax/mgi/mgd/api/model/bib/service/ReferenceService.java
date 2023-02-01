@@ -1061,9 +1061,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					domain.setPriorityKey("");
 				}
 				
-				// default = "Not Applicable"
+				// default = "Not Specified"
 				if (domain.getConditionalMutantsKey().equals("0")) {
-					domain.setConditionalMutantsKey("4834242");
+					domain.setConditionalMutantsKey("4834243");
 				}
 				
 				results.add(domain);

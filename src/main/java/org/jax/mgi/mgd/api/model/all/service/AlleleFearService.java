@@ -347,11 +347,11 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			value = relationshipDomain.getNote().getNoteChunk();
 			if (value != null && !value.isEmpty()) {
-				from = from + ",mgi_note n";
-				where = where + "\nand v1._relationship_key = n._object_key"
-						+ "\nand n._mgitype_key = 40"
-						+ "\nand n._notetype_key = 1042"
-						+ "\nand n.note ilike '" + value + "'";
+				from = from + ",mgi_note n1";
+				where = where + "\nand v1._relationship_key = n1._object_key"
+						+ "\nand n1._mgitype_key = 40"
+						+ "\nand n1._notetype_key = 1042"
+						+ "\nand n1.note ilike '" + value + "'";
 				from_mi = true;	
 			}
 			
@@ -434,15 +434,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			value = relationshipDomain.getNote().getNoteChunk();
 			if (value != null && !value.isEmpty()) {
-				from = from + ",mgi_note n";
-				where = where + "\nand v2._relationship_key = n._object_key"
-						+ "\nand n._mgitype_key = 40"
-						+ "\nand n._notetype_key = 1042"
-						+ "\nand n.note ilike '" + value + "'";
+				from = from + ",mgi_note n2";
+				where = where + "\nand v2._relationship_key = n2._object_key"
+						+ "\nand n2._mgitype_key = 40"
+						+ "\nand n2._notetype_key = 1042"
+						+ "\nand n2.note ilike '" + value + "'";
 				from_ec = true;	
 			}
-			
-			
+				
 			if ((from_ec == true) || (from_property == true)) {				
 				from = from + ",mgi_relationship_fear_view v2";		
 				where = where + "\nand a._allele_key = v2._object_key_1 and v2._category_key = " + relationshipDomain.getCategoryKey();	
@@ -509,16 +508,14 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 			
 			value = relationshipDomain.getNote().getNoteChunk();
 			if (value != null && !value.isEmpty()) {
-				from = from + ",mgi_note n";
-				where = where + "\nand v3._relationship_key = n._object_key"
-						+ "\nand n._mgitype_key = 40"
-						+ "\nand n._notetype_key = 1042"
-						+ "\nand n.note ilike '" + value + "'";
+				from = from + ",mgi_note n3";
+				where = where + "\nand v3._relationship_key = n3._object_key"
+						+ "\nand n3._mgitype_key = 40"
+						+ "\nand n3._notetype_key = 1042"
+						+ "\nand n3.note ilike '" + value + "'";
 				from_dc = true;	
 			}
 			
-			// save search cmd for driver components
-			// make sure to exclude driver components that use recombinase alleles
 			if (from_dc == true) {
 				from = from + ",mgi_relationship_fear_view v3";						
 				where = where + "\nand a._allele_key = v3._object_key_1 and v3._category_key = " + relationshipDomain.getCategoryKey();	

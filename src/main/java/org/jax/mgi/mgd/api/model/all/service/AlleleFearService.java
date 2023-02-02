@@ -18,7 +18,6 @@ import org.jax.mgi.mgd.api.model.all.translator.AlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
@@ -132,8 +131,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				// add notes to this relationship
 				rdomain.setNote(domain.getExpressesComponents().get(i).getNote());
 				
-				// add properties to this relationship
-				rdomain.setProperties(domain.getExpressesComponents().get(i).getProperties());
+//				// add properties to this relationship
+//				rdomain.setProperties(domain.getExpressesComponents().get(i).getProperties());
 
 				// add relationshipDomain to relationshipList
 				relationshipDomain.add(rdomain);         
@@ -414,23 +413,23 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 					from_ec = true;									
 			}	
 			
-			// only expresses component contains properties
-			if (relationshipDomain.getProperties() != null) {
-					
-				value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
-				if (value != null && !value.isEmpty()) {
-					where = where + "\nand p._propertyname_key = " + value;
-					from_ec = true;
-					from_property = true;
-				}
-	
-				value = relationshipDomain.getProperties().get(0).getValue();
-				if (value != null && !value.isEmpty()) {
-					where = where + "\nand p.value ilike '" + value + "'";
-					from_ec = true;
-					from_property = true;
-				}
-			}
+//			// only expresses component contains properties
+//			if (relationshipDomain.getProperties() != null) {
+//					
+//				value = relationshipDomain.getProperties().get(0).getPropertyNameKey();
+//				if (value != null && !value.isEmpty()) {
+//					where = where + "\nand p._propertyname_key = " + value;
+//					from_ec = true;
+//					from_property = true;
+//				}
+//	
+//				value = relationshipDomain.getProperties().get(0).getValue();
+//				if (value != null && !value.isEmpty()) {
+//					where = where + "\nand p.value ilike '" + value + "'";
+//					from_ec = true;
+//					from_property = true;
+//				}
+//			}
 			
 			value = relationshipDomain.getNote().getNoteChunk();
 			if (value != null && !value.isEmpty()) {
@@ -548,125 +547,125 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		return results;
 	}
 
-	@Transactional	
-	public List<RelationshipPropertyDomain> searchPropertyAccId(RelationshipPropertyDomain searchDomain) {
-		// using propertyName/propertyNameKey Acc ID, search & return 
-		
-		List<RelationshipPropertyDomain> results = new ArrayList<RelationshipPropertyDomain>();
-
-		//  12948292 | Non-mouse_NCBI_Gene_ID
-		//	100655557 | Non-mouse_HGNC_Gene_ID
-		//	100655558 | Non-mouse_RGD_Gene_ID
-		//	100655559 | Non-mouse_ZFIN_Gene_ID
-	
-		String ncbi = "12948292";
-		String hgnc = "100655557";
-		String rgd = "100655558";
-		String zfin = "100655559";
-		String organism = "12948290";
-		String symbol = "12948291";
-		
-		String ldbKey1;
-		String ldbKey2;
-		String organismKey;
-		
-		String value = searchDomain.getValue();
-				
-		// NCBI is used by > 1 organism; but the NCBI ids are unique
-		// a search by NCBI id should still return at most one symbol
-		if (searchDomain.getPropertyNameKey().equals(ncbi)) {
-			ldbKey1 = "55";
-			ldbKey2 = "47,64,172";
-			organismKey = "2,10,11,13,40,63,84,94,95";
-		}
-		// a search by HGNC id may also return an NCBI id
-		else if (searchDomain.getPropertyNameKey().equals(hgnc)) {
-			ldbKey1 = "64";
-			ldbKey2 = "55";
-			organismKey = "2";
-			if (!value.contains("HGNC:")) {
-				value = "HGNC:" + value;
-			}
-		}	
-		// a search by RGD id may also return an NCBI id
-		else if (searchDomain.getPropertyNameKey().equals(rgd)) {
-			ldbKey1 = "47";
-			ldbKey2 = "55";
-			organismKey = "40";
-			if (!value.contains("RGD:")) {
-				value = "RGD:" + value;
-			}			
-		}
-		// a search by ZFIN id may also return an NCBI id
-		else if (searchDomain.getPropertyNameKey().equals(zfin)) {
-			ldbKey1 = "172";
-			ldbKey2 = "55";			
-			organismKey = "84";
-		}		
-		else {
-			return results;
-		}
-		
-		String cmd = "\nselect m.symbol as value, " + symbol + " as propertyNameKey, 2 as orderBy"
-				+ "\nfrom acc_accession a, mrk_marker m"
-				+ "\nwhere a.accid = '" + value + "'"
-				+ "\nand a._logicaldb_key = " + ldbKey1					
-				+ "\nand a._object_key = m._marker_key"
-				+ "\nand m._organism_key in (" + organismKey + ")"
-				+ "\nunion"
-				+ "\nselect o.commonname as value, " + organism + " as propertyNameKey, 1 as orderBy"
-				+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
-				+ "\nwhere a.accid = '" + value + "'"
-				+ "\nand a._logicaldb_key = " + ldbKey1
-				+ "\nand a._object_key = m._marker_key"
-				+ "\nand m._organism_key = o._organism_key"
-				+ "\nand m._organism_key in (" + organismKey + ")"						
-				+ "\nunion"
-				+ "\nselect aa.accid as value, aa._logicaldb_key as propertyNameKey, 3 as orderBy"
-				+ "\nfrom acc_accession a, acc_accession aa"
-				+ "\nwhere a.accid = '" + value + "'"
-				+ "\nand a._logicaldb_key = " + ldbKey1
-				+ "\nand a._object_key = aa._object_key"
-				+ "\nand aa._logicaldb_key in (" + ldbKey2 + ")"
-				+ "\norder by orderBy";
-
-		log.info("cmd: " + cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-						
-			while (rs.next())  {
-				RelationshipPropertyDomain domain = new RelationshipPropertyDomain();
-				domain.setProcessStatus(Constants.PROCESS_CREATE);
-				domain.setRelationshipKey(searchDomain.getRelationshipKey());
-				domain.setValue(rs.getString("value"));
-				
-				if (rs.getInt("propertyNameKey") == 47) {
-					domain.setPropertyNameKey(rgd);
-				}
-				else if (rs.getInt("propertyNameKey") == 55) {
-					domain.setPropertyNameKey(ncbi);
-				}
-				else if (rs.getInt("propertyNameKey") == 64) {
-					domain.setPropertyNameKey(hgnc);
-				}
-				else if (rs.getInt("propertyNameKey") == 172) {
-					domain.setPropertyNameKey(zfin);
-				}				
-				else {
-					domain.setPropertyNameKey(String.valueOf(rs.getInt("propertyNameKey")));	
-				}
-				
-				results.add(domain);						
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
+//	@Transactional	
+//	public List<RelationshipPropertyDomain> searchPropertyAccId(RelationshipPropertyDomain searchDomain) {
+//		// using propertyName/propertyNameKey Acc ID, search & return 
+//		
+//		List<RelationshipPropertyDomain> results = new ArrayList<RelationshipPropertyDomain>();
+//
+//		//  12948292 | Non-mouse_NCBI_Gene_ID
+//		//	100655557 | Non-mouse_HGNC_Gene_ID
+//		//	100655558 | Non-mouse_RGD_Gene_ID
+//		//	100655559 | Non-mouse_ZFIN_Gene_ID
+//	
+//		String ncbi = "12948292";
+//		String hgnc = "100655557";
+//		String rgd = "100655558";
+//		String zfin = "100655559";
+//		String organism = "12948290";
+//		String symbol = "12948291";
+//		
+//		String ldbKey1;
+//		String ldbKey2;
+//		String organismKey;
+//		
+//		String value = searchDomain.getValue();
+//				
+//		// NCBI is used by > 1 organism; but the NCBI ids are unique
+//		// a search by NCBI id should still return at most one symbol
+//		if (searchDomain.getPropertyNameKey().equals(ncbi)) {
+//			ldbKey1 = "55";
+//			ldbKey2 = "47,64,172";
+//			organismKey = "2,10,11,13,40,63,84,94,95";
+//		}
+//		// a search by HGNC id may also return an NCBI id
+//		else if (searchDomain.getPropertyNameKey().equals(hgnc)) {
+//			ldbKey1 = "64";
+//			ldbKey2 = "55";
+//			organismKey = "2";
+//			if (!value.contains("HGNC:")) {
+//				value = "HGNC:" + value;
+//			}
+//		}	
+//		// a search by RGD id may also return an NCBI id
+//		else if (searchDomain.getPropertyNameKey().equals(rgd)) {
+//			ldbKey1 = "47";
+//			ldbKey2 = "55";
+//			organismKey = "40";
+//			if (!value.contains("RGD:")) {
+//				value = "RGD:" + value;
+//			}			
+//		}
+//		// a search by ZFIN id may also return an NCBI id
+//		else if (searchDomain.getPropertyNameKey().equals(zfin)) {
+//			ldbKey1 = "172";
+//			ldbKey2 = "55";			
+//			organismKey = "84";
+//		}		
+//		else {
+//			return results;
+//		}
+//		
+//		String cmd = "\nselect m.symbol as value, " + symbol + " as propertyNameKey, 2 as orderBy"
+//				+ "\nfrom acc_accession a, mrk_marker m"
+//				+ "\nwhere a.accid = '" + value + "'"
+//				+ "\nand a._logicaldb_key = " + ldbKey1					
+//				+ "\nand a._object_key = m._marker_key"
+//				+ "\nand m._organism_key in (" + organismKey + ")"
+//				+ "\nunion"
+//				+ "\nselect o.commonname as value, " + organism + " as propertyNameKey, 1 as orderBy"
+//				+ "\nfrom acc_accession a, mrk_marker m, mgi_organism o"
+//				+ "\nwhere a.accid = '" + value + "'"
+//				+ "\nand a._logicaldb_key = " + ldbKey1
+//				+ "\nand a._object_key = m._marker_key"
+//				+ "\nand m._organism_key = o._organism_key"
+//				+ "\nand m._organism_key in (" + organismKey + ")"						
+//				+ "\nunion"
+//				+ "\nselect aa.accid as value, aa._logicaldb_key as propertyNameKey, 3 as orderBy"
+//				+ "\nfrom acc_accession a, acc_accession aa"
+//				+ "\nwhere a.accid = '" + value + "'"
+//				+ "\nand a._logicaldb_key = " + ldbKey1
+//				+ "\nand a._object_key = aa._object_key"
+//				+ "\nand aa._logicaldb_key in (" + ldbKey2 + ")"
+//				+ "\norder by orderBy";
+//
+//		log.info("cmd: " + cmd);
+//
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//						
+//			while (rs.next())  {
+//				RelationshipPropertyDomain domain = new RelationshipPropertyDomain();
+//				domain.setProcessStatus(Constants.PROCESS_CREATE);
+//				domain.setRelationshipKey(searchDomain.getRelationshipKey());
+//				domain.setValue(rs.getString("value"));
+//				
+//				if (rs.getInt("propertyNameKey") == 47) {
+//					domain.setPropertyNameKey(rgd);
+//				}
+//				else if (rs.getInt("propertyNameKey") == 55) {
+//					domain.setPropertyNameKey(ncbi);
+//				}
+//				else if (rs.getInt("propertyNameKey") == 64) {
+//					domain.setPropertyNameKey(hgnc);
+//				}
+//				else if (rs.getInt("propertyNameKey") == 172) {
+//					domain.setPropertyNameKey(zfin);
+//				}				
+//				else {
+//					domain.setPropertyNameKey(String.valueOf(rs.getInt("propertyNameKey")));	
+//				}
+//				
+//				results.add(domain);						
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return results;
+//	}
 
 	@Transactional	
 	public List<SlimMarkerDomain> getMarkerByRegion(SlimAlleleFearRegionDomain searchDomain) {

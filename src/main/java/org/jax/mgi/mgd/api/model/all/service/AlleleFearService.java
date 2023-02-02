@@ -265,7 +265,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		Boolean from_mi = false;
 		Boolean from_ec = false;
 		Boolean from_dc = false;
-		Boolean from_property = false;
+		//Boolean from_property = false;
 		
 		RelationshipFearDomain relationshipDomain;
 
@@ -440,15 +440,20 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 						+ "\nand n2.note ilike '" + value + "'";
 				from_ec = true;	
 			}
-				
-			if ((from_ec == true) || (from_property == true)) {				
+			
+			if (from_ec == true) {				
 				from = from + ",mgi_relationship_fear_view v2";		
-				where = where + "\nand a._allele_key = v2._object_key_1 and v2._category_key = " + relationshipDomain.getCategoryKey();	
-				if (from_property == true) {
-					from = from + ",mgi_relationship_property p";
-					where = where + "\nand v2._relationship_key = p._relationship_key";
-				}					
-			}
+				where = where + "\nand a._allele_key = v2._object_key_1 and v2._category_key = " + relationshipDomain.getCategoryKey();						
+			}			
+				
+//			if ((from_ec == true) || (from_property == true)) {				
+//				from = from + ",mgi_relationship_fear_view v2";		
+//				where = where + "\nand a._allele_key = v2._object_key_1 and v2._category_key = " + relationshipDomain.getCategoryKey();	
+//				if (from_property == true) {
+//					from = from + ",mgi_relationship_property p";
+//					where = where + "\nand v2._relationship_key = p._relationship_key";
+//				}					
+//			}
 			
 		}
 		

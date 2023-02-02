@@ -51,10 +51,10 @@ public class RelationshipFear extends BaseEntity {
 	private String creation_date;
 	private String modification_date; 
 
-	// relationship/property
-	@OneToMany()
-	@JoinColumn(name="_relationship_key", insertable=false, updatable=false)
-	private List<RelationshipProperty> properties;
+//	// relationship/property
+//	@OneToMany()
+//	@JoinColumn(name="_relationship_key", insertable=false, updatable=false)
+//	private List<RelationshipProperty> properties;
 
 	//  1042 | Relationship
 	@OneToMany()

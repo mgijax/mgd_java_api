@@ -1382,7 +1382,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	//
 	public String getAssayBySQL (String queryType, String accid) {
 		String cmd ;
-		String select = "\nselect distinct e._assay_key, ea.accid as assayid, ma.accid as markerid, m.symbol as markersymbol, at.assaytype, r.jnumid, r.short_citation " ;
+		String select = "\nselect distinct e._assay_key, ea.accid as assayid, ma.accid as markerid, m.symbol as markersymbol, at.assaytype, at.sequenceNum, r.jnumid, r.short_citation " ;
 		String from = "\nfrom gxd_expression e, acc_accession ea, mrk_marker m,  acc_accession ma, gxd_assaytype at, bib_citation_cache r " ;
 		String where = "\nwhere e._assay_key = ea._object_key " +
 			"\nand ea._mgitype_key = 8 " +
@@ -1439,7 +1439,10 @@ public class AssayService extends BaseService<AssayDomain> {
 		default:
 			throw new RuntimeException("Unknown queryType: " + queryType);
 		}
-		cmd = select + from + where;
+
+		String orderby = "\norder by m.symbol, at.sequenceNum, r.short_citation, ea.accid ";
+
+		cmd = select + from + where + orderby;
 		return cmd;
 
 	}
@@ -1648,7 +1651,9 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a._logicaldb_key = " + logicalDbKey + 
 				"\nand a.accid = '" + accid + "'"
 				+ stageClause;
-			cmd = addPaginationSQL(cmd, "e._stage_key, st.term, ct.term, m.symbol, gt.sequenceNum", offset, limit);
+			cmd = addPaginationSQL(cmd,
+			          "e.isforgxd desc, e._stage_key, st.term, ct.term, m.symbol, gt.sequenceNum, aa.accid, sp.specimenlabel",
+				  offset, limit);
 		}
 		return cmd;
 	}

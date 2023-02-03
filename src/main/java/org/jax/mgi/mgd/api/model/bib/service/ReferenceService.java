@@ -2178,6 +2178,37 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return a.equals(b);
 	}
 
+	// ----------------------------------------------------------
+	// get references by Jnums. (Note the plural. Must support comma-separated list)
+
+	public String getRefByJnumsSQL(String accids) {
+		String[] jnums = accids.split(",",0);
+		String cmd = "\nselect r.*" +
+			"\nfrom bib_summary_view r" + 
+			"\nwhere r.jnumid in ('" + String.join("','", jnums) + "')" + 
+			"\norder by r._refs_key desc";
+		return cmd;
+	}
+
+	@Transactional	
+	public SearchResults<SummaryReferenceDomain> getRefByJnums(String accids) {
+		// return list of reference domains by allele acc id
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
+		String cmd = getRefByJnumsSQL(accids);
+		results.items = processSummaryReferenceDomain(accids, -1, -1, cmd);
+		results.total_count = results.items.size();
+		return results;
+	}
+	
+	@Transactional	
+	public Response downloadRefByJnums(String accids) {
+		String cmd = getRefByJnumsSQL(accids);
+		return download(cmd, getTsvFileName("getRefByJnums", accids.replaceAll(",","_")), new ReferenceFormatter());
+	}
+	
+	// ----------------------------------------------------------
+	// get references by allele
+
 	public String getRefByAlleleSQL(String accid, int offset, int limit, boolean returnCount) {
 		String cmd;
 		if (returnCount) {
@@ -2188,10 +2219,11 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		cmd += "\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r" + 
 			"\nwhere a.accid = '" + accid + "'" + 
 			"\nand a._mgitype_key = 11" + 
+			"\nand a._logicaldb_key = 1" + 
 			"\nand a._object_key = ar._object_key" + 
 			"\nand ar._mgitype_key = 11" + 				
 			"\nand ar._refs_key = r._refs_key";
-		if (!returnCount) cmd = addPaginationSQL(cmd, null, offset, limit);
+		if (!returnCount) cmd = addPaginationSQL(cmd, "mr._refs_key desc", offset, limit);
 		return cmd;
 	}
 
@@ -2214,6 +2246,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return download(cmd, getTsvFileName("getRefByAllele", accid), new ReferenceFormatter());
 	}
 	
+	// ----------------------------------------------------------
+	// get references by marker
+
 	public String getRefByMarkerSQL(String accid, int offset, int limit, boolean returnCount) {
 		String cmd;
 		if (returnCount) {
@@ -2224,9 +2259,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		cmd += "\nfrom mrk_reference mr, acc_accession a, bib_summary_view r" + 
 			"\nwhere mr._marker_key = a._object_key" + 
 			"\nand a._mgitype_key = 2" + 
+			"\nand a._logicaldb_key = 1" + 
 			"\nand a.accid = '" + accid + "'" + 
 			"\nand mr._refs_key = r._refs_key";
-		if (!returnCount) cmd = addPaginationSQL(cmd, null, offset, limit);
+		if (!returnCount) cmd = addPaginationSQL(cmd, "mr._refs_key desc", offset, limit);
 		return cmd;
 	}
 
@@ -2248,7 +2284,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String cmd = getRefByMarkerSQL(accid, -1, -1, false);
 		return download(cmd, getTsvFileName("getRefByMarker", accid), new ReferenceFormatter());
 	}
-	
+
+	// ----------------------------------------------------------
+	// get references by search domain
+
 	public String getRefBySearchSQL(SummaryReferenceDomain searchDomain, int offset, int limit, boolean returnCount) {
 		// return list of reference domains by searchDomain
 		// accession ids; authors; title; journal; volume; and year.
@@ -2310,7 +2349,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		cmd = cmd + where;
 
-		if (!returnCount) cmd = addPaginationSQL(cmd, "numericpart desc", offset, limit);
+		if (!returnCount) cmd = addPaginationSQL(cmd, "r._refs_key desc", offset, limit);
 		
 		return cmd;
 	}
@@ -2393,6 +2432,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setHasGXDIndex(rs.getBoolean("has_gxdindex"));
 				domain.setHasMarker(rs.getBoolean("has_markers"));
 				domain.setHasProbe(rs.getBoolean("has_probes"));					
+				domain.setHasMapping(rs.getBoolean("has_mapping"));					
 				results.add(domain);
 				referenceDAO.clear();
 			}

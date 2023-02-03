@@ -37,5 +37,6 @@ public class SummaryReferenceDomain extends BaseDomain {
 	private Boolean hasGXDIndex = false;	
 	private Boolean hasMarker = false;	
 	private Boolean hasProbe = false;
+	private Boolean hasMapping = false;
 	
 }

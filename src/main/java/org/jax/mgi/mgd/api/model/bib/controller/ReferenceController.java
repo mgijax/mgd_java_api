@@ -198,6 +198,34 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.validateJnumImage(domain);
 	}
 	
+	// -----------------------------------------------------
+	// get reference by jumns
+
+	@GET
+	@ApiOperation(value = "Get list of reference domains jnum(s). Arg is comma-separated list.")
+	@Path("/getRefByJnums")
+	public SearchResults<SummaryReferenceDomain> getRefByJnums(@QueryParam("accids") String accids) {
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
+		try {
+			results = referenceService.getRefByJnums(accids);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefByJnums")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefByJnums(@QueryParam("accids") String accids) {
+             return referenceService.downloadRefByJnums(accids);
+	}
+	
+	// -----------------------------------------------------
+	// get reference by allele
+
 	@GET
 	@ApiOperation(value = "Get list of reference domains by allele accession id")
 	@Path("/getRefByAllele")
@@ -219,6 +247,17 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 	
 	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefByAllele")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefByAllele(@QueryParam("accid") String accid) {
+             return referenceService.downloadRefByAllele(accid);
+	}
+	
+	// -----------------------------------------------------
+	// get reference by marker
+
+	@GET
 	@ApiOperation(value = "Get list of reference domains by marker accession id")
 	@Path("/getRefByMarker")
 	public SearchResults<SummaryReferenceDomain> getRefByMarker(
@@ -238,6 +277,17 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefByMarker(@QueryParam("accid") String accid) {
+             return referenceService.downloadRefByMarker(accid);
+	}
+	
+	// -----------------------------------------------------
+	// get reference by search
+
 	@POST
 	@ApiOperation(value = "Get list of reference domains by search domain")
 	@Path("/getRefBySearch")
@@ -254,22 +304,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 	
-	@GET
-	@ApiOperation(value = "Download TSV file.")
-	@Path("/downloadRefByMarker")
-        @Produces(MediaType.TEXT_PLAIN)
-	public Response downloadRefByMarker(@QueryParam("accid") String accid) {
-             return referenceService.downloadRefByMarker(accid);
-	}
-	
-	@GET
-	@ApiOperation(value = "Download TSV file.")
-	@Path("/downloadRefByAllele")
-        @Produces(MediaType.TEXT_PLAIN)
-	public Response downloadRefByAllele(@QueryParam("accid") String accid) {
-             return referenceService.downloadRefByAllele(accid);
-	}
-	
 	@POST
 	@ApiOperation(value = "Download TSV file.")
 	@Path("/downloadRefBySearch")
@@ -277,5 +311,4 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	public Response downloadRefBySearch(SummaryReferenceDomain searchDomain) {
              return referenceService.downloadRefBySearch(searchDomain);
 	}
-	
 }

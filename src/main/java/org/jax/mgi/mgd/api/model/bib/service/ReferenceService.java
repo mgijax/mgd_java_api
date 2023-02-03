@@ -2223,7 +2223,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			"\nand a._object_key = ar._object_key" + 
 			"\nand ar._mgitype_key = 11" + 				
 			"\nand ar._refs_key = r._refs_key";
-		if (!returnCount) cmd = addPaginationSQL(cmd, "mr._refs_key desc", offset, limit);
+		if (!returnCount) cmd = addPaginationSQL(cmd, "r._refs_key desc", offset, limit);
 		return cmd;
 	}
 
@@ -2262,7 +2262,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			"\nand a._logicaldb_key = 1" + 
 			"\nand a.accid = '" + accid + "'" + 
 			"\nand mr._refs_key = r._refs_key";
-		if (!returnCount) cmd = addPaginationSQL(cmd, "mr._refs_key desc", offset, limit);
+		if (!returnCount) cmd = addPaginationSQL(cmd, "r._refs_key desc", offset, limit);
 		return cmd;
 	}
 

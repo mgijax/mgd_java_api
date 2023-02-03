@@ -90,22 +90,6 @@ public class AlleleFearController extends BaseController<AlleleFearDomain> {
 		
 		return results;
 	}
-
-//	@POST
-//	@ApiOperation(value = "Search/returns relationship/property by acc id")
-//	@Path("/searchPropertyAccId")
-//	public List<RelationshipPropertyDomain> searchPropertyAccId(RelationshipPropertyDomain searchDomain) {
-//	
-//		List<RelationshipPropertyDomain> results = new ArrayList<RelationshipPropertyDomain>();
-//
-//		try {
-//			results = alleleFearService.searchPropertyAccId(searchDomain);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return results;
-//	}
 	
 	@POST
 	@ApiOperation(value = "Get Marker Region by Chr, Start Coord, End Coord")

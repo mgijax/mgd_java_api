@@ -1705,16 +1705,6 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}		
 
-		// attach all sort rules
-		Comparator<SummaryResultDomain> c1 = Comparator.comparingInt(SummaryResultDomain::getStageKey);	
-		Comparator<SummaryResultDomain> c2 = Comparator.comparing(SummaryResultDomain::getStructure);			 
-		Comparator<SummaryResultDomain> c3 = Comparator.comparing(SummaryResultDomain::getCellType);
-		Comparator<SummaryResultDomain> c4 = Comparator.comparing(SummaryResultDomain::getMarkerSymbol);
-		Comparator<SummaryResultDomain> c5 = Comparator.comparingInt(SummaryResultDomain::getAssayTypeSequenceNum);
-		Comparator<SummaryResultDomain> c6 = Comparator.comparing(SummaryResultDomain::getSpecimenLabel);
-		Comparator<SummaryResultDomain> compareAll = c1.thenComparing(c2).thenComparing(c3).thenComparing(c4).thenComparing(c5).thenComparing(c6);	
-		summaryResults.sort(compareAll);
-
 		return summaryResults;
 	}
 	

@@ -58,14 +58,6 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 			domain.setNote(noteDomain);
 		}
 		
-//		// properties
-//		if (entity.getProperties() != null) {
-//			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
-//			Iterable<RelationshipPropertyDomain> i = propertyTranslator.translateEntities(entity.getProperties());
-//			domain.setProperties(IteratorUtils.toList(i.iterator()));
-//			domain.getProperties().sort(Comparator.comparingInt(RelationshipPropertyDomain::getSequenceNum));
-//		}
-		
 		return domain;
 	}
 

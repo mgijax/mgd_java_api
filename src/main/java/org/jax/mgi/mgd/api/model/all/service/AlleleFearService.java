@@ -291,7 +291,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		}
 
 		// mutation involves
-		
 		if (searchDomain.getMutationInvolves() != null) {
 
 			relationshipDomain = searchDomain.getMutationInvolves().get(0);
@@ -360,7 +359,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		}
 		
 		// expresses components
-		
 		if (searchDomain.getExpressesComponents() != null) {
 		
 			relationshipDomain = searchDomain.getExpressesComponents().get(0);
@@ -435,7 +433,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		}
 		
 		// driver components
-		
 		if (searchDomain.getDriverComponents() != null) {
 
 			relationshipDomain = searchDomain.getDriverComponents().get(0);
@@ -472,6 +469,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from_dc = true;			
 			}
 	
+			// always allele_to_driver_gene
 //			value = relationshipDomain.getRelationshipTermKey();
 //			if (value != null && !value.isEmpty()) {
 //				where = where + "\nand v3._relationshipterm_key = " + value;
@@ -503,6 +501,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from_dc = true;	
 			}
 			
+			// exclude allele = Recombinase
 			if (from_dc == true) {
 				from = from + ",mgi_relationship_fear_view v3";						
 				where = where + "\nand a._allele_key = v3._object_key_1 and v3._category_key = " + relationshipDomain.getCategoryKey();	

@@ -73,6 +73,7 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
 		return results;
 	}
 	
+	/*
     protected String formatTsv (String endpoint, Object obj) {   
     	if (endpoint.startsWith("getSpecimenBy")) {
             String[][] cols = {
@@ -95,4 +96,5 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
             return null;
         } 	
     }	
+    */
 }

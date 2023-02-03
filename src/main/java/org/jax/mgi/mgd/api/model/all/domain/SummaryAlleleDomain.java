@@ -18,15 +18,12 @@ public class SummaryAlleleDomain extends BaseDomain {
 	private String alleleKey;
 	private String symbol;
 	private String name;
-	private String alleleTypeKey;
 	private String alleleType;
-	private String alleleStatusKey;
 	private String alleleStatus;	
-	private String transmissionKey;
 	private String transmission;
-	private String diseaseAnnots;
-	private String mpAnnots;	
-	private List<MGISynonymDomain> synonyms;
-	private List<AnnotationDomain> subtypeAnnots;
+	private String diseases;
+	private String pheno;	
+	private String synonyms;
+	private String attrs;
 	
 }

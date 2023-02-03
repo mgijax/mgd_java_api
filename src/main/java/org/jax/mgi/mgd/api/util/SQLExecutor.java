@@ -133,11 +133,11 @@ public class SQLExecutor {
 			if (cursorLimit > 0) {
 				stmt.setFetchSize(cursorLimit);
 			}
-			//log.info("start executeQuery:" + start);
 			start = new Date();
+			log.info("start executeQuery:" + start);
 			set = stmt.executeQuery(query);
 			end = new Date();
-			//log.info("end executeQuery:" + end);			
+			log.info("end executeQuery:" + end);			
 			return set;
 		} catch (Exception e) {
 			e.printStackTrace();

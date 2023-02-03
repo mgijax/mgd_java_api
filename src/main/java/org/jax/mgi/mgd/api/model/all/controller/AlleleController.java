@@ -10,6 +10,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
@@ -228,6 +229,14 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	}
 
 	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAlleleByImagePane")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAlleleByImagePane(@QueryParam("key") int key) {
+		return alleleService.downloadAlleleByImagePane(key);
+	}
+	
+	@GET
 	@ApiOperation(value = "Get list of allele domains by marker accession id")
 	@Path("/getAlleleByMarker")
 	public List<SummaryAlleleDomain> getAlleleByMarker(@QueryParam("accid") String accid) {
@@ -241,6 +250,14 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		}
 		
 		return results;
+	}
+	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAlleleByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAlleleByMarker(@QueryParam("accid") String accid) {
+		return alleleService.downloadAlleleByMarker(accid);
 	}
 	
 	@GET
@@ -259,23 +276,12 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return results;
 	}	
 
-        protected String formatTsv (String endpoint, Object obj) {
-            if (endpoint.startsWith("getAlleleBy")) {
-                String [][] cols = {
-                    {"Symbol", "symbol"},
-                    {"MGI ID","alleleID"},
-                    {"Name", "name"},
-                    {"Synonyms", "synontme"},
-                    {"Transmission", "transmission"},
-                    {"Allele Status", "alleleStatus"},
-                    {"Generation Type", "alleleType"},
-                    {"Attributes", "subtypeAnnots"},
-                    {"MP Annotations", "mpAnnots"},
-                    {"Disease Annotations", "diseaseAnnots"}
-                };
-                return formatTsvHelper(obj, cols);
-            } else {
-                return "Not-Implemented";
-            }
-        }
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAlleleByRef")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAlleleByRef(@QueryParam("accid") String accid) {
+		return alleleService.downloadAlleleByRef(accid);
+	}
+	
 }

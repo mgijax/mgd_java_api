@@ -77,6 +77,7 @@ public class SequenceController extends BaseController<SequenceDomain> {
 		return results;
 	}
 	
+    /*
     protected String formatTsv (String endpoint, Object obj) {   
     	if (endpoint.startsWith("getSequenceBy")) {
             String[][] cols = {
@@ -92,4 +93,5 @@ public class SequenceController extends BaseController<SequenceDomain> {
             return null;
         } 	
     }
+    */
 }

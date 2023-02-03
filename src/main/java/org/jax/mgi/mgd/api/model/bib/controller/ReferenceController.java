@@ -14,6 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
@@ -236,13 +237,13 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		
 		return results;
 	}
-	
+
 	@POST
 	@ApiOperation(value = "Get list of reference domains by search domain")
 	@Path("/getRefBySearch")
-	public List<SummaryReferenceDomain> getRefBySearch(SummaryReferenceDomain searchDomain) {
+	public SearchResults<SummaryReferenceDomain> getRefBySearch(SummaryReferenceDomain searchDomain) {
 		
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 
 		try {
 			results = referenceService.getRefBySearch(searchDomain);
@@ -253,20 +254,28 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 	
-    protected String formatTsv (String endpoint, Object obj) {   
-    	if (endpoint.startsWith("getRefBy")) {
-            String[][] cols = {
-                {"J:#",       	"jnumid"},
-                {"PubMed ID",   "pubmedid"},
-                {"RefType",     "referencetype"},
-                {"Title",       "title"},
-                {"Authors",     "authors"},
-                {"Journal",     "journal"},
-                {"Abstract",    "referenceAbstract"}
-                };
-            return formatTsvHelper(obj, cols);
-        } else {
-            return null;
-        }
-    }	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefByMarker(@QueryParam("accid") String accid) {
+             return referenceService.downloadRefByMarker(accid);
+	}
+	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefByAllele")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefByAllele(@QueryParam("accid") String accid) {
+             return referenceService.downloadRefByAllele(accid);
+	}
+	
+	@POST
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefBySearch")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefBySearch(SummaryReferenceDomain searchDomain) {
+             return referenceService.downloadRefBySearch(searchDomain);
+	}
+	
 }

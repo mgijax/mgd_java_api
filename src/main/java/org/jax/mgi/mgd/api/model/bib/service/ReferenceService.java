@@ -2178,20 +2178,24 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return a.equals(b);
 	}
 
+	// ----------------------------------------------------------
+	// get references by allele
+
 	public String getRefByAlleleSQL(String accid, int offset, int limit, boolean returnCount) {
 		String cmd;
 		if (returnCount) {
 			cmd = "\nselect count(*) as total_count";
 		} else {
-			cmd = "\nselect a.accid, r.*" ;
+			cmd = "\nselect a.accid, br._primary, r.*" ;
 		}
-		cmd += "\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r" + 
+		cmd += "\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r  join bib_refs br on r._refs_key = br._refs_key" + 
 			"\nwhere a.accid = '" + accid + "'" + 
 			"\nand a._mgitype_key = 11" + 
+			"\nand a._logicaldb_key = 1" + 
 			"\nand a._object_key = ar._object_key" + 
 			"\nand ar._mgitype_key = 11" + 				
 			"\nand ar._refs_key = r._refs_key";
-		if (!returnCount) cmd = addPaginationSQL(cmd, null, offset, limit);
+		if (!returnCount) cmd = addPaginationSQL(cmd, "r._refs_key desc", offset, limit);
 		return cmd;
 	}
 
@@ -2214,19 +2218,23 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return download(cmd, getTsvFileName("getRefByAllele", accid), new ReferenceFormatter());
 	}
 	
+	// ----------------------------------------------------------
+	// get references by marker
+
 	public String getRefByMarkerSQL(String accid, int offset, int limit, boolean returnCount) {
 		String cmd;
 		if (returnCount) {
 			cmd = "\nselect count(*) as total_count";
 		} else {
-			cmd = "\nselect a.accid, r.*";
+			cmd = "\nselect a.accid, br._primary, r.*";
 		}
-		cmd += "\nfrom mrk_reference mr, acc_accession a, bib_summary_view r" + 
+		cmd += "\nfrom mrk_reference mr, acc_accession a, bib_summary_view r join bib_refs br on r._refs_key = br._refs_key" + 
 			"\nwhere mr._marker_key = a._object_key" + 
 			"\nand a._mgitype_key = 2" + 
+			"\nand a._logicaldb_key = 1" + 
 			"\nand a.accid = '" + accid + "'" + 
 			"\nand mr._refs_key = r._refs_key";
-		if (!returnCount) cmd = addPaginationSQL(cmd, null, offset, limit);
+		if (!returnCount) cmd = addPaginationSQL(cmd, "r._refs_key desc", offset, limit);
 		return cmd;
 	}
 
@@ -2248,18 +2256,22 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String cmd = getRefByMarkerSQL(accid, -1, -1, false);
 		return download(cmd, getTsvFileName("getRefByMarker", accid), new ReferenceFormatter());
 	}
-	
+
+	// ----------------------------------------------------------
+	// get references by search domain
+
 	public String getRefBySearchSQL(SummaryReferenceDomain searchDomain, int offset, int limit, boolean returnCount) {
 		// return list of reference domains by searchDomain
 		// accession ids; authors; title; journal; volume; and year.
 		
 		String cmd ;
 		if (returnCount) {
-	       		cmd = "\nselect count(*) as total_count from bib_summary_view r";
+	       		cmd = "\nselect count(*) as total_count from bib_summary_view r join bib_refs br on r._refs_key = br._refs_key";
 		} else {
-			cmd = "\nselect null as accid, r.* from bib_summary_view r";
+			cmd = "\nselect null as accid, br._primary, r.* from bib_summary_view r join bib_refs br on r._refs_key = br._refs_key";
 		}
 		String where = "\nwhere r._refs_key is not null";				
+		int initialWhereLength = where.length();
 		String value = "";
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
@@ -2276,6 +2288,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		if (searchDomain.getAuthors() != null && !searchDomain.getAuthors().isEmpty()) {
 			where = where + "\nand r.authors ilike '" + searchDomain.getAuthors() + "'";
+		}
+		if (searchDomain.getPrimaryAuthor() != null && !searchDomain.getPrimaryAuthor().isEmpty()) {
+			where = where + "\nand br._primary ilike '" + searchDomain.getPrimaryAuthor() + "'";
 		}
 		if (searchDomain.getTitle() != null && !searchDomain.getTitle().isEmpty()) {
 			where = where + "\nand r.title ilike '" + searchDomain.getTitle() + "'";
@@ -2308,9 +2323,13 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		
+		if (where.length() == initialWhereLength) {
+			throw new RuntimeException("No conditions added to where clause.");
+		}
+
 		cmd = cmd + where;
 
-		if (!returnCount) cmd = addPaginationSQL(cmd, "numericpart desc", offset, limit);
+		if (!returnCount) cmd = addPaginationSQL(cmd, "r._refs_key desc", offset, limit);
 		
 		return cmd;
 	}
@@ -2376,6 +2395,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setJnumid(rs.getString("jnumid"));
 				domain.setShort_citation(rs.getString("short_citation"));
 				domain.setAuthors(rs.getString("authors"));
+				domain.setPrimaryAuthor(rs.getString("_primary"));
 				domain.setTitle(rs.getString("title"));	
 				domain.setJournal(rs.getString("journal"));
 				domain.setYear(rs.getString("year"));
@@ -2393,6 +2413,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setHasGXDIndex(rs.getBoolean("has_gxdindex"));
 				domain.setHasMarker(rs.getBoolean("has_markers"));
 				domain.setHasProbe(rs.getBoolean("has_probes"));					
+				domain.setHasMapping(rs.getBoolean("has_mapping"));					
 				results.add(domain);
 				referenceDAO.clear();
 			}
@@ -2414,6 +2435,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				{"Title",       "title"},
 				{"Authors",     "authors"},
 				{"Journal",     "journal"},
+				{"Year",        "year"},
 				{"Abstract",    "abstract"}
 			};
 			return formatTsvHelper(obj, cols);

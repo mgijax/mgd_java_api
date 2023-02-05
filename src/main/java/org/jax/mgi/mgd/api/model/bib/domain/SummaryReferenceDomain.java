@@ -20,6 +20,7 @@ public class SummaryReferenceDomain extends BaseDomain {
 	private String jnum;
 	private String short_citation;
 	private String authors;
+	private String primaryAuthor;
 	private String title;	
 	private String journal;
 	private String year;
@@ -37,5 +38,6 @@ public class SummaryReferenceDomain extends BaseDomain {
 	private Boolean hasGXDIndex = false;	
 	private Boolean hasMarker = false;	
 	private Boolean hasProbe = false;
+	private Boolean hasMapping = false;
 	
 }

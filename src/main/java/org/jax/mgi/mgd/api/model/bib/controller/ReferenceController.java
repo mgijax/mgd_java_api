@@ -198,6 +198,9 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.validateJnumImage(domain);
 	}
 	
+	// -----------------------------------------------------
+	// get reference by allele
+
 	@GET
 	@ApiOperation(value = "Get list of reference domains by allele accession id")
 	@Path("/getRefByAllele")
@@ -219,6 +222,17 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 	
 	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefByAllele")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefByAllele(@QueryParam("accid") String accid) {
+             return referenceService.downloadRefByAllele(accid);
+	}
+	
+	// -----------------------------------------------------
+	// get reference by marker
+
+	@GET
 	@ApiOperation(value = "Get list of reference domains by marker accession id")
 	@Path("/getRefByMarker")
 	public SearchResults<SummaryReferenceDomain> getRefByMarker(
@@ -238,6 +252,17 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefByMarker(@QueryParam("accid") String accid) {
+             return referenceService.downloadRefByMarker(accid);
+	}
+	
+	// -----------------------------------------------------
+	// get reference by search
+
 	@POST
 	@ApiOperation(value = "Get list of reference domains by search domain")
 	@Path("/getRefBySearch")
@@ -254,22 +279,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 	
-	@GET
-	@ApiOperation(value = "Download TSV file.")
-	@Path("/downloadRefByMarker")
-        @Produces(MediaType.TEXT_PLAIN)
-	public Response downloadRefByMarker(@QueryParam("accid") String accid) {
-             return referenceService.downloadRefByMarker(accid);
-	}
-	
-	@GET
-	@ApiOperation(value = "Download TSV file.")
-	@Path("/downloadRefByAllele")
-        @Produces(MediaType.TEXT_PLAIN)
-	public Response downloadRefByAllele(@QueryParam("accid") String accid) {
-             return referenceService.downloadRefByAllele(accid);
-	}
-	
 	@POST
 	@ApiOperation(value = "Download TSV file.")
 	@Path("/downloadRefBySearch")
@@ -277,5 +286,4 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	public Response downloadRefBySearch(SummaryReferenceDomain searchDomain) {
              return referenceService.downloadRefBySearch(searchDomain);
 	}
-	
 }

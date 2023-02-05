@@ -199,31 +199,6 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 	
 	// -----------------------------------------------------
-	// get reference by jumns
-
-	@GET
-	@ApiOperation(value = "Get list of reference domains jnum(s). Arg is comma-separated list.")
-	@Path("/getRefByJnums")
-	public SearchResults<SummaryReferenceDomain> getRefByJnums(@QueryParam("accids") String accids) {
-		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
-		try {
-			results = referenceService.getRefByJnums(accids);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}
-	
-	@GET
-	@ApiOperation(value = "Download TSV file.")
-	@Path("/downloadRefByJnums")
-        @Produces(MediaType.TEXT_PLAIN)
-	public Response downloadRefByJnums(@QueryParam("accids") String accids) {
-             return referenceService.downloadRefByJnums(accids);
-	}
-	
-	// -----------------------------------------------------
 	// get reference by allele
 
 	@GET

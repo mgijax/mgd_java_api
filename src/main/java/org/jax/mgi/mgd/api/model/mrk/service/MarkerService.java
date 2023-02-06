@@ -1059,15 +1059,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
 			String mgiid = searchDomain.getAccID().toUpperCase();
-			if (searchDomain.getOrganismKey() == null || searchDomain.getOrganismKey().isEmpty()) {
-				if (!mgiid.contains("MGI:")) {
-					mgiid = "MGI:" + mgiid;
-				}
+			if ((searchDomain.getOrganismKey() == null || searchDomain.getOrganismKey().isEmpty()) && !mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
 			}
-			else if (searchDomain.getOrganismKey().equals("1")) {
-				if (!mgiid.contains("MGI:")) {
-					mgiid = "MGI:" + mgiid;
-				}
+			else if (searchDomain.getOrganismKey().equals("1") && !mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
 			}			
 			where = where + "\nand lower(acc.accID) = '" + mgiid.toLowerCase() + "'";	
 			from_accession = true;

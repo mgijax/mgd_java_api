@@ -203,6 +203,12 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				Query query = specimenDAO.createNativeQuery(cmd);
 				query.getResultList();
 				
+				// process order reset
+				cmd = "select count(*) from MGI_resetSequenceNum ('GXD_InSituResult'," + entity.get_specimen_key() + "," + user.get_user_key() + ")";
+				log.info("processAssay/process MGI_resetSequenceNum: " + cmd);
+				query = specimenDAO.createNativeQuery(cmd);
+				query.getResultList();
+				
 				modified = true;
 				log.info("processSpecimen/create processed: " + entity.get_specimen_key());					
 			}
@@ -266,6 +272,12 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				String cmd = "select count(*) from MGI_resetAgeMinMax ('GXD_Specimen'," + entity.get_specimen_key() + ")";
 				log.info("cmd: " + cmd);
 				Query query = specimenDAO.createNativeQuery(cmd);
+				query.getResultList();
+				
+				// process order reset
+				cmd = "select count(*) from MGI_resetSequenceNum ('GXD_InSituResult'," + entity.get_specimen_key() + "," + user.get_user_key() + ")";
+				log.info("processAssay/process MGI_resetSequenceNum: " + cmd);
+				query = specimenDAO.createNativeQuery(cmd);
 				query.getResultList();
 				
 				modified = true;

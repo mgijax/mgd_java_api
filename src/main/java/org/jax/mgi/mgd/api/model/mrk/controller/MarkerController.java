@@ -52,6 +52,12 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		results = markerService.create(domain, user);
 		
+		// if non-mouse, then return
+		if (!results.items.get(0).getOrganismKey().equals("1")) {
+			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
+			return results;
+		}
+		
 		// to update the mrk_location_cache table						
 		try {
 			log.info("processMarker/mrkLocationUtilities");
@@ -89,6 +95,12 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		results = markerService.update(domain, user);
 
+		// if non-mouse, then return
+		if (!results.items.get(0).getOrganismKey().equals("1")) {
+			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
+			return results;
+		}
+		
 		// to update the mrk_location_cache table						
 		try {
 			log.info("processMarker/mrkLocationUtilities");

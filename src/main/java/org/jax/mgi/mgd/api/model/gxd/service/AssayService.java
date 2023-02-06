@@ -1,11 +1,9 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
-import java.lang.RuntimeException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -340,12 +338,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		else {
 			log.info("processAssay/no changes processed: " + domain.getAssayKey());
 		}
-
-		// process order reset
-		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_InSituResult'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
-		log.info("processAssay/process MGI_resetSequenceNum: " + cmd);
-		query = assayDAO.createNativeQuery(cmd);
-		query.getResultList();
 
 		// process order reset
 		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_Specimen'," + entity.get_assay_key() + "," + user.get_user_key() + ")";

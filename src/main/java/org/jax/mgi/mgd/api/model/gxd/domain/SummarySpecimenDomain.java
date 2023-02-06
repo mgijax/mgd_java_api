@@ -23,4 +23,5 @@ public class SummarySpecimenDomain extends BaseDomain {
 	private String hybridization;
 	private String specimenNote;
 	private String markerSymbol;
+	private boolean conditional;
 }

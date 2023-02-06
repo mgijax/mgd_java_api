@@ -6,6 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
@@ -56,16 +57,12 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
 	@GET
 	@ApiOperation(value = "Get list of specimen domains by reference jnum id")
 	@Path("/getSpecimenByRef")
-	public SearchResults<SummarySpecimenDomain> getSpecimenByRef(
-                @QueryParam("accid") String accid,
-                @QueryParam("offset") int offset,
-                @QueryParam("limit") int limit
-		) {
+	public SearchResults<SummarySpecimenDomain> getSpecimenByRef(@QueryParam("accid") String accid) {
 
 		SearchResults<SummarySpecimenDomain> results = new SearchResults<SummarySpecimenDomain>();
 
 		try {
-			results = specimenService.getSpecimenByRef(accid, offset, limit);
+			results = specimenService.getSpecimenByRef(accid, -1, -1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -73,28 +70,12 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
 		return results;
 	}
 	
-	/*
-    protected String formatTsv (String endpoint, Object obj) {   
-    	if (endpoint.startsWith("getSpecimenBy")) {
-            String[][] cols = {
-                {"Assay ID",        "jnumid"},
-                {"Marker Symbol",   "markerSymbol"},
-                {"Assay Type",      "assayType"},
-                {"Specimen Label",  "specimenLabel"},
-                {"Age",             "age"},
-                {"Age Note",        "ageNote"},
-                {"Sex",             "sex"},
-                {"Hybridization",   "hybridization"},
-                {"Fixation",        "fixationMethod"},
-                {"Embedding",       "embeddingMethod"},
-                {"Background",      "genotypeBackground"},
-                {"Allele(s)",       "alleleDetailNote"},
-                {"Specimen Note",   "specimenNote"}
-                };
-            return formatTsvHelper(obj, cols);
-        } else {
-            return null;
-        } 	
-    }	
-    */
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadSpecimenByRef")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response downloadSpecimenByRef(@QueryParam("accid") String accid) {
+		return specimenService.downloadSpecimenByJnum(accid);
+	}
+	
 }

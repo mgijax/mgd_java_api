@@ -342,11 +342,17 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 
 		// process order reset
-		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_Specimen'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
+		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_InSituResult'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
 		log.info("processAssay/process MGI_resetSequenceNum: " + cmd);
 		query = assayDAO.createNativeQuery(cmd);
 		query.getResultList();
 
+		// process order reset
+		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_Specimen'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
+		log.info("processAssay/process MGI_resetSequenceNum: " + cmd);
+		query = assayDAO.createNativeQuery(cmd);
+		query.getResultList();
+		
 		// process order reset
 		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_GelLane'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
 		log.info("processAssay/process MGI_resetSequenceNum: " + cmd);

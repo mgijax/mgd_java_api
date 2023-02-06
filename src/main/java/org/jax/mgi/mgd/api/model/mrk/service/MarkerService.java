@@ -128,7 +128,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		// process marker accession ids that can be edited
 		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
-			accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user);
+			accessionService.process(String.valueOf(entity.get_marker_key()), domain.getEditAccessionIds(), mgiTypeName, user);
 		}
 		
 		// mouse only stuff		

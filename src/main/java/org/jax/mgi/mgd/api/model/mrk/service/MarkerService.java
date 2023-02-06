@@ -1064,6 +1064,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 					mgiid = "MGI:" + mgiid;
 				}
 			}
+			else if (searchDomain.getOrganismKey().equals("1")) {
+				if (!mgiid.contains("MGI:")) {
+					mgiid = "MGI:" + mgiid;
+				}
+			}			
 			where = where + "\nand lower(acc.accID) = '" + mgiid.toLowerCase() + "'";	
 			from_accession = true;
 		}

@@ -1490,9 +1490,36 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	 */
 	public String getAlleleBySQL (String queryType, String accid) {
 		// allelediseases = allele key + comman separated list of diseases
-		String cmd = ""
+		String cmd = "";
+
+		switch (queryType) {
+		case "marker":
+			cmd +=  "with alleles as ("
+			+ "\nselect a._allele_key "
+			+ "\nfrom all_allele a, acc_accession aa "
+			+ "\nwhere a._marker_key = aa._object_key "
+			+ "\nand aa._mgitype_key = 2 "
+			+ "\nand aa._logicaldb_key = 1 "
+			+ "\nand aa.accid = '" + accid + "'),"
+			;
+			break;
+		case "reference":
+			cmd += "with alleles as ("
+  			+ "\n  select ra._object_key as _allele_key"
+  			+ "\n  from MGI_Reference_Assoc ra, ACC_Accession aa"
+  			+ "\n  where ra._mgitype_key = 11"
+  			+ "\n  and ra._refs_key = aa._object_key"
+  			+ "\n  and aa._mgitype_key = 1"
+  			+ "\n  and aa._logicaldb_key = 1"
+  			+ "\n  and aa.accid = '" + accid + "'),"
+			;
+			break;
+		default:
+			throw new RuntimeException("Unknown queryType: " + queryType);
+		}
+
 		// allelediseases = table of allele key + comma-separated list of diseases
-		+ "\nwith allelediseases as ( "
+		cmd += "\nallelediseases as ( "
 		+ "\n  -- includes NOT models also "
 		+ "\n  select a._allele_key, array_to_string(array_agg(DISTINCT vt.term), ','::text) AS diseases "
 		+ "\n  from all_allele a, voc_annot va, voc_term vt, gxd_allelegenotype ga "
@@ -1500,6 +1527,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\n  and va._object_key = ga._genotype_key "
 		+ "\n  and ga._allele_key = a._allele_key "
 		+ "\n  and va._term_key = vt._term_key "
+		+ "\n  and a._allele_key in (select * from alleles) "
 		+ "\n  group by a._allele_key "
 		+ "\n), "
 
@@ -1513,6 +1541,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\n  and va._term_key = vt._term_key "
 		+ "\n  and va._qualifier_key != 2181424 " 
 		+ "\n  and va._term_key != 293594 "  // don't count annotations to "no phenotypic analysis"
+		+ "\n  and a._allele_key in (select * from alleles) "
 		+ "\n), "
 
 		// allelenormal = table of allele key + 'no abnormal phenotype observed' 
@@ -1534,6 +1563,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\n     and ga._allele_key = a._allele_key "
 		+ "\n     and va._term_key != 293594 "  // don't count annotations to "no phenotypic analysis"
 		+ "\n     and va._qualifier_key = 2181423) "
+		+ "\n  and a._allele_key in (select * from alleles) "
 		+ "\n), "
 
 		// allelesynonyms = table of allele key + comma-separated list of synonyms
@@ -1542,6 +1572,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\n  from all_allele a, mgi_synonym s  "
 		+ "\n  where a._allele_key = s._object_key "
 		+ "\n  and s._synonymtype_key = 1016 "
+		+ "\n  and a._allele_key in (select * from alleles) "
 		+ "\n  group by a._allele_key "
 		+ "\n), "
 
@@ -1552,6 +1583,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\n  where va._annottype_key = 1014 "
 		+ "\n  and va._object_key = a._allele_key "
 		+ "\n  and va._term_key = vt._term_key "
+		+ "\n  and a._allele_key in (select * from alleles) "
 		+ "\n  group by a._allele_key "
 		+ "\n) "
 
@@ -1592,33 +1624,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\nand aa._mgitype_key = 11 "
 		+ "\nand aa._logicaldb_key = 1 "
 		+ "\nand aa.preferred = 1 "
+		+ "\nand a._allele_key in (select * from alleles) "
 		;
-
-		// Add the caller's selection clause
-		switch (queryType) {
-		case "marker":
-			cmd +=  ""
-			+ "\nand a._marker_key in ( "
-			+ "\n  select _object_key from acc_accession "
-			+ "\n  where _mgitype_key = 2 and _logicaldb_key = 1 and accid = '" + accid + "')"
-			;
-			break;
-		case "reference":
-			cmd += ""
-			+ "\nand exists ("
-  			+ "\n  select 1"
-  			+ "\n  from MGI_Reference_Assoc ra, ACC_Accession aa"
-  			+ "\n  where ra._mgitype_key = 11"
-  			+ "\n  and ra._object_key = a._allele_key"
-  			+ "\n  and ra._refs_key = aa._object_key"
-  			+ "\n  and aa._mgitype_key = 1"
-  			+ "\n  and aa._logicaldb_key = 1"
-  			+ "\n  and aa.accid = '" + accid + "')"
-			;
-			break;
-		default:
-			throw new RuntimeException("Unknown queryType: " + queryType);
-		}
 
 		// Finally, the sorting
 		cmd += "\norder by trans.term desc, astatus.term, a.symbol " ;

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
@@ -312,25 +313,21 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		return results;
 	}
 
-	@Transactional	
-	public SearchResults<SlimExptsDomain> getExptsByMarker(String accid, int offset, int limit) {
-		// return list of assay domains by marker acc id
+	// ------------------------------
+	// get experiments by marker
 
-		SearchResults<SlimExptsDomain> results = new SearchResults<SlimExptsDomain>();
-		List<SlimExptsDomain> summaryResults = new ArrayList<SlimExptsDomain>();
-		
-		String cmd = "\nselect count(*) as total_count" + 
+	public String getExptsByMarkerSQL(String accid, int offset, int limit, boolean returnCount) {
+		String cmd;
+		if (returnCount) {
+			cmd = "\nselect count(*) as total_count" + 
 				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em" + 
 				"\nwhere m._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\nand m._marker_key = em._marker_key" +
 				"\nand em._expt_key = e._expt_key";	
-		results.total_count = processSummaryExptsCount(cmd);
-		results.offset = offset;
-		results.limit = limit;
-		
-		cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart" + 
+		} else {
+			cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart, e.chromosome, c.jnumid, c.short_citation" + 
 				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c" + 
 				"\nwhere m._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" +
@@ -339,9 +336,54 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				"\nand em._expt_key = e._expt_key" +
 				"\nand e._refs_key = c._refs_key" +
 				"\nand e.exptType in " + exptTypes;
+			cmd = addPaginationSQL(cmd, "e.expttype, c.numericpart", offset, limit);
+		}
+		return cmd;
+	}
+
+	@Transactional	
+	public SearchResults<SlimExptsDomain> getExptsByMarker(String accid, int offset, int limit) {
+		// return list of assay domains by marker acc id
+
+		SearchResults<SlimExptsDomain> results = new SearchResults<SlimExptsDomain>();
+		List<SlimExptsDomain> summaryResults = new ArrayList<SlimExptsDomain>();
+		
+		String cmd = getExptsByMarkerSQL(accid, offset, limit, true);
+		results.total_count = processSummaryExptsCount(cmd);
+		results.offset = offset;
+		results.limit = limit;
+		
+		cmd = getExptsByMarkerSQL(accid, offset, limit, false);
 		summaryResults = processSummaryExptsDomain(accid, offset, limit, cmd);
 		results.items = summaryResults;
 		return results;
+	}
+
+	public Response downloadExptsByMarker(String accid) {
+		String cmd = getExptsByMarkerSQL(accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getExptsByMarker", accid), new ExptFormatter());
+	}
+
+	// ------------------------------
+	// get experiments by Jnum
+
+	public String getExptsByRefSQL (String accid, int offset, int limit, boolean returnCount) {
+		String cmd;
+		if (returnCount) {
+			cmd = "\nselect count(*) as total_count" + 
+			"\nfrom bib_citation_cache aa, mld_expts e" + 
+			"\nwhere aa.jnumid = '" + accid + "'" +
+			"\nand aa._refs_key = e._refs_key" +
+			"\nand e.exptType in " + exptTypes;
+		} else {
+			cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart, e.chromosome, c.jnumid, c.short_citation" + 
+			"\nfrom bib_citation_cache c, mld_expts e" + 
+			"\nwhere c.jnumid = '" + accid + "'" +
+			"\nand c._refs_key = e._refs_key" +
+			"\nand e.exptType in " + exptTypes;
+			cmd = addPaginationSQL(cmd, "e.expttype, c.numericpart", offset, limit);
+		}
+		return cmd;
 	}
 
 	@Transactional	
@@ -351,24 +393,23 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		SearchResults<SlimExptsDomain> results = new SearchResults<SlimExptsDomain>();
 		List<SlimExptsDomain> summaryResults = new ArrayList<SlimExptsDomain>();
 
-		String cmd = "\nselect count(*) as total_count" + 
-					"\nfrom bib_citation_cache aa, mld_expts e" + 
-					"\nwhere aa.jnumid = '" + accid + "'" +
-					"\nand aa._refs_key = e._refs_key" +
-					"\nand e.exptType in " + exptTypes;
+		String cmd = getExptsByRefSQL(accid, offset, limit, true);
 		results.total_count = processSummaryExptsCount(cmd);
 		results.offset = offset;
 		results.limit = limit;
 		
-		cmd = "\nselect distinct e._expt_key, e.expttype, aa.numericpart" + 
-				"\nfrom bib_citation_cache aa, mld_expts e" + 
-				"\nwhere aa.jnumid = '" + accid + "'" +
-				"\nand aa._refs_key = e._refs_key" +
-				"\nand e.exptType in " + exptTypes;
+		cmd = getExptsByRefSQL(accid, offset, limit, false);
 		summaryResults = processSummaryExptsDomain(accid, offset, limit, cmd);
 		results.items = summaryResults;
 		return results;
 	}
+
+	public Response downloadExptsByRef(String accid) {
+		String cmd = getExptsByRefSQL(accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getExptsByRef", accid), new ExptFormatter());
+	}
+
+	// ------------------------------
 	
 	@Transactional	
 	public Long processSummaryExptsCount(String cmd) {
@@ -398,22 +439,16 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
 		
-		cmd = cmd + "\norder by numericpart desc";
-		
-		if (offset >= 0) {
-            cmd = cmd + "\noffset " + offset;
-		}
-        if (limit > 0) {
-        	cmd = cmd + "\nlimit " + limit;
-        }		
-        
-        log.info(cmd);	
+        	log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {				
 				SlimExptsDomain domain = new SlimExptsDomain();
-				domain = slimtranslator.translate(exptsDAO.get(rs.getInt("_expt_key")));
+				domain.setExptType(rs.getString("expttype"));
+				domain.setChromosome(rs.getString("chromosome"));
+				domain.setJnumid(rs.getString("jnumid"));
+				domain.setShort_citation(rs.getString("short_citation"));
 				results.add(domain);
 				exptsDAO.clear();				
 			}
@@ -425,4 +460,16 @@ public class ExptsService extends BaseService<ExptsDomain> {
 
 		return results;
 	}	
+
+	public static class ExptFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+                		{"Experiment Type",     "expttype"},
+                		{"Chromosome",   	"chromosome"},
+                		{"Reference J Num",     "jnumid"},
+                		{"Reference Citation",  "short_citation"}
+                		};
+            		return formatTsvHelper(obj, cols);
+        	} 	
+    	}	
 }

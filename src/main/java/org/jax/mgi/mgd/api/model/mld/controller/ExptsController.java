@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -80,6 +81,9 @@ public class ExptsController extends BaseController<ExptsDomain> {
 		return results;
 	}
 
+	// ----------------------
+	// get by marker
+
 	@GET
 	@ApiOperation(value = "Get list of experiments domains by marker id")
 	@Path("/getExptsByMarker")
@@ -99,7 +103,18 @@ public class ExptsController extends BaseController<ExptsDomain> {
 		
 		return results;
 	}	
-	
+
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadExptsByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadExptsByMarker(@QueryParam("accid") String accid) {
+             return exptsService.downloadExptsByMarker(accid);
+	}
+
+	// ----------------------
+	// get by ref
+
 	@GET
 	@ApiOperation(value = "Get list of experiments domains by jnum id")
 	@Path("/getExptsByRef")
@@ -120,19 +135,11 @@ public class ExptsController extends BaseController<ExptsDomain> {
 		return results;
 	}
 	
-    /*
-    protected String formatTsv (String endpoint, Object obj) {   
-    	if (endpoint.startsWith("getExptsBy")) {
-            String[][] cols = {
-                {"Experiment Type",     "exptType"},
-                {"Chromosome",   		"chromosome"},
-                {"Reference J Num",     "jnumid"},
-                {"Reference Citation",  "short_citation"}
-                };
-            return formatTsvHelper(obj, cols);
-        } else {
-            return null;
-        } 	
-    }	
-    */
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadExptsByRef")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadExptsByRef(@QueryParam("accid") String accid) {
+             return exptsService.downloadExptsByRef(accid);
+	}
 }

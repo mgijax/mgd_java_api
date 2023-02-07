@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -76,22 +77,13 @@ public class SequenceController extends BaseController<SequenceDomain> {
 		
 		return results;
 	}
+
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadSequenceByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadSequenceByMarker(@QueryParam("accid") String accid) {
+             return sequenceService.downloadSequenceByMarker(accid);
+	}
 	
-    /*
-    protected String formatTsv (String endpoint, Object obj) {   
-    	if (endpoint.startsWith("getSequenceBy")) {
-            String[][] cols = {
-                {"ID",     			"accID"},
-                {"Type",   			"sequenceType"},
-                {"Length",     		"length"},
-                {"Strain/Species",  "strain"},
-                {"Description",		"description"},
-                {"Marker Symbols", 	"markerSymbol"}
-                };
-            return formatTsvHelper(obj, cols);
-        } else {
-            return null;
-        } 	
-    }
-    */
 }

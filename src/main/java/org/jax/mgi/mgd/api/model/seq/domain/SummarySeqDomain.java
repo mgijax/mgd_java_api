@@ -9,10 +9,10 @@ import lombok.Setter;
 public class SummarySeqDomain extends BaseDomain {
 		
 	private String accID;
+	private String url;
 	private String sequenceType;
 	private String length;
 	private String strain;
-	private String markerSymbol;
-	private String markerAccID;
+	private String markers; // comma separated list of "symbol|mgiid"
 	private String description;
 }

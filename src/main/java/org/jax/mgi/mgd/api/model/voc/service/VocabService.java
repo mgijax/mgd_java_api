@@ -436,8 +436,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		}
 		else if (vocabName.equals("expressesComponents")) {		
 			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
-					+ "\nand _term_key in (12948293,12965808,111135297,12438346)"
-//					+ "\nand _term_key in (12438346)"					
+					+ "\nand _term_key in (12438346)"					
 					+ "\norder by term";
 		}
 		else if (vocabName.equals("driverComponents")) {		

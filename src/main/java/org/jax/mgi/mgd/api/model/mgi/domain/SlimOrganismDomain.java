@@ -12,5 +12,6 @@ public class SlimOrganismDomain extends BaseDomain {
 	// for backward compatibility with gxd/ht
 	private Integer _organism_key;
 	private String commonname;
+	private String latinname;
 
 }

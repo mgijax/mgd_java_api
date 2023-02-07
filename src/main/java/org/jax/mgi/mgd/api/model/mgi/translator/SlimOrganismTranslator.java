@@ -14,7 +14,7 @@ public class SlimOrganismTranslator extends BaseEntityDomainTranslator<Organism,
 		// for backward compatibility with gxd/ht
 		domain.set_organism_key(entity.get_organism_key());
 		domain.setCommonname(entity.getCommonname());
-		domain.setLatinname(entity.getLatinname());
+		domain.setCommonLatinName(entity.getCommonname() + " (" + entity.getLatinname() + ")");
 		
 		return domain;
 	}

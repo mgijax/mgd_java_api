@@ -327,15 +327,19 @@ public class ExptsService extends BaseService<ExptsDomain> {
 				"\nand m._marker_key = em._marker_key" +
 				"\nand em._expt_key = e._expt_key";	
 		} else {
-			cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart, e.chromosome, c.jnumid, c.short_citation" + 
-				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c" + 
+			cmd = "\nselect distinct e._expt_key, ea.accid, e.expttype, c.numericpart, e.chromosome, c.jnumid, c.short_citation" + 
+				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c, acc_accession ea" + 
 				"\nwhere m._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\nand m._marker_key = em._marker_key" +
 				"\nand em._expt_key = e._expt_key" +
 				"\nand e._refs_key = c._refs_key" +
-				"\nand e.exptType in " + exptTypes;
+				"\nand e.exptType in " + exptTypes +
+				"\nand e._expt_key = ea._object_key " +
+				"\nand ea._mgitype_key = 4 " +
+				"\nand ea._logicaldb_key = 1 " +
+				"\nand ea.preferred = 1 " ;
 			cmd = addPaginationSQL(cmd, "e.expttype, c.numericpart", offset, limit);
 		}
 		return cmd;
@@ -376,11 +380,15 @@ public class ExptsService extends BaseService<ExptsDomain> {
 			"\nand aa._refs_key = e._refs_key" +
 			"\nand e.exptType in " + exptTypes;
 		} else {
-			cmd = "\nselect distinct e._expt_key, e.expttype, c.numericpart, e.chromosome, c.jnumid, c.short_citation" + 
-			"\nfrom bib_citation_cache c, mld_expts e" + 
+			cmd = "\nselect distinct e._expt_key, ea.accid, e.expttype, c.numericpart, e.chromosome, c.jnumid, c.short_citation" + 
+			"\nfrom bib_citation_cache c, mld_expts e, acc_accession ea" + 
 			"\nwhere c.jnumid = '" + accid + "'" +
 			"\nand c._refs_key = e._refs_key" +
-			"\nand e.exptType in " + exptTypes;
+			"\nand e.exptType in " + exptTypes +
+			"\nand e._expt_key = ea._object_key " +
+			"\nand ea._mgitype_key = 4 " +
+			"\nand ea._logicaldb_key = 1 " +
+			"\nand ea.preferred = 1 " ;
 			cmd = addPaginationSQL(cmd, "e.expttype, c.numericpart", offset, limit);
 		}
 		return cmd;
@@ -445,6 +453,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {				
 				SlimExptsDomain domain = new SlimExptsDomain();
+				domain.setAccID(rs.getString("accid"));
 				domain.setExptType(rs.getString("expttype"));
 				domain.setChromosome(rs.getString("chromosome"));
 				domain.setJnumid(rs.getString("jnumid"));

@@ -450,5 +450,66 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		
 		return results;
 	}
+
+	public List<SlimAccessionDomain> getQSResultByAccid(String accid) {
+		String cmd;
+
+		String accids = "'" + String.join("','", accid.split(",")) + "'";
+		cmd = "select a.*, t.name as typename, d.name as ldbname "
+			+ "\nfrom acc_accession a, acc_mgitype t, acc_logicaldb d"
+			+ "\nwhere a.accid in (" + accids + ")"
+			+ "\nand a._logicaldb_key in (1,15,31,34,169,170,173,191)"
+			+ "\nand a._mgitype_key in (1,2,3,4,6,8,9,11,13)"
+			+ "\nand a._mgitype_key = t._mgitype_key"
+			+ "\nand a._logicaldb_key = d._logicaldb_key"
+			;
+		log.info(cmd);
+		List<SlimAccessionDomain> summaryResults = new ArrayList<SlimAccessionDomain>();
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAccessionDomain domain = new SlimAccessionDomain();
+				domain.setAccID(rs.getString("accid"));
+				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+				domain.setLogicaldbName(rs.getString("ldbname"));
+				domain.setObjectKey(rs.getString("_object_key"));
+				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
+				domain.setMgiTypeName(rs.getString("typename"));
+				if (rs.getString("_mgitype_key").equals("2")) {
+				    String symbol = getMarkerSymbol(rs.getString("accid"));
+				    domain.setSymbol(symbol);
+				}
+				summaryResults.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return summaryResults;
+	}
+
+	private String getMarkerSymbol (String accid) {
+		String cmd = "select m.symbol "
+		+ "\nfrom mrk_marker m, acc_accession a "
+		+ "\nwhere m._marker_key = a._object_key "
+		+ "\nand a._mgitype_key = 2 "
+		+ "\nand a._logicaldb_key = 1 "
+		+ "\nand a.accid = '" + accid + "'"
+		;
+		String symbol = "";
+		try {
+		    log.info(cmd);
+		    ResultSet rs = sqlExecutor.executeProto(cmd);
+		    while (rs.next()) {
+		        symbol = rs.getString("symbol");
+		    }
+		    sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return symbol;
+	}
 		
 }

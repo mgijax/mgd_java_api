@@ -19,8 +19,10 @@ public class SlimAccessionDomain extends BaseDomain {
 	private String logicaldbName;
 	private String objectKey;
 	private String mgiTypeKey;
+	private String mgiTypeName;
 	private String accID;
 	private String prefixPart;
 	private String numericPart;
+	private String symbol;
 		
 }

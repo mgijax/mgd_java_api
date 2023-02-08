@@ -451,10 +451,13 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		return results;
 	}
 
-	public List<SlimAccessionDomain> getQSResultByAccid(String accid) {
+	// Quick search for accession IDs and/or marker symbols
+	public List<SlimAccessionDomain> getQSResultByAccid(String ids) {
 		String cmd;
 
-		String accids = "'" + String.join("','", accid.split(",")) + "'";
+		// First search as accession IDs
+		//
+		String accids = "'" + String.join("','", ids.split(",")) + "'";
 		cmd = "select a.*, t.name as typename, d.name as ldbname "
 			+ "\nfrom acc_accession a, acc_mgitype t, acc_logicaldb d"
 			+ "\nwhere a.accid in (" + accids + ")"
@@ -475,6 +478,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				domain.setObjectKey(rs.getString("_object_key"));
 				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
 				domain.setMgiTypeName(rs.getString("typename"));
+				// If this accid is for a marker, go get its symbol
 				if (rs.getString("_mgitype_key").equals("2")) {
 				    String symbol = getMarkerSymbol(rs.getString("accid"));
 				    domain.setSymbol(symbol);
@@ -486,9 +490,16 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}		
+
+		// Now search again interpreting the ids as symbols
+		for (SlimAccessionDomain d : getQSResultBySymbol(accids)) {
+		    summaryResults.add(d);
+		}
+
 		return summaryResults;
 	}
 
+	// Returns the symbol of the marker with the given mgi id.
 	private String getMarkerSymbol (String accid) {
 		String cmd = "select m.symbol "
 		+ "\nfrom mrk_marker m, acc_accession a "
@@ -511,5 +522,39 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		}		
 		return symbol;
 	}
-		
+
+	// Returns the accession IDs for the given marker symbols.
+	private List<SlimAccessionDomain> getQSResultBySymbol (String symbols) {
+		String cmd = ""
+		+ "\nselect m.symbol, a.*, 'Marker' as typename, 'MGI' as ldbname"
+		+ "\nfrom mrk_marker m, acc_accession a"
+		+ "\nwhere m._organism_key = 1"
+		+ "\nand LOWER(m.symbol) in (" + symbols.toLowerCase() + ")"
+		+ "\nand m._marker_key = a._object_key"
+		+ "\nand a._mgitype_key = 2"
+		+ "\nand a._logicaldb_key = 1"
+		+ "\nand a.preferred = 1"
+		;
+		log.info(cmd);
+		List<SlimAccessionDomain> summaryResults = new ArrayList<SlimAccessionDomain>();
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAccessionDomain domain = new SlimAccessionDomain();
+				domain.setAccID(rs.getString("accid"));
+				domain.setLogicaldbKey(rs.getString("_logicaldb_key"));
+				domain.setLogicaldbName(rs.getString("ldbname"));
+				domain.setObjectKey(rs.getString("_object_key"));
+				domain.setMgiTypeKey(rs.getString("_mgitype_key"));
+				domain.setMgiTypeName(rs.getString("typename"));
+				domain.setSymbol(rs.getString("symbol"));
+				summaryResults.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return summaryResults;
+	}
 }

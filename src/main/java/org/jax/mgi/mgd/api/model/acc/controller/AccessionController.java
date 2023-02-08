@@ -158,12 +158,12 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	@GET
 	@ApiOperation(value = "Get list of quick searrch results by accid(s).")
 	@Path("/getQSResultByAccid")
-	public List<SlimAccessionDomain> getQSResultByAccid(@QueryParam("accid") String accid) {
+	public List<SlimAccessionDomain> getQSResultByAccid(@QueryParam("ids") String ids) {
 
 		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
 
 		try {
-			results = accessionService.getQSResultByAccid(accid);
+			results = accessionService.getQSResultByAccid(ids);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

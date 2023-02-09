@@ -319,13 +319,15 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	public String getExptsByMarkerSQL(String accid, int offset, int limit, boolean returnCount) {
 		String cmd;
 		if (returnCount) {
-			cmd = "\nselect count(*) as total_count" + 
+			cmd = "\nselect count(distinct e._expt_key) as total_count" + 
 				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em" + 
 				"\nwhere m._marker_key = aa._object_key" + 
 				"\nand aa._mgitype_key = 2" +
 				"\nand aa.accid = '" + accid + "'" +
 				"\nand m._marker_key = em._marker_key" +
-				"\nand em._expt_key = e._expt_key";	
+				"\nand em._expt_key = e._expt_key" +
+				"\nand e.exptType in " + exptTypes
+				;
 		} else {
 			cmd = "\nselect distinct e._expt_key, ea.accid, e.expttype, c.numericpart, e.chromosome, c.jnumid, c.short_citation" + 
 				"\nfrom mrk_marker m, acc_accession aa, mld_expts e, mld_expt_marker em, bib_citation_cache c, acc_accession ea" + 
@@ -374,7 +376,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	public String getExptsByRefSQL (String accid, int offset, int limit, boolean returnCount) {
 		String cmd;
 		if (returnCount) {
-			cmd = "\nselect count(*) as total_count" + 
+			cmd = "\nselect count(distinct e._expt_key) as total_count" + 
 			"\nfrom bib_citation_cache aa, mld_expts e" + 
 			"\nwhere aa.jnumid = '" + accid + "'" +
 			"\nand aa._refs_key = e._refs_key" +

@@ -458,13 +458,20 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// First search as accession IDs
 		//
 		String accids = "'" + String.join("','", ids.split(",")) + "'";
-		cmd = "select a.*, t.name as typename, d.name as ldbname "
-			+ "\nfrom acc_accession a, acc_mgitype t, acc_logicaldb d"
+		cmd = "select aa.*, t.name as typename, d.name as ldbname "
+			+ "\nfrom acc_accession a, acc_mgitype t, acc_logicaldb d, acc_accession aa"
 			+ "\nwhere a.accid in (" + accids + ")"
 			+ "\nand a._logicaldb_key in (1,15,31,34,169,170,173,191)"
 			+ "\nand a._mgitype_key in (1,2,3,4,6,8,9,11,13)"
 			+ "\nand a._mgitype_key = t._mgitype_key"
 			+ "\nand a._logicaldb_key = d._logicaldb_key"
+
+			+ "\nand aa._object_key = a._object_key"
+			+ "\nand aa._mgitype_key = a._mgitype_key"
+			+ "\nand aa.preferred = 1"
+			+ "\nand aa._logicaldb_key in (1,15,31,34,169,170,173,191)"
+			+ "\nand aa._mgitype_key = t._mgitype_key"
+
 			;
 		log.info(cmd);
 		List<SlimAccessionDomain> summaryResults = new ArrayList<SlimAccessionDomain>();

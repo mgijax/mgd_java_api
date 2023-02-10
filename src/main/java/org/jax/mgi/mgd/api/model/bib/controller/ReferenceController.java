@@ -279,11 +279,27 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Download TSV file.")
 	@Path("/downloadRefBySearch")
         @Produces(MediaType.TEXT_PLAIN)
-	public Response downloadRefBySearch(SummaryReferenceDomain searchDomain) {
+	public Response downloadRefBySearch(
+		@QueryParam("accID") String accID,
+		@QueryParam("authors") String authors,
+		@QueryParam("primaryAuthor") String primaryAuthor,
+		@QueryParam("title") String title,
+		@QueryParam("journal") String journal,
+		@QueryParam("vol") String vol,
+		@QueryParam("year") String year
+	) {
+	     SummaryReferenceDomain searchDomain = new SummaryReferenceDomain();
+	     searchDomain.setAccID(accID);
+	     searchDomain.setAuthors(authors);
+	     searchDomain.setPrimaryAuthor(primaryAuthor);
+	     searchDomain.setTitle(title);
+	     searchDomain.setJournal(journal);
+	     searchDomain.setVol(vol);
+	     searchDomain.setYear(year);
              return referenceService.downloadRefBySearch(searchDomain);
 	}
 }

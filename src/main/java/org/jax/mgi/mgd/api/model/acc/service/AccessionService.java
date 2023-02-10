@@ -471,6 +471,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			+ "\nand aa.preferred = 1"
 			+ "\nand aa._logicaldb_key in (1,15,31,34,169,170,173,191)"
 			+ "\nand aa._mgitype_key = t._mgitype_key"
+			+ "\nand (aa._mgitype_key != 1 OR aa.prefixPart = 'J:')"
 
 			;
 		log.info(cmd);

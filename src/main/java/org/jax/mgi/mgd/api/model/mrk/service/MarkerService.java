@@ -767,8 +767,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand m._marker_key = mr._object_key";
 		}
 		if (from_editAccession == true) {
-			from = from + ", mrk_accref1_view acc1";
+			from = from + ", acc_accession acc1";
 			where = where + "\nand m._marker_key = acc1._object_key";
+			where = where + "\nand acc1._mgitype_key = 2";
 		}
 		if (from_noneditAccession == true) {
 			from = from + ", mrk_accref2_view acc2";

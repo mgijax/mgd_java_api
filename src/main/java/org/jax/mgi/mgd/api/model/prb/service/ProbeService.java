@@ -880,38 +880,40 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	public String getProbeBySQL(String queryType, String accid, int offset, int limit, boolean returnCount) {
 		String probesQ = "";
 		if (queryType.equals("marker")) {
-			probesQ = "\nwith probes as ( "
-			+ "\nselect distinct p._probe_key"
+			probesQ = ""
+			+ "\nselect distinct p._probe_key, p.name"
 			+ "\n  from prb_probe p, prb_marker pm, acc_accession ma "
 			+ "\n  where p._probe_key = pm._probe_key "
 			+ "\n  and pm._marker_key = ma._object_key "
 			+ "\n  and ma._mgitype_key = 2 "
 			+ "\n  and ma._logicaldb_key = 1 "
 			+ "\n  and ma.accid = '" + accid + "' "
-			+ "\n)"
 			;
 		} else if (queryType.equals("reference")) {
-			probesQ = "\nwith probes as ( "
-			+ "\nselect distinct p._probe_key"
+			probesQ = ""
+			+ "\nselect distinct p._probe_key, p.name"
 			+ "\n  from prb_probe p, prb_reference pr, acc_accession ra "
 			+ "\n  where p._probe_key = pr._probe_key "
 			+ "\n  and pr._refs_key = ra._object_key "
 			+ "\n  and ra._mgitype_key = 1 "
 			+ "\n  and ra._logicaldb_key = 1 "
 			+ "\n  and ra.accid = '" + accid + "' "
-			+ "\n)"
 			;
 		} else if (queryType.equals("search")) {
-			probesQ = "\nwith probes as ( " + accid + "\n)";
+			probesQ = accid;
 		} else {
 		    throw new RuntimeException("Unknown query type: " + queryType);
 		}
 
 		if (returnCount) {
-		    return probesQ + "\nselect count(*) as total_count from probes";
+		    return "\nwith probes as (" + probesQ + ")\nselect count(*) as total_count from probes";
+		} else {
+		    probesQ = addPaginationSQL(probesQ, "name", offset, limit);
 		}
 
-		String cmd = probesQ + "," 
+		String cmd = "\nwith probes as (" 
+		+ probesQ
+		+ "\n)," 
 		+ "\nprobeMarkers as ( "
 		+ "\n  select p._probe_key, "
 		+ "\n     array_to_string(array_agg(mm.symbol), '|'::text) AS markers, "
@@ -978,17 +980,16 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		+ "\n  prb_source ps, "
 		+ "\n  mgi_organism o, "
 		+ "\n  acc_accession pa "
-		+ "\nwhere p._probe_key in (select * from probes) "
-		+ "\nand p._source_key = ps._source_key "
+		+ "\nwhere p._source_key = ps._source_key "
 		+ "\nand ps._organism_key = o._organism_key "
 		+ "\nand p._segmenttype_key = pt._term_key "
 		+ "\nand p._probe_key = pa._object_key "
 		+ "\nand pa._mgitype_key = 3 "
 		+ "\nand pa._logicaldb_key = 1 "
 		+ "\nand pa.preferred = 1 "
+		+ "\norder by p.name "
 		;
 
-		cmd = addPaginationSQL(cmd, "p.name", offset, limit);
 		return cmd;
 	}
 
@@ -1035,7 +1036,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 	public String getProbeBySearchSQL(String name, String segmentTypeKey, int offset, int limit, boolean returnCount) {
 
-		String cmd = "select distinct p._probe_key from prb_probe p where 1=1 ";
+		String cmd = "select distinct p._probe_key, p.name from prb_probe p where 1=1 ";
 		if (segmentTypeKey != null && !segmentTypeKey.isEmpty()) {
 			cmd = cmd + "\nand p._segmenttype_key = " + segmentTypeKey;
 		}
@@ -1043,7 +1044,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (name != null && !name.isEmpty()) {
 			cmd = cmd + "\nand p.name ilike '" + name + "'";
 			cmd = cmd + "\nunion" +
-					"\nselect distinct p._probe_key from PRB_Probe p, PRB_Alias a, PRB_Reference r" +
+					"\nselect distinct p._probe_key, p.name from PRB_Probe p, PRB_Alias a, PRB_Reference r" +
 					"\nwhere a.alias ilike '" + name + "'" +
 					"\nand a._reference_key = r._reference_key" +
 					"\nand r._probe_key = p._probe_key";

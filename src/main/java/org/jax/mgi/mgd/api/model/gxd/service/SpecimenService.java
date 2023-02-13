@@ -307,6 +307,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			"\nt2.term as fixationTerm," +
 			"\nt3.assaytype," +
 			"\ngs.isconditional," +
+			"\ncase when g._assaytype_key in (10,11) then 1 else 0 end as isRecombSpecimen, " +
 			"\ns.ageNote, s.specimenNote, ss.strain, n.note as alleleDetailNote" +
 			"\nfrom bib_citation_cache aa, gxd_assay g, gxd_specimen s, mrk_marker m, acc_accession a," +
 			"\nvoc_term t1, voc_term t2, gxd_assaytype t3," +
@@ -324,7 +325,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 			"\nand s._genotype_key = gs._genotype_key" +
 			"\nand gs._strain_key = ss._strain_key";
 		
-		cmd = addPaginationSQL(cmd, "specimenLabel, symbol, accid", offset, limit);
+		cmd = addPaginationSQL(cmd, "isRecombSpecimen, specimenLabel, symbol, accid", offset, limit);
 
 		return cmd;
 

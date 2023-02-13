@@ -9,7 +9,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -113,15 +115,19 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
 	@ApiOperation(value = "Get list of summary domains by marker accession id")
 	@Path("/getProbeByMarker")
-	public List<SummaryProbeDomain> getProbeByMarker(String accid) {
+	public SearchResults<SummaryProbeDomain> getProbeByMarker(
+		@QueryParam("accid") String accid,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
 		
-		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+		SearchResults<SummaryProbeDomain> results = new SearchResults<SummaryProbeDomain>();
 
 		try {
-			results = probeService.getProbeByMarker(accid);
+			results = probeService.getProbeByMarker(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -129,15 +135,27 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadProbeByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadProbeByMarker(@QueryParam("accid") String accid) {
+             return probeService.downloadProbeByMarker(accid);
+	}
+	
+	@GET
 	@ApiOperation(value = "Get list of summary domains by reference jnumid")
 	@Path("/getProbeByRef")
-	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
+	public SearchResults<SummaryProbeDomain> getProbeByRef(
+		@QueryParam("accid") String accid,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
 		
-		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+		SearchResults<SummaryProbeDomain> results = new SearchResults<SummaryProbeDomain>();
 
 		try {
-			results = probeService.getProbeByRef(jnumid);
+			results = probeService.getProbeByRef(accid,offset,limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -145,15 +163,28 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadProbeByRef")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadProbeByRef(@QueryParam("accid") String accid) {
+             return probeService.downloadProbeByRef(accid);
+	}
+	
+	@GET
 	@ApiOperation(value = "Get list of summary domains by search")
 	@Path("/getProbeBySearch")
-	public List<SummaryProbeDomain> getProbeBySearch(ProbeDomain searchDomain) {
+	public SearchResults<SummaryProbeDomain> getProbeBySearch(
+		@QueryParam("name") String name,
+		@QueryParam("segmentTypeKey") String segmentTypeKey,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
 		
-		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+		SearchResults<SummaryProbeDomain> results = new SearchResults<SummaryProbeDomain>();
 
 		try {
-			results = probeService.getProbeBySearch(searchDomain);
+			results = probeService.getProbeBySearch(name, segmentTypeKey, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -161,6 +192,16 @@ public class ProbeController extends BaseController<ProbeDomain> {
 		return results;
 	}	
 	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadProbeBySearch")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadProbeBySearch(
+		@QueryParam("name") String name,
+		@QueryParam("segmentTypeKey") String segmentTypeKey
+	) {
+             return probeService.downloadProbeBySearch(name, segmentTypeKey);
+	}
 	@POST
 	@ApiOperation(value = "Get list of child clones of probe key")
 	@Path("/getChildClones")

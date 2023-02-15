@@ -462,7 +462,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			+ "\nfrom acc_accession a, acc_mgitype t, acc_logicaldb d, acc_accession aa"
 			+ "\nwhere a.accid in (" + accids + ")"
 			+ "\nand a._logicaldb_key in (1,15,31,34,169,170,173,191)"
-			+ "\nand a._mgitype_key in (1,2,3,4,6,8,9,11,13)"
+			+ "\nand a._mgitype_key in (1,2,3,4,6,8,9,11,12,13)"
 			+ "\nand a._mgitype_key = t._mgitype_key"
 			+ "\nand a._logicaldb_key = d._logicaldb_key"
 

@@ -1573,6 +1573,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				{"Marker Symbol",  "markersymbol"},
 				{"Assay Type",     "assaytype"},
 				{"Age",            "age"},
+				{"Stage",          "stage"},
 				{"Structure",      "structure"},
 				{"Cell Type",      "celltype"},
 				{"Strength",       "strength"},
@@ -1630,7 +1631,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a.accid = '" + accid + "'"
 				+ stageClause;
 		} else {
-			cmd = "\nselect e._expression_key, aa.accid as assayid, m.symbol as markersymbol, gt.assaytype, e.age, st.term as structure, ct.term as celltype, e.strength, e.resultnote, sp.specimenlabel, mn.note as mutantalleles" +
+			cmd = "\nselect e._expression_key, aa.accid as assayid, m.symbol as markersymbol, gt.assaytype, e.age, e._stage_key as stage, st.term as structure, ct.term as celltype, e.strength, e.resultnote, sp.specimenlabel, mn.note as mutantalleles" +
 				"\nfrom acc_accession a, acc_accession aa," +
 				"\ngxd_expression e " +
 				"\n     left outer join voc_term ct on (e._celltype_term_key = ct._term_key)" +

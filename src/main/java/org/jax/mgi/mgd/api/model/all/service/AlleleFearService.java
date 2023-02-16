@@ -394,7 +394,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				where = where + "\nand v2.markersymbol ilike '" + value + "'";
 				from_ec = true;								
 			}
-		
+			
+			// always expresses_component
 //			value = relationshipDomain.getRelationshipTermKey();
 //			if (value != null && !value.isEmpty()) {
 //				where = where + "\nand v2._relationshipterm_key = " + value;

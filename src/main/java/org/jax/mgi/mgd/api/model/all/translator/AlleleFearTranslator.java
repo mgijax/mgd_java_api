@@ -43,7 +43,7 @@ public class AlleleFearTranslator extends BaseEntityDomainTranslator<Allele, All
 			domain.getExpressesComponents().sort(Comparator.comparing(RelationshipFearDomain::getMarkerSymbol, String.CASE_INSENSITIVE_ORDER));	
 		}
 		
-		// relationship domain by allele/driver_component for non-recombinase
+		// relationship domain by allele/driver_component
 		if (entity.getDriverComponents() != null && !entity.getDriverComponents().isEmpty()) {
 			RelationshipFearTranslator fearTranslator = new RelationshipFearTranslator();	
 			Iterable<RelationshipFearDomain> t = fearTranslator.translateEntities(entity.getDriverComponents());

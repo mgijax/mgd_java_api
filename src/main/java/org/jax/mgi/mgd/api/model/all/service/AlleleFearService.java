@@ -130,9 +130,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				
 				// add notes to this relationship
 				rdomain.setNote(domain.getExpressesComponents().get(i).getNote());
-				
-//				// add properties to this relationship
-//				rdomain.setProperties(domain.getExpressesComponents().get(i).getProperties());
 
 				// add relationshipDomain to relationshipList
 				relationshipDomain.add(rdomain);         

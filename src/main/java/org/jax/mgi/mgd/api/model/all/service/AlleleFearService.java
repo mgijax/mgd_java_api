@@ -501,15 +501,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from_dc = true;	
 			}
 			
-			// exclude allele = Recombinase
 			if (from_dc == true) {
 				from = from + ",mgi_relationship_fear_view v3";						
 				where = where + "\nand a._allele_key = v3._object_key_1 and v3._category_key = " + relationshipDomain.getCategoryKey();	
-				where = where +
-						"\nand not exists (select 1 from voc_annot vr" +
-						        "\nwhere v3._object_key_1 = vr._object_key" +
-						        "\nand vr._annottype_key = 1014" +
-						        "\nand vr._term_key = 11025588)";
 			}
 		}
 		

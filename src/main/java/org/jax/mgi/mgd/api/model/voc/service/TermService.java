@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.StringBuffer;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -19,6 +23,7 @@ import org.jax.mgi.mgd.api.model.voc.domain.TermAncestorDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermFamilyEdgesViewDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.TermFamilyViewDomain;
+import org.jax.mgi.mgd.api.model.voc.domain.TreeViewNodeDomain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
@@ -801,4 +806,276 @@ public class TermService extends BaseService<TermDomain> {
 		return results;
 	}
 	
+	// Generate query that returns the immediate children of the specified voc_term primary id
+	public String getTreeViewChildrenSQL (String accid) {
+		String cmd = ""
+		    + "\nselect "
+		    + "\n  ct.term, "
+		    + "\n  ca.accid,"
+		    + "\n  case when exists ("
+		    + "\n    select 1 from dag_edge ee "
+		    + "\n    where ee._parent_key = cn._node_key and ee._dag_key = cn._dag_key"
+		    + "\n  ) then 1 else 0 end as ex"
+		    + "\nfrom"
+		    + "\n  voc_term pt"
+		    + "\n  join acc_accession pa "
+		    + "\n    on pt._term_key = pa._object_key"
+		    + "\n    and pa._mgitype_key = 13"
+		    + "\n    and pa.accid = '" + accid + "'"
+		    + "\n  join dag_node pn on pt._term_key = pn._object_key"
+		    + "\n  join dag_dag pd on pn._dag_key = pd._dag_key and pd._mgitype_key = 13"
+		    + "\n  join dag_edge e on pn._node_key = e._parent_key and e._dag_key = pn._dag_key  "
+		    + "\n  join dag_node cn on cn._node_key = e._child_key and e._dag_key = cn._dag_key"
+		    + "\n  join voc_term ct on ct._term_key = cn._object_key"
+		    + "\n  join acc_accession ca on ct._term_key = ca._object_key"
+		    + "\n    and ca._mgitype_key = 13"
+		    + "\n    and ca.preferred = 1"
+		    + "\norder by ct.term"
+		    ;
+		return cmd;
+	}
+
+	// Returns a JSON formatted list of immediate children on the given term id.
+	public String getTreeViewChildren (String accid) {
+		String cmd = getTreeViewChildrenSQL(accid);
+		log.info(cmd);
+		StringBuffer b = new StringBuffer();
+		b.append("[");
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			boolean first = true;
+			while (rs.next()) {
+				if (!first) {
+					b.append(",");
+				}
+				first = false;
+				b.append("{");
+				b.append("\"label\":\"" + rs.getString("term") + "\"");
+				b.append(",");
+				b.append("\"id\":\"" + rs.getString("accid") + "\"");
+				if (rs.getString("ex").equals("1")) {
+					b.append(",");
+					b.append("\"ex\":true");
+				}
+				b.append("}");
+			}
+			sqlExecutor.cleanup();			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		b.append("]");
+		return b.toString();
+	}
+
+	// Returns a list containing the keys of nodes along the default path
+	// from the given term to the root.
+	public List<String> getDefaultAncestorPath (String accid) {
+		List<String> path = new ArrayList<String>();
+
+		// first get the term key and vocab key for the given accid
+		String tkey = null;
+		String vkey = null;
+		try {
+			String cmd = "\nselect t._term_key, t._vocab_key "
+			+ "\nfrom acc_accession a, voc_term t"
+			+ "\nwhere a.accid = '" + accid + "'"
+			+ "\nand a._mgitype_key = 13"
+			+ "\nand a._object_key = t._term_key"
+			;
+			log.info(cmd);
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+		    		tkey = rs.getString("_term_key");
+				vkey = rs.getString("_vocab_key");
+			}
+			sqlExecutor.cleanup();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// now march up the dag, getting the preferred parent for each node.
+		while (tkey != null) {
+			// add current term's key to the path
+			path.add(tkey);
+
+			// pick a single parent for the current term
+			String getParentCmd = "";
+			switch (vkey) {
+			case "90": // EMAPA
+			case "91": // EMAPS:
+				// EMAPA and EMAPS have defined way to get preferred parent
+				getParentCmd = "\nselect _defaultparent_key as _parent_key"
+				+ "\nfrom " + (vkey.equals("90") ? "voc_term_emapa" : "voc_term_emaps")
+				+ "\nwhere _term_key = " + tkey;
+				break;
+			default:
+				// default is to return the parent with the min key
+				getParentCmd = "\nselect min(p._object_key) as _parent_key"
+				+ "\nfrom dag_node n, dag_dag d, dag_edge e, dag_node p"
+				+ "\nwhere n._object_key = " + tkey 
+				+ "\nand n._dag_key = d._dag_key"
+				+ "\nand d._mgitype_key = 13"
+				+ "\nand n._node_key = e._child_key"
+				+ "\nand e._parent_key = p._node_key"
+				;
+				break;
+			}
+			try {
+				log.info(getParentCmd);
+				String pkey = null; // parent key
+				ResultSet rs = sqlExecutor.executeProto(getParentCmd);
+				while (rs.next()) {
+					pkey = rs.getString("_parent_key");
+				}
+				sqlExecutor.cleanup();
+				// either got a parent key, or this is the root and pkey is null
+				// In either case...
+				tkey = pkey;
+			} catch (Exception e) {
+				e.printStackTrace();
+				// error - exit loop
+				tkey = null;
+			}
+		}
+		//
+		return path;
+	}
+
+	public String getTreeViewSQL (List<String> ancestorPath) {
+		
+		StringBuffer b = new StringBuffer();
+		int n = 0;
+		b.append("with termKeys1(_term_key, _parent_key) as (\n");
+		for (String tkey : ancestorPath) {
+			n += 1;
+			String pkey = n < ancestorPath.size() ? ancestorPath.get(n) : null;
+			if (n > 1) b.append(" union ");
+			b.append(" select " + tkey + ", " + pkey);
+		}
+		b.append("\n),");
+
+
+		String cmd = b.toString()
+		// add the immediate children of nodes in termKeys
+		+ "\ntermKeys2 as ("
+		+ "\n  select _term_key, _parent_key from termKeys1"
+		+ "\n  union "
+		+ "\n  select distinct cn._object_key as _term_key, p._term_key as _parent_key"
+		+ "\n  from termKeys1 p, dag_node pn, dag_dag d, dag_edge e, dag_node cn"
+		+ "\n  where p._term_key = pn._object_key"
+		+ "\n  and pn._dag_key = d._dag_key"
+		+ "\n  and d._mgitype_key = 13"
+		+ "\n  and pn._node_key = e._parent_key"
+		+ "\n  and e._child_key = cn._node_key"
+		+ "\n)"
+		// main query - returns (_parent_key, _term_key, term, accid, hasChildren)
+		+ "\nselect n._parent_key, t._term_key, t.term, a.accid,"
+		+ "\n  case when exists ("
+		+ "\n    select 1"
+		+ "\n    from dag_closure dc"
+		+ "\n    where t._term_key = dc._ancestorobject_key "
+		+ "\n    and dc._mgitype_key = 13"
+		+ "\n) then 1 else 0 end as hasChildren"
+		+ "\nfrom termKeys2 n, voc_term t, acc_accession a"
+		+ "\nwhere n._term_key = t._term_key"
+		+ "\nand t._term_key = a._object_key"
+		+ "\nand a._mgitype_key = 13"
+		+ "\nand a.preferred =1 "
+		;
+		return cmd;
+	}
+
+	public static class TreeViewNodeDomainComparator implements Comparator<TreeViewNodeDomain> {
+		public int compare(TreeViewNodeDomain a, TreeViewNodeDomain b) {
+			return a.getLabel().compareTo(b.getLabel());
+		}
+	}
+
+	public String getTreeView (String accid) {
+		TreeViewNodeDomain rootNode = null;
+		// get keys of terms in default path to root.
+		List<String> pathKeys = getDefaultAncestorPath(accid);
+		// Get treeview data for this path
+		String cmd = getTreeViewSQL(pathKeys);
+		log.info(cmd);
+		try {
+			List<TreeViewNodeDomain> tvnList = new ArrayList<TreeViewNodeDomain>();
+			Map<String,List<TreeViewNodeDomain>> key2nodes 
+			    = new HashMap<String,List<TreeViewNodeDomain>>();
+			// first pass - create domain objects and build mappings
+			// The same term can appear more than once if it is a child of multiple
+			// terms along the path. 
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+			    String tkey = rs.getString("_term_key");
+			    String pkey = rs.getString("_parent_key");
+			    //
+			    TreeViewNodeDomain tvn = new TreeViewNodeDomain();
+			    tvn.setTermKey(tkey);
+			    tvn.setParentKey(pkey);
+			    tvn.setId(rs.getString("accid"));
+			    tvn.setLabel(rs.getString("term"));
+			    tvn.setEx(rs.getBoolean("hasChildren"));
+			    int ki = pathKeys.indexOf(tkey);
+			    if (ki >= 0) {
+			    	String nxt = (ki+1) < pathKeys.size() ? pathKeys.get(ki+1) : null;
+			        if ((pkey == null && nxt == null) || (pkey != null && pkey.equals(nxt))) {
+				    // term is on the path and its parent is next on the path. set it to open.
+				    tvn.setOc("open");
+			        }
+			    }
+
+			    if (pkey == null) rootNode = tvn;
+
+			    //
+			    tvnList.add(tvn);
+			    //
+			    if (key2nodes.containsKey(tkey)) {
+			    	key2nodes.get(tkey).add(tvn);
+			    } else {
+			        List<TreeViewNodeDomain> tmp =  new ArrayList<TreeViewNodeDomain>();
+				tmp.add(tvn);
+				key2nodes.put(tkey, tmp);
+			    }
+			}
+			sqlExecutor.cleanup();			
+
+log.info("After part1. tvnList:" + tvnList.size() + " key2nodes:" + key2nodes.size());
+			// second pass - add each node to its parent's children list
+			for (TreeViewNodeDomain tvn : tvnList) {
+				String tkey = tvn.getTermKey();
+				String pkey = tvn.getParentKey();
+				if (pkey != null) {
+					List<TreeViewNodeDomain> ptvnList = key2nodes.get(pkey);
+					for (TreeViewNodeDomain ptvn : ptvnList) {
+						if (! "open".equals(ptvn.getOc())) continue;
+						List <TreeViewNodeDomain> kids = ptvn.getChildren();
+						if (kids == null) {
+							kids = new ArrayList<TreeViewNodeDomain>();
+							ptvn.setChildren(kids);
+						}
+						kids.add(tvn);
+					}
+				}
+			}
+log.info("After part2. ");
+
+			// third pass - sort siblings by label
+			for (TreeViewNodeDomain tvn : tvnList) {
+				List<TreeViewNodeDomain> kids = tvn.getChildren();
+				if (kids != null) {
+					kids.sort(new TreeViewNodeDomainComparator());
+				}
+			}
+log.info("After part3. ");
+		}
+		catch (Exception e) {
+			log.info("Exception caught: " + e.toString());
+			e.printStackTrace();
+		}
+		// Last pass - generate the json
+		String rootJson = rootNode == null ? "" : rootNode.toJson();
+		return "[" + rootJson + "]";
+	}
 }

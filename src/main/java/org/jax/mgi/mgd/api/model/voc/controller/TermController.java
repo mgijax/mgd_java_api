@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jax.mgi.mgd.api.model.BaseController;
@@ -145,4 +147,17 @@ public class TermController extends BaseController<TermDomain> {
 		return results;	
 	}	
 	
+	@GET
+	@ApiOperation(value = "Get the immediate children of a node.")
+	@Path("/getTreeViewChildren/{accid}")
+	public String getTreeViewChildren(@PathParam("accid") String accid) {
+	    return termService.getTreeViewChildren(accid);
+	}
+
+	@GET
+	@ApiOperation(value = "Get the tree view for the given node ID.")
+	@Path("/getTreeView/{accid}")
+	public String getTreeView(@PathParam("accid") String accid) {
+	    return termService.getTreeView(accid);
+	}
 }

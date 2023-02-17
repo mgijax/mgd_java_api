@@ -43,16 +43,16 @@ public class MGISetMember extends BaseEntity {
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
 
+	// set member/emapa
+	@OneToMany()
+	@JoinColumn(name="_setmember_key", referencedColumnName="_setmember_key", insertable=false, updatable=false)
+	private List<MGISetMemberEmapa> emapas;
+	
 	// genotype accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_object_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 12 and `_logicaldb_key` = 1")
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> genotypeAccessionIds;
-	
-	// set member/emapa
-	@OneToMany()
-	@JoinColumn(name="_setmember_key", referencedColumnName="_setmember_key", insertable=false, updatable=false)
-	private List<MGISetMemberEmapa> emapaMembers;
 
 }

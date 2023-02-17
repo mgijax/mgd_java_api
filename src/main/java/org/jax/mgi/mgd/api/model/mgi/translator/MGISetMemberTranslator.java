@@ -35,9 +35,9 @@ public class MGISetMemberTranslator extends BaseEntityDomainTranslator<MGISetMem
 		}
 		
 		// emapa; only 1 row exists
-		if (entity.getEmapas() != null && !entity.getEmapas().isEmpty()) {
+		if (entity.getEmapaStages() != null && !entity.getEmapaStages().isEmpty()) {
 			MGISetMemberEmapaTranslator eTranslator = new MGISetMemberEmapaTranslator();
-			Iterable<MGISetMemberEmapaDomain> i = eTranslator.translateEntities(entity.getEmapas());
+			Iterable<MGISetMemberEmapaDomain> i = eTranslator.translateEntities(entity.getEmapaStages());
 			domain.setEmapa(i.iterator().next());
 		}
 		

@@ -56,7 +56,6 @@ public class MGISetService extends BaseService<MGISetDomain> {
 
 		// process genotype clipboard set member
 		if (domain.getGenotypeClipboardMembers() != null ) {		
-
 			if (setMemberService.process(domain.getSetKey(), domain.getGenotypeClipboardMembers(), user)) {
 				modified = true;
 			}
@@ -173,7 +172,6 @@ public class MGISetService extends BaseService<MGISetDomain> {
 
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
 		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
-		
 				
 		MGISetDomain domain = new MGISetDomain();
 		domain.setSetKey(searchDomain.getSetKey());

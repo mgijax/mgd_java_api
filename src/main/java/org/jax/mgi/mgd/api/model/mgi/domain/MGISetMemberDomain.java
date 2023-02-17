@@ -25,5 +25,5 @@ public class MGISetMemberDomain extends BaseDomain {
 	private String celltypeID;
 	
 	private MGISetMemberEmapaDomain emapa;
-	
-}   	
+
+}

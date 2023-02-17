@@ -46,7 +46,7 @@ public class MGISetMember extends BaseEntity {
 	// set member/emapa
 	@OneToMany()
 	@JoinColumn(name="_setmember_key", referencedColumnName="_setmember_key", insertable=false, updatable=false)
-	private List<MGISetMemberEmapa> emapas;
+	private List<MGISetMemberEmapa> emapaStages;
 	
 	// genotype accession ids only
 	@OneToMany()

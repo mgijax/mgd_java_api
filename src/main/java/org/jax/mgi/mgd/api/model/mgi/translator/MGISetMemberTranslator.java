@@ -34,7 +34,7 @@ public class MGISetMemberTranslator extends BaseEntityDomainTranslator<MGISetMem
 			domain.setGenotypeID(entity.getGenotypeAccessionIds().get(0).getAccID());
 		}
 		
-		// setmember/emapa
+		// emapa; only 1 row exists
 		if (entity.getEmapas() != null && !entity.getEmapas().isEmpty()) {
 			MGISetMemberEmapaTranslator eTranslator = new MGISetMemberEmapaTranslator();
 			Iterable<MGISetMemberEmapaDomain> i = eTranslator.translateEntities(entity.getEmapas());

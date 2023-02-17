@@ -56,7 +56,6 @@ public class MGISetService extends BaseService<MGISetDomain> {
 
 		// process genotype clipboard set member
 		if (domain.getGenotypeClipboardMembers() != null ) {		
-
 			if (setMemberService.process(domain.getSetKey(), domain.getGenotypeClipboardMembers(), user)) {
 				modified = true;
 			}
@@ -64,9 +63,15 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		// process celltype clipboard set member
 		else if(domain.getCelltypeClipboardMembers() != null ) {
 			if (setMemberService.process(domain.getSetKey(),  domain.getCelltypeClipboardMembers(), user)) {
-				log.info("Called setMemberService");
+				log.info("Called getCelltypeClipboard setMemberService");
 				modified = true;
 			}
+		}
+		// process emapa clipboard set member
+		else if(domain.getEmapaClipboardMembers() != null ) {
+			if (setMemberService.process(domain.getSetKey(),  domain.getEmapaClipboardMembers(), user)) {
+				modified = true;
+			}	
 		}
 		
 		// only if modifications were actually made
@@ -153,6 +158,10 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		else if (domain.getSetKey().equals("1059")) {
 			domain.setCelltypeClipboardMembers(listOfMembers);
 		}
+		else if (domain.getSetKey().equals("1046")) {
+			domain.setEmapaClipboardMembers(listOfMembers);
+		}	
+
 		results.add(domain);
 		return results;
 	}
@@ -163,7 +172,6 @@ public class MGISetService extends BaseService<MGISetDomain> {
 
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
 		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
-		
 				
 		MGISetDomain domain = new MGISetDomain();
 		domain.setSetKey(searchDomain.getSetKey());
@@ -197,6 +205,10 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		else if (domain.getSetKey().equals("1059")) {
 			domain.setCelltypeClipboardMembers(listOfMembers);
 		}
+		else if (domain.getSetKey().equals("1046")) {
+			domain.setEmapaClipboardMembers(listOfMembers);
+		}
+		
 		results.add(domain);
 		return results;
 	}

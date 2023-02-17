@@ -38,7 +38,7 @@ public class MGISetMemberTranslator extends BaseEntityDomainTranslator<MGISetMem
 		if (entity.getEmapaStages() != null && !entity.getEmapaStages().isEmpty()) {
 			MGISetMemberEmapaTranslator eTranslator = new MGISetMemberEmapaTranslator();
 			Iterable<MGISetMemberEmapaDomain> i = eTranslator.translateEntities(entity.getEmapaStages());
-			domain.setEmapa(i.iterator().next());
+			domain.setEmapaStage(i.iterator().next());
 		}
 		
 		return domain;

@@ -130,8 +130,9 @@ public class TermService extends BaseService<TermDomain> {
 		
 		// use SQL query to load cell type annotation count
 		if(domain != null ) {
-			if (domain.getVocabKey() != null && !domain.getVocabKey().isEmpty() && domain.getVocabKey().equals("102")) {
-				domain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
+			if (domain.getVocabKey() != null && !domain.getVocabKey().isEmpty()) {
+				addAnnotCount(domain);
+				addEmapInfo(domain);
 			}
 		}	
 		return domain;
@@ -144,6 +145,20 @@ public class TermService extends BaseService<TermDomain> {
         termDAO.clear();
         return results;
     }
+
+
+	public String multiMatchClause(String colExpr, String op, String searchTerm) {
+		String[] values = searchTerm.split(";");
+		String clause = "(";
+		for(int i = 0; i < values.length; i++) {
+			String value = values[i].trim();
+			value = value.replace("'",  "''").replace("(",  "\\(").replace(")", "\\)");
+			if (i > 0) clause += " or ";
+			clause += colExpr + " " + op + " '" + value + "'";
+		}
+		clause += ")";
+		return clause;
+	}
 
 	@Transactional	
 	public List<TermDomain> search(TermDomain searchDomain) {
@@ -177,7 +192,7 @@ public class TermService extends BaseService<TermDomain> {
 		//Boolean from_synonym = false;
 		
 		// value after escaping apostrophe in term
-        String value = null;
+        	String value = null;
 	
 		// if parameter exists, then add to where-clause
 		
@@ -192,12 +207,21 @@ public class TermService extends BaseService<TermDomain> {
 
 		}
 		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
-					value = searchDomain.getTerm().replace("'",  "''");
-					value = value.replace("(",  "\\(");
-					value = value.replace(")", "\\)");
-                	where = where + "\nand t.term ilike '" + value + "'";
-
+			where += "\nand " + multiMatchClause("t.term" , "ilike", searchDomain.getTerm());
 		}
+		if (searchDomain.getStagesearch() != null && !searchDomain.getStagesearch().isEmpty()) {
+			String ssch = searchDomain.getStagesearch();
+			from += ", voc_term_emapa ea";
+			synonymFrom += ", voc_term_emapa ea";
+			String w =  "\nand ea._term_key = t._term_key"
+				+ "\nand exists (select 1 from voc_term_emaps es "
+				+ "\n  where es._emapa_term_key = ea._term_key "
+				+ "\n  and es._stage_key in (" + ssch + "))"
+				;
+			where += w;
+			synonymWhere += w;
+		}
+
 		if (searchDomain.getAbbreviation() != null && !searchDomain.getAbbreviation().isEmpty()) {
                         value = searchDomain.getAbbreviation().replace("'",  "''");
                         where = where + "\nand t.abbreviation ilike '" + value + "'";
@@ -218,8 +242,10 @@ public class TermService extends BaseService<TermDomain> {
 		
 		// for cell types we want to query the term synonyms by the passed in term string
 		// we create a union of the term search and the synonym search, exact syn only
-		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("102") && value != null) {
-			synonymWhere = synonymWhere + "\nand s.synonym ilike '" + value + "'"
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()
+		&& searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
+			synonymWhere = synonymWhere 
+					+ "\nand " + multiMatchClause("s.synonym", "ilike", searchDomain.getTerm())
 					+ "\nand s._mgitype_key = 13"
 					+ "\nand s._synonymtype_key = 1017"
 					+ "\nand t._term_key = s._object_key"
@@ -248,7 +274,7 @@ public class TermService extends BaseService<TermDomain> {
 			where = where + "\nand isObsolete != 1";
 		}
 		// make this easy to copy/paste for troubleshooting
-		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("102")) {
+		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() ) {
 			cmd = "\n" + select + "\n" + from + "\n" + synonymJoin + "\n" + where + "\n" + synonymUnion + "\n" + synonymOrderBy;
 		}
 		else {
@@ -269,8 +295,9 @@ public class TermService extends BaseService<TermDomain> {
 				domain.setDagParents(dagParents);
 				
 				// use SQL query to load cell type annotation count
-				if(searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty() && searchDomain.getVocabKey().equals("102")) {
-					domain.setCellTypeAnnotCount(getCelltypeAnnotCount(rs.getInt("_term_key")));
+				if(domain.getVocabKey() != null && !domain.getVocabKey().isEmpty()) {
+					addAnnotCount(domain);
+					addEmapInfo(domain);
 				}
 				
 				results.add(domain);
@@ -626,13 +653,14 @@ public class TermService extends BaseService<TermDomain> {
 
 		List<TermDomain> results = new ArrayList<TermDomain>();
 		
-		String cmd = "select t2._term_key as parentKey, t2.term as parentTerm" + 
-				"\nfrom voc_term t1, dag_node n1 , dag_edge e1, dag_node n2, voc_term t2" + 
+		String cmd = "select t2._term_key as parentKey, t2.term as parentTerm, dl.label" + 
+				"\nfrom voc_term t1, dag_node n1 , dag_edge e1, dag_label dl, dag_node n2, voc_term t2" + 
 				"\nwhere n1._object_key = " + termKey +
 				"\nand n1._object_key = t1._term_key" + 
 				"\nand n1._node_key = e1._child_key" + 
 				"\nand e1._parent_key = n2._node_key" + 
 				"\nand n2._object_key = t2._term_key" +
+				"\nand e1._label_key = dl._label_key" +
 				"\norder by t2.term";
 		log.info(cmd);
 		
@@ -642,11 +670,12 @@ public class TermService extends BaseService<TermDomain> {
 				Integer key = Integer.valueOf(rs.getString("parentKey"));
 				TermDomain parentDomain = translator.translate(termDAO.get(key));
 				termDAO.clear();		
-				parentDomain.setCellTypeAnnotCount(getCelltypeAnnotCount(key));
+				addAnnotCount(parentDomain);
+				addEmapInfo(parentDomain);
+				parentDomain.setEdgeLabel(rs.getString("label"));
 				results.add(parentDomain);				
 			}
-			// turned off on purpose
-			//sqlExecutor.cleanup();			
+			sqlExecutor.cleanup();			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -656,27 +685,96 @@ public class TermService extends BaseService<TermDomain> {
 	}
 	
 	@Transactional	
-	public String getCelltypeAnnotCount(Integer termKey) {
-		String cmd = "select count(*) as annotCt" + 
+	// Returns the number of direct annotations to the given term.
+	// The vocabKey indicates which kind of term it is:
+	//     102=cell type, 90=EMAPA, 91=EMAPS
+	// If vocabKey is not one of these, no action is taken.
+	public void addAnnotCount(TermDomain term) {
+		String termKey = term.getTermKey();
+		String vocabKey = term.getVocabKey();
+		String cmd;
+		switch (vocabKey) {
+		case "102":
+			// CellType
+			cmd = "\nselect count(*) as annotCt" + 
 				"\nfrom gxd_isresultcelltype irc, gxd_isresultstructure irs" +
 				"\nwhere irc._result_key = irs._result_key" +
-				"\nand irc._celltype_term_key = " + termKey;
+				"\nand irc._celltype_term_key = " + termKey
+				;
+			break;
+		case "90":
+			// EMAPA
+			cmd = "\nselect count(*) as annotCt" + 
+				"\nfrom gxd_expression" +
+				"\nwhere _emapa_term_key = " + termKey
+				;
+			break;
+		case "91":
+			// EMAPS
+			cmd = "\nselect count(*) as annotCt" + 
+				"\nfrom gxd_expression e, voc_term_emaps es" +
+				"\nwhere e._emapa_term_key = es._emapa_term_key" +
+				"\nand e._stage_key = es._stage_key" +
+				"\nand es._term_key = " + termKey
+				;
+			break;
+		default:
+			return;
+		}
+
 		log.info(cmd);
 		
 		String count = "";
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				count = rs.getString("annotCt");			
+				term.setAnnotCount(rs.getString("annotCt"));
 			}
-			// turned off on purpose
-			//sqlExecutor.cleanup();						
+			sqlExecutor.cleanup();						
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return count;	
+	}
+
+	public void addEmapInfo (TermDomain term) {
+		String termKey = term.getTermKey();
+		String vocabKey = term.getVocabKey();
+		String cmd;
+		switch (vocabKey) {
+		case "90": 
+			cmd = "\nselect ea.startstage, ea.endstage, null as theilerstage, t1.dpcmin, t2.dpcmax"
+			+ "\nfrom voc_term_emapa ea, gxd_theilerstage t1, gxd_theilerstage t2"
+			+ "\nwhere ea.startstage = t1._stage_key and ea.endstage = t2._stage_key and ea._term_key = "
+			+ termKey;
+			break;
+		case "91":
+			cmd = "\nselect es._stage_key as startstage, es._stage_key as endstage, " 
+			+ " es._stage_key as theilerstage, t.dpcmin, t.dpcMax"
+			+ "\nfrom voc_term_emaps es, gxd_theilerstage t"
+			+ "\nwhere es._stage_key = t._stage_key and es._term_key = "
+			+ termKey;
+			break;
+		default:
+			return;
+		}
+		log.info(cmd);
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				term.setTheilerstage(rs.getInt("theilerstage"));
+				term.setStartstage(rs.getInt("startstage"));
+				term.setEndstage(rs.getInt("endstage"));
+				term.setDpcmin(rs.getString("dpcmin"));
+				term.setDpcmax(rs.getString("dpcmax"));
+			}
+			sqlExecutor.cleanup();
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.info(e.toString());
+			return;
+		}
+
 	}
 	
 	@Transactional	
@@ -1041,7 +1139,6 @@ public class TermService extends BaseService<TermDomain> {
 			}
 			sqlExecutor.cleanup();			
 
-log.info("After part1. tvnList:" + tvnList.size() + " key2nodes:" + key2nodes.size());
 			// second pass - add each node to its parent's children list
 			for (TreeViewNodeDomain tvn : tvnList) {
 				String tkey = tvn.getTermKey();
@@ -1059,7 +1156,6 @@ log.info("After part1. tvnList:" + tvnList.size() + " key2nodes:" + key2nodes.si
 					}
 				}
 			}
-log.info("After part2. ");
 
 			// third pass - sort siblings by label
 			for (TreeViewNodeDomain tvn : tvnList) {
@@ -1068,7 +1164,6 @@ log.info("After part2. ");
 					kids.sort(new TreeViewNodeDomainComparator());
 				}
 			}
-log.info("After part3. ");
 		}
 		catch (Exception e) {
 			log.info("Exception caught: " + e.toString());

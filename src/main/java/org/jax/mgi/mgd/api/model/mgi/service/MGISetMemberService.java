@@ -99,7 +99,7 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				//}
 				
 				log.info("processSetMember create");
-                                value = domain.get(i).getLabel().replace("'",  "''");				
+				value = domain.get(i).getLabel().replace("'",  "''");				
 				cmd = "select count(*) from MGI_addSetMember ("
 						+ domain.get(i).getSetKey()
 						+ "," + domain.get(i).getObjectKey()

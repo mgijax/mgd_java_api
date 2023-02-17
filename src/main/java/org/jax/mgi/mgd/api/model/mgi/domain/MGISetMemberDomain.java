@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.domain;
 
-import java.util.List;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -26,6 +24,6 @@ public class MGISetMemberDomain extends BaseDomain {
 	private String genotypeID;
 	private String celltypeID;
 	
-	private List<MGISetMemberEmapaDomain> emapaMembers;
+	private MGISetMemberEmapaDomain emapa;
 	
 }   	

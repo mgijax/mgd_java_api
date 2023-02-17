@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
@@ -36,10 +35,10 @@ public class MGISetMemberTranslator extends BaseEntityDomainTranslator<MGISetMem
 		}
 		
 		// setmember/emapa
-		if (entity.getEmapaMembers() != null && !entity.getEmapaMembers().isEmpty()) {
+		if (entity.getEmapas() != null && !entity.getEmapas().isEmpty()) {
 			MGISetMemberEmapaTranslator eTranslator = new MGISetMemberEmapaTranslator();
-			Iterable<MGISetMemberEmapaDomain> i = eTranslator.translateEntities(entity.getEmapaMembers());
-			domain.setEmapaMembers(IteratorUtils.toList(i.iterator()));
+			Iterable<MGISetMemberEmapaDomain> i = eTranslator.translateEntities(entity.getEmapas());
+			domain.setEmapa(i.iterator().next());
 		}
 		
 		return domain;

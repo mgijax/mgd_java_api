@@ -83,7 +83,8 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				
 		String cmd = "";
 		Query query;
-                String value; // for escaping of the set label
+        String labelValue; // for escaping of the set label
+        int stageValue = 0;
 
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
@@ -92,20 +93,28 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
-				// if synonym is null/empty, then skip
-				// pwi has sent a "c" that is empty/not being used
+				// empty label is allowed; don't skip
 				//if (domain.get(i).getLabel() == null || domain.get(i).getLabel().isEmpty()) {
 				//	continue;
 				//}
 				
 				log.info("processSetMember create");
-				value = domain.get(i).getLabel().replace("'",  "''");				
+
+				// only 1 emapa member is ever used
+				if (domain.get(i).getEmapa() != null) {
+					stageValue = Integer.valueOf(domain.get(i).getEmapa().getStageKey());
+				}
+				
+				labelValue = domain.get(i).getLabel().replace("'",  "''");
+				
 				cmd = "select count(*) from MGI_addSetMember ("
 						+ domain.get(i).getSetKey()
 						+ "," + domain.get(i).getObjectKey()
 						+ "," + user.get_user_key() 
-						+ ", '" + value + "'"
+						+ ", '" + labelValue + "'"
+						+ "," + stageValue
 						+")";
+				
 				query = setMemberDAO.createNativeQuery(cmd);
 				query.getResultList();
 				modified = true;
@@ -120,6 +129,7 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSetMember update");
 				MGISetMember entity = setMemberDAO.get(Integer.valueOf(domain.get(i).getSetMemberKey()));
+
 				if(domain.get(i).getLabel() == null || domain.get(i).getLabel().isEmpty()) {
 					entity.setLabel(null);
 				}
@@ -132,7 +142,6 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				setMemberDAO.update(entity);
 				
 				log.info("processSetMember/changes processed: " + domain.get(i).getSetMemberKey());
-			
 			}
 			else {
 				log.info("processSetMember/no changes processed: " + domain.get(i).getSetMemberKey());

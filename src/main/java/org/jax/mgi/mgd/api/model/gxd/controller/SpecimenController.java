@@ -57,12 +57,16 @@ public class SpecimenController extends BaseController<SpecimenDomain> {
 	@GET
 	@ApiOperation(value = "Get list of specimen domains by reference jnum id")
 	@Path("/getSpecimenByRef")
-	public SearchResults<SummarySpecimenDomain> getSpecimenByRef(@QueryParam("accid") String accid) {
+	public SearchResults<SummarySpecimenDomain> getSpecimenByRef(
+		@QueryParam("accid") String accid,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
 
 		SearchResults<SummarySpecimenDomain> results = new SearchResults<SummarySpecimenDomain>();
 
 		try {
-			results = specimenService.getSpecimenByRef(accid, -1, -1);
+			results = specimenService.getSpecimenByRef(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

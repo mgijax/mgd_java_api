@@ -130,9 +130,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				
 				// add notes to this relationship
 				rdomain.setNote(domain.getExpressesComponents().get(i).getNote());
-				
-//				// add properties to this relationship
-//				rdomain.setProperties(domain.getExpressesComponents().get(i).getProperties());
 
 				// add relationshipDomain to relationshipList
 				relationshipDomain.add(rdomain);         
@@ -394,7 +391,8 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				where = where + "\nand v2.markersymbol ilike '" + value + "'";
 				from_ec = true;								
 			}
-		
+			
+			// always expresses_component
 //			value = relationshipDomain.getRelationshipTermKey();
 //			if (value != null && !value.isEmpty()) {
 //				where = where + "\nand v2._relationshipterm_key = " + value;

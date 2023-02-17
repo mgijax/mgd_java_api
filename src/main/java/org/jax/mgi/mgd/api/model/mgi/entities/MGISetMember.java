@@ -50,4 +50,9 @@ public class MGISetMember extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> genotypeAccessionIds;
 	
+	// set member/emapa
+	@OneToMany()
+	@JoinColumn(name="_setmember_key", referencedColumnName="_setmember_key", insertable=false, updatable=false)
+	private List<MGISetMemberEmapa> emapaMembers;
+
 }

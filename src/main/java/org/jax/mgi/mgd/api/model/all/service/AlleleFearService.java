@@ -130,9 +130,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				
 				// add notes to this relationship
 				rdomain.setNote(domain.getExpressesComponents().get(i).getNote());
-				
-//				// add properties to this relationship
-//				rdomain.setProperties(domain.getExpressesComponents().get(i).getProperties());
 
 				// add relationshipDomain to relationshipList
 				relationshipDomain.add(rdomain);         
@@ -394,12 +391,13 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				where = where + "\nand v2.markersymbol ilike '" + value + "'";
 				from_ec = true;								
 			}
-		
-			value = relationshipDomain.getRelationshipTermKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v2._relationshipterm_key = " + value;
-				from_ec = true;							
-			}
+			
+			// always expresses_component
+//			value = relationshipDomain.getRelationshipTermKey();
+//			if (value != null && !value.isEmpty()) {
+//				where = where + "\nand v2._relationshipterm_key = " + value;
+//				from_ec = true;							
+//			}
 											
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		
@@ -501,15 +499,9 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 				from_dc = true;	
 			}
 			
-			// exclude allele = Recombinase
 			if (from_dc == true) {
 				from = from + ",mgi_relationship_fear_view v3";						
 				where = where + "\nand a._allele_key = v3._object_key_1 and v3._category_key = " + relationshipDomain.getCategoryKey();	
-				where = where +
-						"\nand not exists (select 1 from voc_annot vr" +
-						        "\nwhere v3._object_key_1 = vr._object_key" +
-						        "\nand vr._annottype_key = 1014" +
-						        "\nand vr._term_key = 11025588)";
 			}
 		}
 		

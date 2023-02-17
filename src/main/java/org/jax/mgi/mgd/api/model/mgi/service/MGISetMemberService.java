@@ -102,7 +102,7 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 
 				// only 1 emapa member is ever used
 				if (domain.get(i).getEmapa() != null) {
-					stageValue = Integer.valueOf(domain.get(i).getEmapa().getStageKey());
+					stageValue = Integer.valueOf(domain.get(i).getEmapa().getStage());
 				}
 				
 				labelValue = domain.get(i).getLabel().replace("'",  "''");

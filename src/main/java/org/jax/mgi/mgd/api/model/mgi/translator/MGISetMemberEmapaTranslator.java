@@ -18,9 +18,11 @@ public class MGISetMemberEmapaTranslator extends BaseEntityDomainTranslator<MGIS
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setSetMemberEmapaKey(String.valueOf(entity.get_setmember_emapa_key()));
 		domain.setSetMemberKey(String.valueOf(entity.get_setmember_key()));
-		domain.setStageKey(String.valueOf(entity.getTheilerStage().get_stage_key()));
 		domain.setStage(String.valueOf(entity.getTheilerStage().getStage()));	
-
+		
+		// these fields are in the domain, but not translated 
+		// because they are not in the entity.
+		// therefore, they will remain null if the translator is called
 //		domain.setSetKey(String.valueOf(entity.get_set_key()));		
 //		domain.setObjectKey(String.valueOf(entity.get_object_key()));	
 //		domain.setDisplayIt;

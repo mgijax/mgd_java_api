@@ -1579,6 +1579,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				{"Strength",       "strength"},
 				{"Specimen Label", "specimenlabel"},
 				{"Mutant Allele",  "mutantalleles"},
+				{"IsConditional",  "isConditional"},
 				{"Result Note",    "resultNote"}
 			};
 			return formatTsvHelper(obj, cols);
@@ -1631,14 +1632,15 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a.accid = '" + accid + "'"
 				+ stageClause;
 		} else {
-			cmd = "\nselect e._expression_key, aa.accid as assayid, m.symbol as markersymbol, gt.assaytype, e.age, e._stage_key as stage, st.term as structure, ct.term as celltype, e.strength, e.resultnote, sp.specimenlabel, mn.note as mutantalleles" +
+			cmd = "\nselect e._expression_key, aa.accid as assayid, m.symbol as markersymbol, gt.assaytype, e.age, e._stage_key as stage, st.term as structure, ct.term as celltype, e.strength, e.resultnote, sp.specimenlabel, mn.note as mutantalleles, gg.isconditional" +
 				"\nfrom acc_accession a, acc_accession aa," +
 				"\ngxd_expression e " +
 				"\n     left outer join voc_term ct on (e._celltype_term_key = ct._term_key)" +
 				"\n     left outer join gxd_specimen sp on (e._specimen_key = sp._specimen_key)" +
 				"\n     left outer join mgi_note mn on (e._genotype_key = mn._object_key and mn._notetype_key = 1016)," +
-				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
+				"\nvoc_term st, mrk_marker m, gxd_assaytype gt, gxd_genotype gg" +
 				"\nwhere e._emapa_term_key = st._term_key" +
+				"\nand e._genotype_key = gg._genotype_key" +
 				"\nand e._marker_key = m._marker_key" +
 				"\nand e._assaytype_key = gt._assaytype_key" +
 				"\nand aa._object_key = e._assay_key" +

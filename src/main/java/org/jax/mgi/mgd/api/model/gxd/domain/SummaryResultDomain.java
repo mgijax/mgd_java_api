@@ -37,4 +37,5 @@ public class SummaryResultDomain extends BaseDomain {
 	private String resultNote;
 	private String specimenLabel;
 	private String alleleDetailNote;
+	private String isConditional;
 }

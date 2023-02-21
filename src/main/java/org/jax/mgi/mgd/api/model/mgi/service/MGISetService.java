@@ -188,5 +188,4 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		return getBySetUserOrderBy(searchDomain, "sequenceNum");
 	}
 
-
 }

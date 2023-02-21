@@ -119,8 +119,7 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		return results;
     }
 
-	@Transactional	
-	public List<MGISetDomain> getBySetUser(MGISetDomain searchDomain) {
+	public List<MGISetDomain> getBySetUserOrderBy(MGISetDomain searchDomain, String orderByField) {
 		// return all set members by _set_key, _createdby_key
 
 		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
@@ -130,12 +129,22 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		domain.setSetKey(searchDomain.getSetKey());
 		domain.setCreatedBy(searchDomain.getCreatedBy());
 		
-		String cmd = "\nselect s.* from mgi_setmember s, mgi_user u"
-				+ "\nwhere s._createdby_key = u._user_key" 
+		String select = "\nselect s.*";
+		String from = "\nfrom mgi_setmember s, mgi_user u";
+		String where = "\nwhere s._createdby_key = u._user_key" 
 				+ "\nand s._set_key = " + searchDomain.getSetKey()
 				+ "\nand s._createdby_key = u._user_key"
-				+ "\nand u.login = '" + searchDomain.getCreatedBy() + "'"
-				+ "\norder by s.label ";
+				+ "\nand u.login = '" + searchDomain.getCreatedBy() + "'";
+		String orderBy = "\norder by s." + orderByField;
+
+		if (searchDomain.getSetKey().equals("1046")) {
+			select += ", t.term ";
+			from += ", voc_term t";
+			where += "\nand s._object_key = t._term_key";
+		}
+
+		String cmd = select + from + where + orderBy;
+
 		log.info(cmd);
 
 		try {
@@ -143,6 +152,9 @@ public class MGISetService extends BaseService<MGISetDomain> {
 			while (rs.next()) {
 				MGISetMemberDomain memberDomain = new MGISetMemberDomain();
 				memberDomain = memberTranslator.translate(setMemberDAO.get(rs.getInt("_setmember_key")));
+				if (searchDomain.getSetKey().equals("1046")) {
+					memberDomain.setLabel(rs.getString("term"));
+				}
 				setMemberDAO.clear();
 				listOfMembers.add(memberDomain);
 			}
@@ -165,52 +177,15 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		results.add(domain);
 		return results;
 	}
+
+	@Transactional	
+	public List<MGISetDomain> getBySetUser(MGISetDomain searchDomain) {
+		return getBySetUserOrderBy(searchDomain, "label");
+	}
 	
 	@Transactional	
 	public List<MGISetDomain> getBySetUserBySeqNum(MGISetDomain searchDomain) {
-		// return all set members by _set_key, _createdby_key
-
-		List<MGISetDomain> results = new ArrayList<MGISetDomain>();
-		List<MGISetMemberDomain> listOfMembers = new ArrayList<MGISetMemberDomain>();
-				
-		MGISetDomain domain = new MGISetDomain();
-		domain.setSetKey(searchDomain.getSetKey());
-		domain.setCreatedBy(searchDomain.getCreatedBy());
-		
-		String cmd = "\nselect s.* from mgi_setmember s, mgi_user u"
-				+ "\nwhere s._createdby_key = u._user_key" 
-				+ "\nand s._set_key = " + searchDomain.getSetKey()
-				+ "\nand s._createdby_key = u._user_key"
-				+ "\nand u.login = '" + searchDomain.getCreatedBy() + "'"
-				+ "\norder by s.sequenceNum";
-		log.info(cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				MGISetMemberDomain memberDomain = new MGISetMemberDomain();
-				memberDomain = memberTranslator.translate(setMemberDAO.get(rs.getInt("_setmember_key")));
-				setMemberDAO.clear();
-				listOfMembers.add(memberDomain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if (domain.getSetKey().equals("1055")) {
-			domain.setGenotypeClipboardMembers(listOfMembers);
-		}
-		else if (domain.getSetKey().equals("1059")) {
-			domain.setCelltypeClipboardMembers(listOfMembers);
-		}
-		else if (domain.getSetKey().equals("1046")) {
-			domain.setEmapaClipboardMembers(listOfMembers);
-		}
-		
-		results.add(domain);
-		return results;
+		return getBySetUserOrderBy(searchDomain, "sequenceNum");
 	}
 
 

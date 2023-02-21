@@ -31,6 +31,7 @@ public class SummaryResultTranslator extends BaseEntityDomainTranslator<Expressi
 		domain.setAge(entity.getAge());
 		domain.setStructureID(entity.getEmapaTerm().getAccessionIds().get(0).getAccID());
 		domain.setStructure("TS" + String.valueOf(entity.get_stage_key()) + ":" + entity.getEmapaTerm().getTerm());
+		domain.setIsConditional(entity.getGenotype().getIsConditional().toString());
 		
 		if (entity.getSpecimen() != null) {
 			domain.setSpecimenLabel(entity.getSpecimen().getSpecimenLabel());

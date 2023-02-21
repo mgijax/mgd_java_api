@@ -143,7 +143,7 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				log.info("modified by:" + user);
 				entity.setModifiedBy(user);
 				setMemberDAO.update(entity);
-				
+				modified = true;
 				log.info("processSetMember/changes processed: " + domain.get(i).getSetMemberKey());
 			}
 			else {

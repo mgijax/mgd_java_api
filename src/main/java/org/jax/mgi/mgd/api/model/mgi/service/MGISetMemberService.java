@@ -128,7 +128,6 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSetMember update");
-				log.info("setmemberkey:" + domain.get(i).getSetMemberKey());
 				MGISetMember entity = setMemberDAO.get(Integer.valueOf(domain.get(i).getSetMemberKey()));
 
 				if(domain.get(i).getLabel() == null || domain.get(i).getLabel().isEmpty()) {
@@ -137,10 +136,8 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				else  {
 					entity.setLabel(domain.get(i).getLabel());
 				}
-				log.info("sequenceNum:" + domain.get(i).getSequenceNum());
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				entity.setModification_date(new Date());
-				log.info("modified by:" + user);
 				entity.setModifiedBy(user);
 				setMemberDAO.update(entity);
 				modified = true;

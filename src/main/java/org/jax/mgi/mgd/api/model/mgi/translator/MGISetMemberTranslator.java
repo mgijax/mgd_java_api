@@ -30,15 +30,19 @@ public class MGISetMemberTranslator extends BaseEntityDomainTranslator<MGISetMem
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
 
 		// if set = 1055/genotype Clipboard, then translate accid of genotype
-		if (entity.getGenotypeAccessionIds() != null && !entity.getGenotypeAccessionIds().isEmpty()) {
-			domain.setGenotypeID(entity.getGenotypeAccessionIds().get(0).getAccID());
+		if (entity.get_set_key() == 1055) {
+			if (entity.getGenotypeAccessionIds() != null && !entity.getGenotypeAccessionIds().isEmpty()) {
+				domain.setGenotypeID(entity.getGenotypeAccessionIds().get(0).getAccID());
+			}
 		}
 		
 		// emapa; only 1 row exists
-		if (entity.getEmapaStages() != null && !entity.getEmapaStages().isEmpty()) {
-			MGISetMemberEmapaTranslator eTranslator = new MGISetMemberEmapaTranslator();
-			Iterable<MGISetMemberEmapaDomain> i = eTranslator.translateEntities(entity.getEmapaStages());
-			domain.setEmapaStage(i.iterator().next());
+		if (entity.get_set_key() == 1046) {
+			if (entity.getEmapaStages() != null && !entity.getEmapaStages().isEmpty()) {
+				MGISetMemberEmapaTranslator eTranslator = new MGISetMemberEmapaTranslator();
+				Iterable<MGISetMemberEmapaDomain> i = eTranslator.translateEntities(entity.getEmapaStages());
+				domain.setEmapaStage(i.iterator().next());
+			}
 		}
 		
 		return domain;

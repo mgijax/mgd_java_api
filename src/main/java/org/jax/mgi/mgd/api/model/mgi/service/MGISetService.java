@@ -62,14 +62,14 @@ public class MGISetService extends BaseService<MGISetDomain> {
 		}
 		// process celltype clipboard set member
 		else if(domain.getCelltypeClipboardMembers() != null ) {
-			if (setMemberService.process(domain.getSetKey(),  domain.getCelltypeClipboardMembers(), user)) {
+			if (setMemberService.process(domain.getSetKey(), domain.getCelltypeClipboardMembers(), user)) {
 				log.info("Called getCelltypeClipboard setMemberService");
 				modified = true;
 			}
 		}
 		// process emapa clipboard set member
 		else if(domain.getEmapaClipboardMembers() != null ) {
-			if (setMemberService.process(domain.getSetKey(),  domain.getEmapaClipboardMembers(), user)) {
+			if (setMemberService.process(domain.getSetKey(), domain.getEmapaClipboardMembers(), user)) {
 				modified = true;
 			}	
 		}

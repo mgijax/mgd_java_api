@@ -1049,7 +1049,10 @@ public class TermService extends BaseService<TermDomain> {
 			n += 1;
 			String pkey = n < ancestorPath.size() ? ancestorPath.get(n) : null;
 			if (n > 1) b.append(" union ");
-			b.append(" select " + tkey + ", " + pkey);
+			// Need to cast pkey as integer to handle case where the focus node is the root.
+			// In that case, pkey is null, and without the cast, postgress infers the column type as text.
+			// Which makes the UNION inside termKeys2 (below) complain.
+			b.append(" select " + tkey + ", cast(" + pkey + " as int)");
 		}
 		b.append("\n),");
 

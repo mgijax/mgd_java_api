@@ -192,7 +192,7 @@ public class TermService extends BaseService<TermDomain> {
 		//Boolean from_synonym = false;
 		
 		// value after escaping apostrophe in term
-        	String value = null;
+        String value = null;
 	
 		// if parameter exists, then add to where-clause
 		
@@ -203,8 +203,7 @@ public class TermService extends BaseService<TermDomain> {
 		}
 		
 		if (searchDomain.getTermKey() != null && !searchDomain.getTermKey().isEmpty()) {
-                        where = where + "\nand t._term_key = " + searchDomain.getTermKey();
-
+			where = where + "\nand t._term_key = " + searchDomain.getTermKey();
 		}
 		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
 			where += "\nand " + multiMatchClause("t.term" , "ilike", searchDomain.getTerm());
@@ -223,9 +222,8 @@ public class TermService extends BaseService<TermDomain> {
 		}
 
 		if (searchDomain.getAbbreviation() != null && !searchDomain.getAbbreviation().isEmpty()) {
-                        value = searchDomain.getAbbreviation().replace("'",  "''");
-                        where = where + "\nand t.abbreviation ilike '" + value + "'";
-
+			value = searchDomain.getAbbreviation().replace("'",  "''");
+            where = where + "\nand t.abbreviation ilike '" + value + "'";
 		}		
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			where = where + "\nand t._vocab_key = " + searchDomain.getVocabKey();
@@ -263,7 +261,6 @@ public class TermService extends BaseService<TermDomain> {
 			where = where + "\nand t._term_key = a._object_key" 
 					+ "\nand a._mgitype_key = 13 and a.preferred = 1";
 		}
-		
 		
 		// now add voc_term to from - this has to be the last table because of the outer join
 		// to mgi_synonym

@@ -27,6 +27,7 @@ public class SummaryReferenceDomain extends BaseDomain {
 	private String vol;
 	private String mgiid;	
 	private String pubmedid;
+	private String doiid;
 	private String referencetype;
 	private String referenceAbstract;
 	private Boolean hasAllele = false;

@@ -2401,6 +2401,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setYear(rs.getString("year"));
 				domain.setMgiid(rs.getString("mgiid"));	
 				domain.setPubmedid(rs.getString("pubmedid"));
+				domain.setDoiid(rs.getString("doiid"));
 				domain.setVol(rs.getString("vol"));
 				domain.setReferencetype(rs.getString("referencetype"));
 				domain.setReferenceAbstract(rs.getString("abstract"));	

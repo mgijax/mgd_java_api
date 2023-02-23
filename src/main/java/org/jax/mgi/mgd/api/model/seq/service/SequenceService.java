@@ -116,6 +116,7 @@ public class SequenceService extends BaseService<SequenceDomain> {
 		"\n  array_to_string(array_agg(DISTINCT concat(m.symbol, '|', aa.accid)), ','::text) AS markers" +
 		"\nfrom " +
 		"\n  seq_marker_cache s, " +
+		"\n  acc_logicaldb sd, " +
 		"\n  acc_actualdb sa, " +
 		"\n  voc_term t1, " +
 		"\n  seq_sequence ss, " +
@@ -127,6 +128,7 @@ public class SequenceService extends BaseService<SequenceDomain> {
 		"\n  seq_marker_cache s2, " +
 		"\n  acc_accession aa2" +
 		"\nwhere s._sequencetype_key = t1._term_key" +
+		"\nand s._logicaldb_key = sd._logicaldb_key" +
 		"\nand s._sequence_key = ss._sequence_key" +
 		"\nand s._marker_key = m._marker_key" +
 		"\nand s._organism_key = 1 " +
@@ -145,9 +147,9 @@ public class SequenceService extends BaseService<SequenceDomain> {
 		"\nand aa2._mgitype_key = 2" +
 		"\nand aa2._logicaldb_key = 1" +
 		"\nand aa2.accid = '" + accid + "'" +
-		"\ngroup by s._sequence_key, s.accid, sa.url, t1.term, ss.length, ss.description, pss.strain" +
+		"\ngroup by s._sequence_key, s.accid, sd.name, sa.url, t1.term, t1.sequencenum, ss.length, ss.description, pss.strain" +
 		"";
-		cmd = addPaginationSQL(cmd, "t1.term, ss.length desc", offset, limit);
+		cmd = addPaginationSQL(cmd, "t1.sequencenum, sd.name, ss.length desc", offset, limit);
 	    }
 	    return cmd;
 	}

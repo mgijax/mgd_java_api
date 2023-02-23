@@ -147,7 +147,7 @@ public class SequenceService extends BaseService<SequenceDomain> {
 		"\nand aa2.accid = '" + accid + "'" +
 		"\ngroup by s._sequence_key, s.accid, sa.url, t1.term, ss.length, ss.description, pss.strain" +
 		"";
-		cmd = addPaginationSQL(cmd, "s._sequence_key", offset, limit);
+		cmd = addPaginationSQL(cmd, "t1.term, ss.length desc", offset, limit);
 	    }
 	    return cmd;
 	}

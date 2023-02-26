@@ -742,15 +742,17 @@ public class TermService extends BaseService<TermDomain> {
 		case "90": 
 			cmd = "\nselect ea.startstage, ea.endstage, null as theilerstage, t1.dpcmin, t2.dpcmax"
 			+ "\nfrom voc_term_emapa ea, gxd_theilerstage t1, gxd_theilerstage t2"
-			+ "\nwhere ea.startstage = t1._stage_key and ea.endstage = t2._stage_key and ea._term_key = "
-			+ termKey;
+			+ "\nwhere ea.startstage = t1._stage_key and ea.endstage = t2._stage_key and ea._term_key = " + termKey
+			;
 			break;
 		case "91":
 			cmd = "\nselect es._stage_key as startstage, es._stage_key as endstage, " 
-			+ " es._stage_key as theilerstage, t.dpcmin, t.dpcMax"
-			+ "\nfrom voc_term_emaps es, gxd_theilerstage t"
-			+ "\nwhere es._stage_key = t._stage_key and es._term_key = "
-			+ termKey;
+			+ " es._stage_key as theilerstage, t.dpcmin, t.dpcMax, es._emapa_term_key, aa.accid as emapaid"
+			+ "\nfrom voc_term_emaps es, gxd_theilerstage t, acc_accession aa"
+			+ "\nwhere es._stage_key = t._stage_key"
+			+ "\nand es._term_key = " + termKey
+			+ "\nand es._emapa_term_key = aa._object_key and aa._mgitype_key = 13 and aa._logicaldb_key = 169 and aa.preferred = 1"
+			;
 			break;
 		default:
 			return;
@@ -764,6 +766,10 @@ public class TermService extends BaseService<TermDomain> {
 				term.setEndstage(rs.getInt("endstage"));
 				term.setDpcmin(rs.getString("dpcmin"));
 				term.setDpcmax(rs.getString("dpcmax"));
+				if (vocabKey.equals("91")) {
+					term.setEmapaTermKey(rs.getString("_emapa_term_key"));
+					term.setEmapaTermID(rs.getString("emapaid"));
+				}
 			}
 			sqlExecutor.cleanup();
 		} catch (Exception e) {

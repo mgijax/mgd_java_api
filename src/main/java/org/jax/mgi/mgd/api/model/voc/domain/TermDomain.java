@@ -67,5 +67,9 @@ public class TermDomain extends BaseDomain {
 	private Integer endstage;
 	private String dpcmin;
 	private String dpcmax;
+	
+	// only for emaps terms - its associated EMAPA key/ID
+	private String emapaTermKey;
+	private String emapaTermID;
 }
 

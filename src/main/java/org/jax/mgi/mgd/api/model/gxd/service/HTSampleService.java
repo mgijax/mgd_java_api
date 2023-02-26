@@ -19,6 +19,7 @@ import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTSampleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
@@ -264,6 +265,72 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		modified = true;
 		log.info("processHTSample/processing successful");
 		return modified;
+	}
+
+	@Transactional	
+	public List<MGISetMemberEmapaDomain> getEmapaHTSampleBySetUser(SlimHTDomain searchDomain) {
+		// return 
+		// all set members of emapa (_set_key = 1046) + user (searchDomain.getCreatedByKey())
+		// union
+		// all emapa for given gxd_htsample (searchDomain.getExperimentKey())
+
+		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();		
+		
+		// Search mgi_setmembers where _set_key = 1046 (emapa). 
+		// Pull in EMAPS stage and _term_key
+		String cmd = 
+			"\n(select distinct s.sequenceNum, t.term, e._stage_key, s._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login, a.accid" +
+			"\nfrom mgi_setmember s, mgi_setmember_emapa e, voc_term t, mgi_user u, acc_accession a" +
+			"\nwhere  s._setmember_key = e._setmember_key" + 
+			"\nand not exists (select 1 from gxd_htsample ht where s._Object_key = ht._emapa_key" +
+			"\nand e._stage_key = ht._stage_key" +
+			"\nand ht._experiment_key = " + searchDomain.get_experiment_key() + ")" +
+			"\nand s._set_key = 1046" +
+			"\nand s._object_key = t._term_key" +
+			"\nand t._term_key = a._object_key" +
+			"\nand a._logicaldb_key = 169" +
+			"\nand a.preferred = 1" +
+			"\nand s._createdby_key = u._user_key" +
+			"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
+			"\nunion all" +
+			"\nselect distinct -1 as SequenceNum, t.term, ht._stage_key, 0 as setMemberKey, 0 as setKey, ht._emapa_key as objectKey, 0 as createdByKey, null as createdBy, a.accid" +
+			"\nfrom gxd_htsample ht, voc_term t, acc_accession a" +
+			"\nwhere ht._emapa_key = t._term_key" +
+			"\nand t._term_key = a._object_key" +
+			"\nand a._logicaldb_key = 169" +	
+			"\nand a.preferred = 1" +				
+			"\nand ht._experiment_key = " + searchDomain.get_experiment_key() +
+			"\ngroup by _emapa_key, _stage_key, term, accid" +
+			"\n) order by sequenceNum, term";
+
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				MGISetMemberEmapaDomain domain = new MGISetMemberEmapaDomain();
+				domain.setProcessStatus("x");
+				domain.setSetKey(rs.getString("setKey"));
+				domain.setSetMemberKey(rs.getString("setMemberKey"));
+				domain.setObjectKey(rs.getString("objectKey"));
+				domain.setTerm(rs.getString("term"));
+				domain.setStage(rs.getString("_stage_key"));
+				domain.setDisplayIt(rs.getString("term"));				
+				domain.setCreatedByKey(rs.getString("createdByKey"));
+				domain.setCreatedBy(rs.getString("login"));
+				domain.setPrimaryid(rs.getString("accid"));
+				domain.setIsUsed(false);
+				results.add(domain);				
+				htSampleDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+
 	}
 
 	@Transactional	

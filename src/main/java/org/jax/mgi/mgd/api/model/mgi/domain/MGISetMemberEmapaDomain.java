@@ -10,16 +10,15 @@ import lombok.Setter;
 public class MGISetMemberEmapaDomain extends BaseDomain {
 
 	private String processStatus = Constants.PROCESS_NOTDIRTY;
-	private String setMemberEmapaKey;
+	private String setKey;	// 1046
 	private String setMemberKey;
-	private String stage;
-
-	// these fields are not set by the translator/not in the entity
-	private String setKey;	
-	private String objectKey;
-	private String displayIt;
+	private String setMemberEmapaKey;
+	private String objectKey; // the EMAPA term key
 	private String term;
-	
+	private String primaryid; // EMAPA accid
+	private String stage;
+	private String displayIt;
+
 	private String createdByKey;
 	private String createdBy;
 	private String modifiedByKey;
@@ -28,5 +27,4 @@ public class MGISetMemberEmapaDomain extends BaseDomain {
 	private String modification_date;
 	
 	private Boolean isUsed = false;
-
 }   	

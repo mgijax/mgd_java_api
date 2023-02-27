@@ -721,7 +721,6 @@ public class TermService extends BaseService<TermDomain> {
 
 		log.info(cmd);
 		
-		String count = "";
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -1147,7 +1146,6 @@ public class TermService extends BaseService<TermDomain> {
 
 			// second pass - add each node to its parent's children list
 			for (TreeViewNodeDomain tvn : tvnList) {
-				String tkey = tvn.getTermKey();
 				String pkey = tvn.getParentKey();
 				if (pkey != null) {
 					List<TreeViewNodeDomain> ptvnList = key2nodes.get(pkey);

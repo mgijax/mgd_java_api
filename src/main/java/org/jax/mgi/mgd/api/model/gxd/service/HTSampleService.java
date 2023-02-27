@@ -279,12 +279,9 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		// Search mgi_setmembers where _set_key = 1046 (emapa). 
 		// Pull in EMAPS stage and _term_key
 		String cmd = 
-			"\n(select distinct s.sequenceNum, t.term, e._stage_key, s._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login, a.accid" +
+			"\nselect distinct s.sequenceNum, t.term, e._stage_key, s._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login, a.accid" +
 			"\nfrom mgi_setmember s, mgi_setmember_emapa e, voc_term t, mgi_user u, acc_accession a" +
 			"\nwhere  s._setmember_key = e._setmember_key" + 
-			"\nand not exists (select 1 from gxd_htsample ht where s._Object_key = ht._emapa_key" +
-			"\nand e._stage_key = ht._stage_key" +
-			"\nand ht._experiment_key = " + searchDomain.get_experiment_key() + ")" +
 			"\nand s._set_key = 1046" +
 			"\nand s._object_key = t._term_key" +
 			"\nand t._term_key = a._object_key" +
@@ -292,16 +289,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 			"\nand a.preferred = 1" +
 			"\nand s._createdby_key = u._user_key" +
 			"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
-			"\nunion all" +
-			"\nselect distinct -1 as SequenceNum, t.term, ht._stage_key, 0 as setMemberKey, 0 as setKey, ht._emapa_key as objectKey, 0 as createdByKey, null as createdBy, a.accid" +
-			"\nfrom gxd_htsample ht, voc_term t, acc_accession a" +
-			"\nwhere ht._emapa_key = t._term_key" +
-			"\nand t._term_key = a._object_key" +
-			"\nand a._logicaldb_key = 169" +	
-			"\nand a.preferred = 1" +				
-			"\nand ht._experiment_key = " + searchDomain.get_experiment_key() +
-			"\ngroup by _emapa_key, _stage_key, term, accid" +
-			"\n) order by sequenceNum, term";
+			"\norder by sequenceNum, term";
 
 		log.info(cmd);
 
@@ -343,28 +331,16 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		List<MGISetMemberCellTypeDomain> results = new ArrayList<MGISetMemberCellTypeDomain>();		
 		
 		// search mgi_setmembers where _set_key = 1059 (cell type)
-		String cmd = 
-				"\n(select distinct s.sequenceNum, t.term, s._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login, a.accid" +
+		String cmd = "\nselect distinct s.sequenceNum, t.term, s._setmember_key as setMemberKey, s._set_key as setKey, s._object_key as objectKey, s._createdby_key as createdByKey, u.login, a.accid" +
 				"\nfrom mgi_setmember s, voc_term t, mgi_user u, acc_accession a" +
-				"\nwhere not exists (select 1 from gxd_htsample ht where s._Object_key = ht._CellType_Term_key" +
-				"\nand ht._experiment_key = " + searchDomain.get_experiment_key() + ")" +
-				"\nand s._set_key = 1059" +
+				"\nwhere s._set_key = 1059" +
 				"\nand s._object_key = t._term_key" +
 				"\nand t._term_key = a._object_key" +
 				"\nand a._logicaldb_key = 173" +
 				"\nand a.preferred = 1" +
 				"\nand s._createdby_key = u._user_key" +
 				"\nand u.login = '" + searchDomain.getCreatedBy() + "'" +		
-				"\nunion all" +
-				"\nselect distinct -1 as SequenceNum, t.term, 0 as setMemberKey, 0 as setKey, ht._CellType_term_key as objectKey, 0 as createdByKey, null as createdBy, a.accid" +
-				"\nfrom gxd_htsample ht, voc_term t, acc_accession a" +
-				"\nwhere ht._celltype_term_key = t._term_key" +
-				"\nand t._term_key = a._object_key" +
-				"\nand a._logicaldb_key = 173" +	
-				"\nand a.preferred = 1" +				
-				"\nand ht._experiment_key = " + searchDomain.get_experiment_key() +
-				"\ngroup by _celltype_term_key, term, accid" +
-				"\n) order by sequenceNum, term";
+				"\norder by sequenceNum, term";
 
 		log.info(cmd);
 

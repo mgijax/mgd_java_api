@@ -262,6 +262,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				&& entity.getOrganism().get_organism_key() != 40
 				&& entity.getOrganism().get_organism_key() != 63
 				&& entity.getOrganism().get_organism_key() != 84
+				&& entity.getOrganism().get_organism_key() != 86				
 				&& entity.getOrganism().get_organism_key() != 94
 				&& entity.getOrganism().get_organism_key() != 95
 				&& entity.getEditAccessionIdsNonMouse() != null 

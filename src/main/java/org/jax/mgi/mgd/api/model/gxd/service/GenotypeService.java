@@ -835,53 +835,29 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nwhere aa.jnumid = '" + accid + "'" +
 				"\nand (exists (select 1 from GXD_Expression g where g._Refs_key = aa._Refs_key)" +
 				"\nor exists (select 1 from VOC_Evidence e, VOC_Annot a where e._Refs_key = aa._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1002)" +
-				"\nor exists (select 1 from MRK_DO_Cache g where g._Refs_key = aa._Refs_key))";
+				"\nor exists (select 1 from VOC_Evidence e, VOC_Annot a where e._Refs_key = aa._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1020)";
 			return cmd;
 		}
 		
-		cmd = "\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, gg.isConditional, 1 as hasAssay, 0 as hasMPAnnot, 0 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, GXD_Expression g, PRB_Strain s," +
-				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
-				"\n     gg._Genotype_key = n._Object_key" + 
-				"\n     and n._NoteType_key = 1016" + 
-				"\n     and n._MGIType_key = 12)" +
-				"\nwhere aa.jnumid = '" + accid + "'" + 
-				"\nand aa._Refs_key = g._Refs_key" + 
-				"\nand g._Genotype_key = gg._Genotype_key" + 
-				"\nand gg._Strain_key = s._Strain_key" +  
-				"\nand gg._Genotype_key = ga._Object_key" +
-				"\nand ga._MGIType_key = 12" +
-				"\nand ga._Logicaldb_key = 1" +
-				"\nunion" + 
-				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, gg.isConditional, 0 as hasAssay, 1 as hasMPAnnot, 0 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, VOC_Evidence e, VOC_Annot a, PRB_Strain s," + 
-				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
-				"\n     gg._Genotype_key = n._Object_key" + 
-				"\n     and n._NoteType_key = 1016" + 
-				"\n     and n._MGIType_key = 12)" +
-				"\nwhere aa.jnumid = '" + accid + "'" + 
-				"\nand aa._Refs_key = e._Refs_key" + 
-				"\nand e._Annot_key = a._Annot_key" + 
-				"\nand a._AnnotType_key = 1002" + 
-				"\nand a._Object_key = gg._Genotype_key" + 
+		cmd = "\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, gg.isConditional," + 
+				"\ncase when exists (select 1 from GXD_Expression g where aa._Refs_key = g._Refs_key and g._Genotype_key = gg._Genotype_key) then 1 else 0 end as hasAssay,\r\n" + 
+				"\ncase when exists (select 1 from VOC_Evidence e, VOC_Annot a where aa._Refs_key = e._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1002 and a._Object_key = gg._Genotype_key) then 1 else 0 end as hasMPAnnot," + 
+				"\ncase when exists (select 1 from VOC_Evidence e, VOC_Annot a where aa._Refs_key = e._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1020 and a._Object_key = gg._Genotype_key) then 1 else 0 end as hasDOAnnot" + 
+				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, PRB_Strain s,\r\n" + 
+				"\nGXD_Genotype gg left outer join MGI_Note n on (" + 
+				"\n    gg._Genotype_key = n._Object_key" + 
+				"\n    and n._NoteType_key = 1016" + 
+				"\n    and n._MGIType_key = 12)" + 
+				"\nwhere aa.jnumid = '" + accid + "'" +
 				"\nand gg._Strain_key = s._Strain_key" + 
-				"\nand gg._Genotype_key = ga._Object_key" +
-				"\nand ga._MGIType_key = 12" +
-				"\nand ga._Logicaldb_key = 1" +				
-				"\nunion" + 
-				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, gg.isConditional, 0 as hasAssay, 0 as hasMPAnnot, 1 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, MRK_DO_Cache g, PRB_Strain s," + 
-				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
-				"\n     gg._Genotype_key = n._Object_key" + 
-				"\n     and n._NoteType_key = 1016" + 
-				"\n     and n._MGIType_key = 12)" +
-				"\nwhere aa.jnumid = '" + accid + "'" + 
-				"\nand aa._Refs_key = g._Refs_key" + 
-				"\nand g._Genotype_key = gg._Genotype_key" + 
-				"\nand gg._Strain_key = s._Strain_key" + 
-				"\nand gg._Genotype_key = ga._Object_key" +
-				"\nand ga._MGIType_key = 12" +
-				"\nand ga._Logicaldb_key = 1";				;		
+				"\nand gg._Genotype_key = ga._Object_key" + 
+				"\nand ga._MGIType_key = 12" + 
+				"\nand ga._Logicaldb_key = 1" + 
+				"\nand (" + 
+				"\nexists (select 1 from GXD_Expression g where aa._Refs_key = g._Refs_key and g._Genotype_key = gg._Genotype_key)" + 
+				"\nor exists (select 1 from VOC_Evidence e, VOC_Annot a where aa._Refs_key = e._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1002 and a._Object_key = gg._Genotype_key)" + 
+				"\nor exists (select 1 from VOC_Evidence e, VOC_Annot a where aa._Refs_key = e._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1020 and a._Object_key = gg._Genotype_key)" + 
+				"\n)";		
 		
 		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
 

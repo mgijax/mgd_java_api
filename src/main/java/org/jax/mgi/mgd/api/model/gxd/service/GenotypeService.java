@@ -938,25 +938,18 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 	public Response downloadSpecimenByJnum (String accid) {
 		String cmd = getGenotypeByRefSQL (accid, -1, -1, false);
-		return download(cmd, getTsvFileName("getSpecimenByRef", accid), new ResultFormatter());
+		return download(cmd, getTsvFileName("getGenotypeByRef", accid), new ResultFormatter());
 	}
 
 	public static class ResultFormatter implements TsvFormatter {
 		public String format (ResultSet obj) {
 			String[][] cols = {
-                	{"Assay ID",        "accid"},
-                	{"Marker Symbol",   "symbol"},
-                	{"Assay Type",      "assayType"},
-                	{"Specimen Label",  "specimenLabel"},
-                	{"Age",             "age"},
-                	{"Age Note",        "ageNote"},
-                	{"Sex",             "sex"},
-                	{"Hybridization",   "hybridization"},
-                	{"Fixation",        "fixationTerm"},
-                	{"Embedding",       "embeddingMethodTerm"},
-                	{"Background",      "strain"},
-                	{"Allele(s)",       "alleleDetailNote"},
-                	{"Specimen Note",   "specimenNote"}
+                	{"Genotype ID", "genotypeid"},
+                	{"Allele Pair(s)", "alleleDetailNote"},
+                	{"Genetic Background/Strain", "strain"},
+                	{"GXD Assays", "hasAssay"},
+                	{"MP Annot", "hasMPAnnot"},
+                	{"DO Annot", "hasDOAnnot"}
 			};
 			return formatTsvHelper(obj, cols);
 		}

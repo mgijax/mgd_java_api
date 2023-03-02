@@ -184,13 +184,13 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			domain.setEditRelevanceKey(domain.getRelevanceHistory().get(0).getRelevanceKey());			
 		}
 
-		// REMOVE ONCE NEW REFERENCE SUMMARY IS INSTALLED
 		// list of strings, each of which indicates a type of data associated with the reference
 		List<String> assocDomain = new ArrayList<String>();
 		ReferenceAssociatedData flags = entity.getAssociatedData();
 		if (flags != null) {
 			if (flags.getHas_alleles() != 0) { assocDomain.add("Alleles"); }
 			if (flags.getHas_antibodies() != 0) { assocDomain.add("Antibodies"); }
+			if (flags.getHas_genotype() != 0) { assocDomain.add("Genotypes"); }			
 			if (flags.getHas_go() != 0) { assocDomain.add("GO"); }
 			if (flags.getHas_gxdindex() != 0) { assocDomain.add("GXD Index"); }
 			if (flags.getHas_gxdimages() != 0) { assocDomain.add("GXD/CRE Images"); }

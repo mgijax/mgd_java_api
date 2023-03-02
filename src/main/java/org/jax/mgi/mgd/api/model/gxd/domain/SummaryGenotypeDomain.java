@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 public class SummaryGenotypeDomain extends BaseDomain {
 
+	private String jnumid;	
 	private String genotypeid;
 	private String genotypeBackground;
 	private String alleleDetailNote;

@@ -871,15 +871,19 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand aa._Refs_key = e._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1020 and gg._Genotype_key = a._Object_key" +
 				"\nand gg._Strain_key = s._Strain_key" +
 				"\n)" +
-				"\nselect distinct gg._genotype_key, gg.isConditional, gg.strain, n.note as alleleDetailNote," +
+				"\nselect a.accid as genotypeid, gg.isConditional, gg.strain, n.note as alleleDetailNote," +
 				"\ncase when exists (select 1 from GXD_Expression g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
 				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasMPAnnot," +
 				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasDOAnnot" +
 				"\nfrom genotypes gg" +
 				"\n       left outer join MGI_Note n on (" +
 				"\n               gg._Genotype_key = n._Object_key" +
-				"\n                and n._NoteType_key = 1016" +
-				"\n               and n._MGIType_key = 12)";
+				"\n               and n._NoteType_key = 1016" +
+				"\n               and n._MGIType_key = 12)," +
+				"\nACC_Accession a" + 
+				"\nwhere gg._Genotype_key = a._Object_key" + 
+				"\nand a._MGIType_key = 12" + 
+				"\nand a._Logicaldb_key = 1";
 
 		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
 

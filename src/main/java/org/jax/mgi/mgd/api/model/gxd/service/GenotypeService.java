@@ -835,7 +835,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nwhere aa.jnumid = '" + accid + "'" +
 				"\nand (exists (select 1 from GXD_Expression g where g._Refs_key = aa._Refs_key)" +
 				"\nor exists (select 1 from VOC_Evidence e, VOC_Annot a where e._Refs_key = aa._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1002)" +
-				"\nor exists (select 1 from VOC_Evidence e, VOC_Annot a where e._Refs_key = aa._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1020)";
+				"\nor exists (select 1 from VOC_Evidence e, VOC_Annot a where e._Refs_key = aa._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1020))";
 			return cmd;
 		}
 		

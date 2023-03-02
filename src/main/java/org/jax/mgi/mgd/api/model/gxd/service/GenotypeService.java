@@ -839,7 +839,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			return cmd;
 		}
 		
-		cmd = "\nselect distinct aa.jnumid, ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 1 as hasAssay, 0 as hasMPAnnot, 0 as hasDOAnnot" + 
+		cmd = "\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 1 as hasAssay, 0 as hasMPAnnot, 0 as hasDOAnnot" + 
 				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, GXD_Expression g, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
 				"\nwhere aa.jnumid = '" + accid + "'" + 
 				"\nand aa._Refs_key = g._Refs_key" + 
@@ -852,7 +852,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand ga._MGIType_key = 12" +
 				"\nand ga._Logicaldb_key = 1" +
 				"\nunion" + 
-				"\nselect distinct aa.jnumid, ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 1 as hasMPAnnot, 0 as hasDOAnnot" + 
+				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 1 as hasMPAnnot, 0 as hasDOAnnot" + 
 				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, VOC_Evidence e, VOC_Annot a, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
 				"\nwhere aa.jnumid = '" + accid + "'" + 
 				"\nand aa._Refs_key = e._Refs_key" + 
@@ -867,7 +867,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand ga._MGIType_key = 12" +
 				"\nand ga._Logicaldb_key = 1" +				
 				"\nunion" + 
-				"\nselect distinct aa.jnumid, ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 0 as hasMPAnnot, 1 as hasDOAnnot" + 
+				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 0 as hasMPAnnot, 1 as hasDOAnnot" + 
 				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, MRK_DO_Cache g, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
 				"\nwhere aa.jnumid = '" + accid + "'" + 
 				"\nand aa._Refs_key = g._Refs_key" + 
@@ -917,7 +917,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryGenotypeDomain domain = new SummaryGenotypeDomain();
-				domain.setJnumid(rs.getString("jnumid"));
+				domain.setJnumid(accid);
 				domain.setGenotypeid(rs.getString("genotypeid"));
 				domain.setGenotypeBackground(rs.getString("strain"));
 				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;

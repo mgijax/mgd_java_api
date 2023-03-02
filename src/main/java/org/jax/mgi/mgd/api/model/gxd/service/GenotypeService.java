@@ -870,7 +870,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand ga._Logicaldb_key = 1" +				
 				"\nunion" + 
 				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 0 as hasMPAnnot, 1 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, MRK_DO_Cache g, PRB_Strain s,n" + 
+				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, MRK_DO_Cache g, PRB_Strain s," + 
 				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
 				"\n     gg._Genotype_key = n._Object_key" + 
 				"\n     and n._NoteType_key = 1016" + 

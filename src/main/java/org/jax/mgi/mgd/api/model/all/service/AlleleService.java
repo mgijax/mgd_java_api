@@ -485,8 +485,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			rdomain.setObjectKey1(alleleKey);
 			rdomain.setObjectKey2(domain.getDriverGenes().get(i).getMarkerKey());
 
-			// has_driver
-			rdomain.setRelationshipTermKey("36770349");
+			// driver_component
+			rdomain.setRelationshipTermKey("111172001");
 
 			// not specified
 			rdomain.setQualifierKey("11391898");

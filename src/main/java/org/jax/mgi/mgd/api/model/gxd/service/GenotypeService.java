@@ -923,7 +923,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;
 				domain.setHasAssay(rs.getBoolean("hasAssay"));
 				domain.setHasMPAnnot(rs.getBoolean("hasMPAnnot"));
-				domain.setHasDOAnnot(rs.getBoolean("hasDOAnnot"));				
+				domain.setHasDOAnnot(rs.getBoolean("hasDOAnnot"));
 				summaryResults.add(domain);
 				genotypeDAO.clear();
 			}

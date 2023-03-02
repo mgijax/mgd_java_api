@@ -941,7 +941,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		return results;
 	}		
 
-	public Response downloadSpecimenByJnum (String accid) {
+	public Response downloadGenotypeByJnum (String accid) {
 		String cmd = getGenotypeByRefSQL (accid, -1, -1, false);
 		return download(cmd, getTsvFileName("getGenotypeByRef", accid), new ResultFormatter());
 	}

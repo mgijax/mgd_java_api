@@ -840,42 +840,45 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 		
 		cmd = "\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 1 as hasAssay, 0 as hasMPAnnot, 0 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, GXD_Expression g, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
+				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, GXD_Expression g, PRB_Strain s," +
+				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
+				"\n     gg._Genotype_key = n._Object_key" + 
+				"\n     and n._NoteType_key = 1016" + 
+				"\n     and n._MGIType_key = 12)" +
 				"\nwhere aa.jnumid = '" + accid + "'" + 
 				"\nand aa._Refs_key = g._Refs_key" + 
 				"\nand g._Genotype_key = gg._Genotype_key" + 
-				"\nand gg._Strain_key = s._Strain_key" + 
-				"\nand gg._Genotype_key = n._Object_key" + 
-				"\nand n._NoteType_key = 1016" + 
-				"\nand n._MGIType_key = 12" + 
+				"\nand gg._Strain_key = s._Strain_key" +  
 				"\nand gg._Genotype_key = ga._Object_key" +
 				"\nand ga._MGIType_key = 12" +
 				"\nand ga._Logicaldb_key = 1" +
 				"\nunion" + 
 				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 1 as hasMPAnnot, 0 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, VOC_Evidence e, VOC_Annot a, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
+				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, VOC_Evidence e, VOC_Annot a, PRB_Strain s," + 
+				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
+				"\n     gg._Genotype_key = n._Object_key" + 
+				"\n     and n._NoteType_key = 1016" + 
+				"\n     and n._MGIType_key = 12)" +
 				"\nwhere aa.jnumid = '" + accid + "'" + 
 				"\nand aa._Refs_key = e._Refs_key" + 
 				"\nand e._Annot_key = a._Annot_key" + 
 				"\nand a._AnnotType_key = 1002" + 
 				"\nand a._Object_key = gg._Genotype_key" + 
 				"\nand gg._Strain_key = s._Strain_key" + 
-				"\nand gg._Genotype_key = n._Object_key" + 
-				"\nand n._NoteType_key = 1016" + 
-				"\nand n._MGIType_key = 12" +
 				"\nand gg._Genotype_key = ga._Object_key" +
 				"\nand ga._MGIType_key = 12" +
 				"\nand ga._Logicaldb_key = 1" +				
 				"\nunion" + 
 				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 0 as hasMPAnnot, 1 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, MRK_DO_Cache g, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
+				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, MRK_DO_Cache g, PRB_Strain s,n" + 
+				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
+				"\n     gg._Genotype_key = n._Object_key" + 
+				"\n     and n._NoteType_key = 1016" + 
+				"\n     and n._MGIType_key = 12)" +
 				"\nwhere aa.jnumid = '" + accid + "'" + 
 				"\nand aa._Refs_key = g._Refs_key" + 
 				"\nand g._Genotype_key = gg._Genotype_key" + 
 				"\nand gg._Strain_key = s._Strain_key" + 
-				"\nand gg._Genotype_key = n._Object_key" + 
-				"\nand n._NoteType_key = 1016" + 
-				"\nand n._MGIType_key = 12" +
 				"\nand gg._Genotype_key = ga._Object_key" +
 				"\nand ga._MGIType_key = 12" +
 				"\nand ga._Logicaldb_key = 1";				;		

@@ -10,12 +10,14 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDataSetDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SummaryGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Genotype;
 import org.jax.mgi.mgd.api.model.gxd.translator.GenotypeTranslator;
 import org.jax.mgi.mgd.api.model.gxd.translator.SlimGenotypeTranslator;
@@ -821,5 +823,142 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 		return results;
 	}
+
+	public String getGenotypeByRefSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting genotypes by acc id
+		
+		String cmd;
+
+		if (returnCount) {
+			cmd = "\nselect count(*) as total_count" + 
+				"\nfrom bib_citation_cache aa" +
+				"\nwhere aa.jnumid = '" + accid + "'" +
+				"\nand (exists (select 1 from GXD_Expression g where g._Refs_key = r._Refs_key)" +
+				"\nor exists (select 1 from VOC_Evidence e, VOC_Annot a where e._Refs_key = r._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1002)" +
+				"\nor exists (select 1 from MRK_DO_Cache g where g._Refs_key = r._Refs_key))";
+			return cmd;
+		}
+		
+		cmd = "\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 1 as hasAssay, 0 as hasMPAnnot, 0 as hasDOAnot" + 
+				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, GXD_Expression g, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
+				"\nwhere aa.jnumid = '" + accid + "'" + 
+				"\nand aa._Refs_key = g._Refs_key" + 
+				"\nand g._Genotype_key = gg._Genotype_key" + 
+				"\nand gg._Strain_key = s._Strain_key" + 
+				"\nand gg._Genotype_key = n._Object_key" + 
+				"\nand n._NoteType_key = 1016" + 
+				"\nand n._MGIType_key = 12" + 
+				"\nand gg._Genotype_key = ga._Object_key" +
+				"\nand ga._MGIType_key = 12" +
+				"\nand ga._Logicaldb_key = 1" +
+				"\nunion" + 
+				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 1 as hasMPAnnot, 0 as hasDOAnot" + 
+				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, VOC_Evidence e, VOC_Annot a, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
+				"\nwhere aa.jnumid = '" + accid + "'" + 
+				"\nand aa._Refs_key = e._Refs_key" + 
+				"\nand e._Annot_key = a._Annot_key" + 
+				"\nand a._AnnotType_key = 1002" + 
+				"\nand a._Object_key = gg._Genotype_key" + 
+				"\nand gg._Strain_key = s._Strain_key" + 
+				"\nand gg._Genotype_key = n._Object_key" + 
+				"\nand n._NoteType_key = 1016" + 
+				"\nand n._MGIType_key = 12" +
+				"\nand gg._Genotype_key = ga._Object_key" +
+				"\nand ga._MGIType_key = 12" +
+				"\nand ga._Logicaldb_key = 1" +				
+				"\nunion" + 
+				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 0 as hasMPAnnot, 1 as hasDOAnot" + 
+				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, MRK_DO_Cache g, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
+				"\nwhere aa.jnumid = '" + accid + "'" + 
+				"\nand aa._Refs_key = g._Refs_key" + 
+				"\nand g._Genotype_key = gg._Genotype_key" + 
+				"\nand gg._Strain_key = s._Strain_key" + 
+				"\nand gg._Genotype_key = n._Object_key" + 
+				"\nand n._NoteType_key = 1016" + 
+				"\nand n._MGIType_key = 12" +
+				"\nand gg._Genotype_key = ga._Object_key" +
+				"\nand ga._MGIType_key = 12" +
+				"\nand ga._Logicaldb_key = 1";				;		
+		
+		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
+
+		return cmd;
+
+	}
 	
+	@Transactional	
+	public SearchResults<SummaryGenotypeDomain> getGenotypeByRef(String accid, int offset, int limit) {
+		// return list of genotype domains by reference jnum id
+
+		SearchResults<SummaryGenotypeDomain> results = new SearchResults<SummaryGenotypeDomain>();
+		List<SummaryGenotypeDomain> summaryResults = new ArrayList<SummaryGenotypeDomain>();
+		
+		String cmd = getGenotypeByRefSQL(accid, offset, limit, true);
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				genotypeDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = getGenotypeByRefSQL(accid, offset, limit, false);
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SummaryGenotypeDomain domain = new SummaryGenotypeDomain();
+				domain.setGenotypeid(rs.getString("genotypeid"));
+				domain.setGenotypeBackground(rs.getString("strain"));
+				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;
+				domain.setHasAssay(rs.getBoolean("hasAssay"));
+				domain.setHasMPAnnot(rs.getBoolean("hasMPAnnot"));
+				domain.setHasDOAnnot(rs.getBoolean("hasDOAnnot"));				
+				summaryResults.add(domain);
+				genotypeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		results.items = summaryResults;
+		return results;
+	}		
+
+	public Response downloadSpecimenByJnum (String accid) {
+		String cmd = getGenotypeByRefSQL (accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getSpecimenByRef", accid), new ResultFormatter());
+	}
+
+	public static class ResultFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+                	{"Assay ID",        "accid"},
+                	{"Marker Symbol",   "symbol"},
+                	{"Assay Type",      "assayType"},
+                	{"Specimen Label",  "specimenLabel"},
+                	{"Age",             "age"},
+                	{"Age Note",        "ageNote"},
+                	{"Sex",             "sex"},
+                	{"Hybridization",   "hybridization"},
+                	{"Fixation",        "fixationTerm"},
+                	{"Embedding",       "embeddingMethodTerm"},
+                	{"Background",      "strain"},
+                	{"Allele(s)",       "alleleDetailNote"},
+                	{"Specimen Note",   "specimenNote"}
+			};
+			return formatTsvHelper(obj, cols);
+		}
+	}	
 }

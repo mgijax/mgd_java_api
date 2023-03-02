@@ -1,23 +1,23 @@
 package org.jax.mgi.mgd.api.model;
 
-import org.jax.mgi.mgd.api.exception.APIException;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.util.SearchResults;
-
-import org.jboss.logging.Logger;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import java.lang.Exception;
-import java.io.Writer;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.WebApplicationException; 
-import java.io.IOException;
+import java.io.Writer;
 import java.sql.ResultSet;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+
+import org.jax.mgi.mgd.api.exception.APIException;
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
+import org.jax.mgi.mgd.api.util.SearchResults;
+import org.jboss.logging.Logger;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class BaseService<D extends BaseDomain> {
 

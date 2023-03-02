@@ -12,6 +12,7 @@ public class SummaryGenotypeDomain extends BaseDomain {
 	private String genotypeid;
 	private String genotypeBackground;
 	private String alleleDetailNote;
+	private Boolean isConditional;
 	private Boolean hasAssay;
 	private Boolean hasMPAnnot;
 	private Boolean hasDOAnnot;

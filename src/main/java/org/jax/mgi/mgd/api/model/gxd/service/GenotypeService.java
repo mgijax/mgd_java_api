@@ -839,7 +839,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			return cmd;
 		}
 		
-		cmd = "\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 1 as hasAssay, 0 as hasMPAnnot, 0 as hasDOAnnot" + 
+		cmd = "\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, gg.isConditional, 1 as hasAssay, 0 as hasMPAnnot, 0 as hasDOAnnot" + 
 				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, GXD_Expression g, PRB_Strain s," +
 				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
 				"\n     gg._Genotype_key = n._Object_key" + 
@@ -853,7 +853,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand ga._MGIType_key = 12" +
 				"\nand ga._Logicaldb_key = 1" +
 				"\nunion" + 
-				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 1 as hasMPAnnot, 0 as hasDOAnnot" + 
+				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, gg.isConditional, 0 as hasAssay, 1 as hasMPAnnot, 0 as hasDOAnnot" + 
 				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, VOC_Evidence e, VOC_Annot a, PRB_Strain s," + 
 				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
 				"\n     gg._Genotype_key = n._Object_key" + 
@@ -869,7 +869,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand ga._MGIType_key = 12" +
 				"\nand ga._Logicaldb_key = 1" +				
 				"\nunion" + 
-				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 0 as hasMPAnnot, 1 as hasDOAnnot" + 
+				"\nselect distinct ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, gg.isConditional, 0 as hasAssay, 0 as hasMPAnnot, 1 as hasDOAnnot" + 
 				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, MRK_DO_Cache g, PRB_Strain s," + 
 				"\nGXD_Genotype gg left outer join MGI_Note n on (" +
 				"\n     gg._Genotype_key = n._Object_key" + 
@@ -924,6 +924,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				domain.setGenotypeid(rs.getString("genotypeid"));
 				domain.setGenotypeBackground(rs.getString("strain"));
 				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;
+				domain.setIsConditional(rs.getBoolean("isConditional"));
 				domain.setHasAssay(rs.getBoolean("hasAssay"));
 				domain.setHasMPAnnot(rs.getBoolean("hasMPAnnot"));
 				domain.setHasDOAnnot(rs.getBoolean("hasDOAnnot"));

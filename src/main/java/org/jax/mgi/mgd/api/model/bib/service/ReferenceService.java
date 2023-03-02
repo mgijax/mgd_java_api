@@ -2406,6 +2406,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setReferencetype(rs.getString("referencetype"));
 				domain.setReferenceAbstract(rs.getString("abstract"));	
 				domain.setHasAllele(rs.getBoolean("has_alleles"));
+				domain.setHasGenotype(rs.getBoolean("has_genotype"));
 				domain.setHasAntibody(rs.getBoolean("has_antibodies"));
 				domain.setHasAssay(rs.getBoolean("has_gxdassays"));
 				domain.setHasAssayResult(rs.getBoolean("has_gxdresults"));

@@ -31,6 +31,7 @@ public class SummaryReferenceDomain extends BaseDomain {
 	private String referencetype;
 	private String referenceAbstract;
 	private Boolean hasAllele = false;
+	private Boolean hasGenotype = false;
 	private Boolean hasAssay = false;
 	private Boolean hasAssayResult = false;
 	private Boolean hasAssaySpecimen = false;

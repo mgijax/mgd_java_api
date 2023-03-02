@@ -10,12 +10,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDataSetDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SummaryGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.AllelePairService;
 import org.jax.mgi.mgd.api.model.gxd.service.GenotypeService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -166,6 +169,34 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 		}
 		
 		return results;
+	}
+
+	@GET
+	@ApiOperation(value = "Get list of genotype domains by reference jnum id")
+	@Path("/getGenotypeByRef")
+	public SearchResults<SummaryGenotypeDomain> getGenotypeByRef(
+		@QueryParam("accid") String accid,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
+
+		SearchResults<SummaryGenotypeDomain> results = new SearchResults<SummaryGenotypeDomain>();
+
+		try {
+			results = genotypeService.getGenotypeByRef(accid, offset, limit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadSpecimenByRef")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response downloadGenotypeByRef(@QueryParam("accid") String accid) {
+		return genotypeService.downloadSpecimenByJnum(accid);
 	}
 	
 }

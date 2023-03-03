@@ -832,11 +832,19 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		if (returnCount) {
 			cmd = "\nwith genotypes as (" + 
 					"\nselect distinct gg._genotype_key" + 
-					"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, GXD_Expression g" + 
+					"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, GXD_Assay ga, GXD_Specimen gs" + 
 					"\nwhere aa.jnumid = '" + accid + "'" +
-					"\nand aa._Refs_key = g._Refs_key" + 
-					"\nand gg._Genotype_key = g._Genotype_key" + 
+					"\nand aa._Refs_key = ga._Refs_key" + 
+					"\nand ga._Assay_key = gs._Assay_key" +					
+					"\nand gg._Genotype_key = gs._Genotype_key" + 
 					"\nunion" + 
+					"\nselect distinct gg._genotype_key" + 
+					"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, GXD_Assay ga, GXD_GelLane gs" + 
+					"\nwhere aa.jnumid = '" + accid + "'" +
+					"\nand aa._Refs_key = ga._Refs_key" + 
+					"\nand ga._Assay_key = gs._Assay_key" +					
+					"\nand gg._Genotype_key = gs._Genotype_key" + 
+					"\nunion" +					
 					"\nselect distinct gg._genotype_key" + 
 					"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, VOC_Evidence e, VOC_Annot a" + 
 					"\nwhere aa.jnumid = '" + accid + "'" +
@@ -853,12 +861,21 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		
 		cmd = "\nwith genotypes as (" +
 				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
-				"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, PRB_Strain s, GXD_Expression g" +
+				"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, PRB_Strain s, GXD_Assay ga, GXD_Specimen gs" +
 				"\nwhere aa.jnumid = '" + accid + "'" +
-				"\nand aa._Refs_key = g._Refs_key" +
-				"\nand gg._Genotype_key = g._Genotype_key" +
+				"\nand aa._Refs_key = ga._Refs_key" +
+				"\nand ga._Assay_key = gs._Assay_key" +									
+				"\nand gg._Genotype_key = gs._Genotype_key" +
 				"\nand gg._Strain_key = s._Strain_key" +
 				"\nunion" +
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, PRB_Strain s, GXD_Assay ga, GXD_GelLane gs" +
+				"\nwhere aa.jnumid = '" + accid + "'" +
+				"\nand aa._Refs_key = ga._Refs_key" +
+				"\nand ga._Assay_key = gs._Assay_key" +									
+				"\nand gg._Genotype_key = gs._Genotype_key" +
+				"\nand gg._Strain_key = s._Strain_key" +
+				"\nunion" +				
 				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
 				"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, PRB_Strain s, VOC_Evidence e, VOC_Annot a" +
 				"\nwhere aa.jnumid = '" + accid + "'" +
@@ -872,7 +889,8 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand gg._Strain_key = s._Strain_key" +
 				"\n)" +
 				"\nselect a.accid as genotypeid, gg.isConditional, gg.strain, n.note as alleleDetailNote," +
-				"\ncase when exists (select 1 from GXD_Expression g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
+				"\ncase when exists (select 1 from GXD_Specimen g where gg._Genotype_key = g._Genotype_key)" +
+				"\n    or exists (select 1 from GXD_GelLane g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
 				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasMPAnnot," +
 				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasDOAnnot" +
 				"\nfrom genotypes gg" +

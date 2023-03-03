@@ -826,6 +826,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 	public String getGenotypeByRefSQL (String accid, int offset, int limit, boolean returnCount) {
 		// SQL for selecting genotypes by acc id
+		// genotype exists in GXD_Assay/GXD_Specimen, GXD_Assay/GXD_GelLane, MP Annot (1002), DO Annot (1020)
 		
 		String cmd;
 

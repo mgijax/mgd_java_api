@@ -193,10 +193,10 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	
 	@GET
 	@ApiOperation(value = "Download TSV file.")
-	@Path("/downloadSpecimenByRef")
+	@Path("/downloadGenotypeByRef")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response downloadGenotypeByRef(@QueryParam("accid") String accid) {
-		return genotypeService.downloadSpecimenByJnum(accid);
+		return genotypeService.downloadGenotypeByJnum(accid);
 	}
 	
 }

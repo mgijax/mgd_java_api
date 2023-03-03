@@ -826,60 +826,84 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 	public String getGenotypeByRefSQL (String accid, int offset, int limit, boolean returnCount) {
 		// SQL for selecting genotypes by acc id
+		// genotype exists in GXD_Assay/GXD_Specimen, GXD_Assay/GXD_GelLane, MP Annot (1002), DO Annot (1020)
 		
 		String cmd;
 
 		if (returnCount) {
-			cmd = "\nselect count(*) as total_count" + 
-				"\nfrom bib_citation_cache aa" +
-				"\nwhere aa.jnumid = '" + accid + "'" +
-				"\nand (exists (select 1 from GXD_Expression g where g._Refs_key = aa._Refs_key)" +
-				"\nor exists (select 1 from VOC_Evidence e, VOC_Annot a where e._Refs_key = aa._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1002)" +
-				"\nor exists (select 1 from MRK_DO_Cache g where g._Refs_key = aa._Refs_key))";
+			cmd = "\nwith genotypes as (" + 
+					"\nselect distinct gg._genotype_key" + 
+					"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, GXD_Assay ga, GXD_Specimen gs" + 
+					"\nwhere aa.jnumid = '" + accid + "'" +
+					"\nand aa._Refs_key = ga._Refs_key" + 
+					"\nand ga._Assay_key = gs._Assay_key" +					
+					"\nand gg._Genotype_key = gs._Genotype_key" + 
+					"\nunion" + 
+					"\nselect distinct gg._genotype_key" + 
+					"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, GXD_Assay ga, GXD_GelLane gs" + 
+					"\nwhere aa.jnumid = '" + accid + "'" +
+					"\nand aa._Refs_key = ga._Refs_key" + 
+					"\nand ga._Assay_key = gs._Assay_key" +					
+					"\nand gg._Genotype_key = gs._Genotype_key" + 
+					"\nunion" +					
+					"\nselect distinct gg._genotype_key" + 
+					"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, VOC_Evidence e, VOC_Annot a" + 
+					"\nwhere aa.jnumid = '" + accid + "'" +
+					"\nand aa._Refs_key = e._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1002 and gg._Genotype_key = a._Object_key" + 
+					"\nunion" + 
+					"\nselect distinct gg._genotype_key" + 
+					"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, VOC_Evidence e, VOC_Annot a" + 
+					"\nwhere aa.jnumid = '" + accid + "'" +
+					"\nand aa._Refs_key = e._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1020 and gg._Genotype_key = a._Object_key" + 
+					"\n)" + 
+					"select count(_genotype_key) as total_count from genotypes";
 			return cmd;
 		}
 		
-		cmd = "\nselect distinct aa.jnumid, ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 1 as hasAssay, 0 as hasMPAnnot, 0 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, GXD_Expression g, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
-				"\nwhere aa.jnumid = '" + accid + "'" + 
-				"\nand aa._Refs_key = g._Refs_key" + 
-				"\nand g._Genotype_key = gg._Genotype_key" + 
-				"\nand gg._Strain_key = s._Strain_key" + 
-				"\nand gg._Genotype_key = n._Object_key" + 
-				"\nand n._NoteType_key = 1016" + 
-				"\nand n._MGIType_key = 12" + 
-				"\nand gg._Genotype_key = ga._Object_key" +
-				"\nand ga._MGIType_key = 12" +
-				"\nand ga._Logicaldb_key = 1" +
-				"\nunion" + 
-				"\nselect distinct aa.jnumid, ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 1 as hasMPAnnot, 0 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, VOC_Evidence e, VOC_Annot a, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
-				"\nwhere aa.jnumid = '" + accid + "'" + 
-				"\nand aa._Refs_key = e._Refs_key" + 
-				"\nand e._Annot_key = a._Annot_key" + 
-				"\nand a._AnnotType_key = 1002" + 
-				"\nand a._Object_key = gg._Genotype_key" + 
-				"\nand gg._Strain_key = s._Strain_key" + 
-				"\nand gg._Genotype_key = n._Object_key" + 
-				"\nand n._NoteType_key = 1016" + 
-				"\nand n._MGIType_key = 12" +
-				"\nand gg._Genotype_key = ga._Object_key" +
-				"\nand ga._MGIType_key = 12" +
-				"\nand ga._Logicaldb_key = 1" +				
-				"\nunion" + 
-				"\nselect distinct aa.jnumid, ga.accid as genotypeid, s.strain, n.note as alleleDetailNote, 0 as hasAssay, 0 as hasMPAnnot, 1 as hasDOAnnot" + 
-				"\nfrom BIB_Citation_Cache aa, ACC_Accession ga, MRK_DO_Cache g, GXD_Genotype gg, PRB_Strain s, MGI_Note n" + 
-				"\nwhere aa.jnumid = '" + accid + "'" + 
-				"\nand aa._Refs_key = g._Refs_key" + 
-				"\nand g._Genotype_key = gg._Genotype_key" + 
-				"\nand gg._Strain_key = s._Strain_key" + 
-				"\nand gg._Genotype_key = n._Object_key" + 
-				"\nand n._NoteType_key = 1016" + 
-				"\nand n._MGIType_key = 12" +
-				"\nand gg._Genotype_key = ga._Object_key" +
-				"\nand ga._MGIType_key = 12" +
-				"\nand ga._Logicaldb_key = 1";				;		
-		
+		cmd = "\nwith genotypes as (" +
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, PRB_Strain s, GXD_Assay ga, GXD_Specimen gs" +
+				"\nwhere aa.jnumid = '" + accid + "'" +
+				"\nand aa._Refs_key = ga._Refs_key" +
+				"\nand ga._Assay_key = gs._Assay_key" +									
+				"\nand gg._Genotype_key = gs._Genotype_key" +
+				"\nand gg._Strain_key = s._Strain_key" +
+				"\nunion" +
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, PRB_Strain s, GXD_Assay ga, GXD_GelLane gs" +
+				"\nwhere aa.jnumid = '" + accid + "'" +
+				"\nand aa._Refs_key = ga._Refs_key" +
+				"\nand ga._Assay_key = gs._Assay_key" +									
+				"\nand gg._Genotype_key = gs._Genotype_key" +
+				"\nand gg._Strain_key = s._Strain_key" +
+				"\nunion" +				
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, PRB_Strain s, VOC_Evidence e, VOC_Annot a" +
+				"\nwhere aa.jnumid = '" + accid + "'" +
+				"\nand aa._Refs_key = e._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1002 and gg._Genotype_key = a._Object_key" +
+				"\nand gg._Strain_key = s._Strain_key" +
+				"\nunion" +
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom BIB_Citation_Cache aa, GXD_Genotype gg, PRB_Strain s, VOC_Evidence e, VOC_Annot a" +
+				"\nwhere aa.jnumid = '" + accid + "'" +
+				"\nand aa._Refs_key = e._Refs_key and e._Annot_key = a._Annot_key and a._AnnotType_key = 1020 and gg._Genotype_key = a._Object_key" +
+				"\nand gg._Strain_key = s._Strain_key" +
+				"\n)" +
+				"\nselect a.accid as genotypeid, gg.isConditional, gg.strain, n.note as alleleDetailNote," +
+				"\ncase when exists (select 1 from GXD_Specimen g where gg._Genotype_key = g._Genotype_key)" +
+				"\n    or exists (select 1 from GXD_GelLane g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
+				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasMPAnnot," +
+				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasDOAnnot" +
+				"\nfrom genotypes gg" +
+				"\n       left outer join MGI_Note n on (" +
+				"\n               gg._Genotype_key = n._Object_key" +
+				"\n               and n._NoteType_key = 1016" +
+				"\n               and n._MGIType_key = 12)," +
+				"\nACC_Accession a" + 
+				"\nwhere gg._Genotype_key = a._Object_key" + 
+				"\nand a._MGIType_key = 12" + 
+				"\nand a._Logicaldb_key = 1";
+
 		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
 
 		return cmd;
@@ -917,13 +941,14 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryGenotypeDomain domain = new SummaryGenotypeDomain();
-				domain.setJnumid(rs.getString("jnumid"));
+				domain.setJnumid(accid);
 				domain.setGenotypeid(rs.getString("genotypeid"));
 				domain.setGenotypeBackground(rs.getString("strain"));
 				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;
+				domain.setIsConditional(rs.getBoolean("isConditional"));
 				domain.setHasAssay(rs.getBoolean("hasAssay"));
 				domain.setHasMPAnnot(rs.getBoolean("hasMPAnnot"));
-				domain.setHasDOAnnot(rs.getBoolean("hasDOAnnot"));				
+				domain.setHasDOAnnot(rs.getBoolean("hasDOAnnot"));
 				summaryResults.add(domain);
 				genotypeDAO.clear();
 			}
@@ -937,7 +962,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		return results;
 	}		
 
-	public Response downloadSpecimenByJnum (String accid) {
+	public Response downloadGenotypeByJnum (String accid) {
 		String cmd = getGenotypeByRefSQL (accid, -1, -1, false);
 		return download(cmd, getTsvFileName("getGenotypeByRef", accid), new ResultFormatter());
 	}

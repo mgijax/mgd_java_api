@@ -874,7 +874,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		cmd = "\nselect * from MRK_SummaryByReference_View where jnumid = '" + accid + "'";
-		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
+		cmd = addPaginationSQL(cmd, "markerstatus, symbol", offset, limit);
 
 		return cmd;
 	}

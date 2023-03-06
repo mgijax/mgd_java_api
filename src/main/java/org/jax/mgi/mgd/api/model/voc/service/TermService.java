@@ -137,14 +137,33 @@ public class TermService extends BaseService<TermDomain> {
 		}	
 		return domain;
 	}
-	
-    @Transactional
-    public SearchResults<TermDomain> getResults(Integer key) {
-        SearchResults<TermDomain> results = new SearchResults<TermDomain>();
-        results.setItem(translator.translate(termDAO.get(key)));
-        termDAO.clear();
-        return results;
-    }
+
+	@Transactional
+	public TermDomain getByAccid (String accid) {
+		String cmd = "\nselect _object_key from acc_accession "
+			+ "\nwhere accid = '" + accid + "'"
+			+ "\nand _mgitype_key = 13 and preferred = 1";
+		int termKey = 0;
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				termKey = rs.getInt("_object_key");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return termKey == 0 ? null : get(termKey);
+	}
+
+	@Transactional
+	public SearchResults<TermDomain> getResults(Integer key) {
+		SearchResults<TermDomain> results = new SearchResults<TermDomain>();
+		results.setItem(translator.translate(termDAO.get(key)));
+		termDAO.clear();
+		return results;
+	}
 
 
 	public String multiMatchClause(String colExpr, String op, String searchTerm) {
@@ -192,7 +211,7 @@ public class TermService extends BaseService<TermDomain> {
 		//Boolean from_synonym = false;
 		
 		// value after escaping apostrophe in term
-        String value = null;
+        	String value = null;
 	
 		// if parameter exists, then add to where-clause
 		
@@ -223,7 +242,7 @@ public class TermService extends BaseService<TermDomain> {
 
 		if (searchDomain.getAbbreviation() != null && !searchDomain.getAbbreviation().isEmpty()) {
 			value = searchDomain.getAbbreviation().replace("'",  "''");
-            where = where + "\nand t.abbreviation ilike '" + value + "'";
+			where = where + "\nand t.abbreviation ilike '" + value + "'";
 		}		
 		if (searchDomain.getVocabKey() != null && !searchDomain.getVocabKey().isEmpty()) {
 			where = where + "\nand t._vocab_key = " + searchDomain.getVocabKey();
@@ -287,13 +306,11 @@ public class TermService extends BaseService<TermDomain> {
 				termDAO.clear();
 				
 				// use SQL query to load list of DAG/Parents
-				List<TermDomain> dagParents = new ArrayList<TermDomain>();
-				dagParents = getDagParents(rs.getInt("_term_key"));
-				domain.setDagParents(dagParents);
+				//List<TermDomain> dagParents = new ArrayList<TermDomain>();
+				//dagParents = getDagParents(rs.getInt("_term_key"));
+				//domain.setDagParents(dagParents);
 				
-				// use SQL query to load cell type annotation count
 				if(domain.getVocabKey() != null && !domain.getVocabKey().isEmpty()) {
-					addAnnotCount(domain);
 					addEmapInfo(domain);
 				}
 				
@@ -910,6 +927,7 @@ public class TermService extends BaseService<TermDomain> {
 	public String getTreeViewChildrenSQL (String accid) {
 		String cmd = ""
 		    + "\nselect "
+		    + "\n  ct._term_key, "
 		    + "\n  ct.term, "
 		    + "\n  ca.accid,"
 		    + "\n  case when exists ("
@@ -951,6 +969,8 @@ public class TermService extends BaseService<TermDomain> {
 				first = false;
 				b.append("{");
 				b.append("\"label\":\"" + rs.getString("term") + "\"");
+				b.append(",");
+				b.append("\"termKey\":\"" + rs.getString("_term_key") + "\"");
 				b.append(",");
 				b.append("\"id\":\"" + rs.getString("accid") + "\"");
 				if (rs.getString("ex").equals("1")) {

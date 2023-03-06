@@ -148,6 +148,13 @@ public class TermController extends BaseController<TermDomain> {
 	}	
 	
 	@GET
+	@ApiOperation(value = "Get term by accid.")
+	@Path("/getByAccid/{accid}")
+	public TermDomain getByAccid(@PathParam("accid") String accid) {
+	    return termService.getByAccid(accid);
+	}
+
+	@GET
 	@ApiOperation(value = "Get the immediate children of a node.")
 	@Path("/getTreeViewChildren/{accid}")
 	public String getTreeViewChildren(@PathParam("accid") String accid) {

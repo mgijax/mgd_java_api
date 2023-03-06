@@ -26,6 +26,8 @@ public class TreeViewNodeDomain extends BaseDomain {
 		b.append("{");
 		b.append("\"id\":\"" + id + "\"");
 		b.append(",");
+		b.append("\"termKey\":\"" + termKey + "\"");
+		b.append(",");
 		b.append("\"label\":\"" + label + "\"");
 		b.append(",");
 		if (children == null) {

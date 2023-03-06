@@ -687,7 +687,7 @@ and a._antibody_key = aa._antibody_key
 		SearchResults<SummaryAntibodyDomain> results = new SearchResults<SummaryAntibodyDomain>();
 		List<SummaryAntibodyDomain> summaryResults = new ArrayList<SummaryAntibodyDomain>();
 		
-		String cmd = getAntibodyByRefSQL(accid, offset, limit, true);
+		String cmd = getAntibodyByMarkerSQL(accid, offset, limit, true);
 		log.info(cmd);
 		
 		try {
@@ -704,7 +704,7 @@ and a._antibody_key = aa._antibody_key
 			e.printStackTrace();
 		}	
 		
-		cmd = getAntibodyByRefSQL(accid, offset, limit, false);
+		cmd = getAntibodyByMarkerSQL(accid, offset, limit, false);
 		log.info(cmd);	
 		
 		try {

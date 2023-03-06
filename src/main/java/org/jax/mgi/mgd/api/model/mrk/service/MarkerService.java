@@ -11,6 +11,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
@@ -862,21 +863,89 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		return results;
 	}	
 	
-	@Transactional	
-	public List<SummaryMarkerDomain> getMarkerByRef(String jnumid) {
-		// return list of summary marker domains by reference jnum id
+	public String getMarkerByRefSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting marker by acc id
+		
+		String cmd;
 
-		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
+		if (returnCount) {
+			cmd = "\nselect count(_marker_key) as total_count from MRK_SummaryByReference_View where jnumid = '" + accid + "'";
+			return cmd;
+		}
 		
-		String cmd = "\nselect * from MRK_SummaryByReference_View where jnumid = '" + jnumid + "'";
+		cmd = "\nselect * from MRK_SummaryByReference_View where jnumid = '" + accid + "'";
+		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
+
+		return cmd;
+	}
+	
+//	@Transactional	
+//	public List<SummaryMarkerDomain> getMarkerByRef(String jnumid) {
+//		// return list of summary marker domains by reference jnum id
+//
+//		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
+//		
+//		String cmd = "\nselect * from MRK_SummaryByReference_View where jnumid = '" + jnumid + "'";
+//		
+//		log.info(cmd);	
+//		
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//			while (rs.next()) {
+//				SummaryMarkerDomain domain = new SummaryMarkerDomain();
+//				domain.setJnumID(jnumid);
+//				domain.setMarkerKey(rs.getString("_marker_key"));
+//				domain.setSymbol(rs.getString("symbol"));
+//				domain.setName(rs.getString("name"));
+//			    domain.setAccID(rs.getString("accid"));
+//				domain.setMarkerStatus(rs.getString("markerStatus"));
+//				domain.setMarkerType(rs.getString("markerType"));
+//				domain.setFeatureTypes(rs.getString("featureTypes"));
+//				domain.setSynonyms(rs.getString("synonyms"));				
+//				results.add(domain);
+//				markerDAO.clear();
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}		
+//
+//		return results;
+//	}
+
+	@Transactional	
+	public SearchResults<SummaryMarkerDomain> getMarkerByRef(String accid, int offset, int limit) {
+		// return list of marker domains by reference jnum id
+
+		SearchResults<SummaryMarkerDomain> results = new SearchResults<SummaryMarkerDomain>();
+		List<SummaryMarkerDomain> summaryResults = new ArrayList<SummaryMarkerDomain>();
 		
+		String cmd = getMarkerByRefSQL(accid, offset, limit, true);
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				markerDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = getMarkerByRefSQL(accid, offset, limit, false);
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryMarkerDomain domain = new SummaryMarkerDomain();
-				domain.setJnumID(jnumid);
+				domain.setJnumID(accid);
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				domain.setName(rs.getString("name"));
@@ -884,8 +953,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				domain.setMarkerStatus(rs.getString("markerStatus"));
 				domain.setMarkerType(rs.getString("markerType"));
 				domain.setFeatureTypes(rs.getString("featureTypes"));
-				domain.setSynonyms(rs.getString("synonyms"));				
-				results.add(domain);
+				domain.setSynonyms(rs.getString("synonyms"));	
+				summaryResults.add(domain);
 				markerDAO.clear();
 			}
 			sqlExecutor.cleanup();
@@ -894,8 +963,29 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			e.printStackTrace();
 		}		
 
+		results.items = summaryResults;
 		return results;
+	}		
+
+	public Response downloadMarkerByJnum (String accid) {
+		String cmd = getMarkerByRefSQL (accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getMarkerByRef", accid), new ResultFormatter());
 	}
+
+	public static class ResultFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+                	{"Symbol", "symbol"},
+                	{"Marker Status", "markerSTatus"},
+                	{"MGI ID", "accid"},
+                	{"Name", "name"},
+                	{"Synonyms", "synonyms"},
+                	{"Feature Type", "featureTypes"},
+                	{"Marker Type", "markerType"},
+			};
+			return formatTsvHelper(obj, cols);
+		}
+	}	
 	
 	@Transactional	
 	public MarkerDomain getSummaryLinks(MarkerDomain domain) {

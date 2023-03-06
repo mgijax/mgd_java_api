@@ -97,38 +97,6 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 		
 		return results;
 	}
-
-//	@POST
-//	@ApiOperation(value = "Get list of antibody domains by marker accession id")
-//	@Path("/getAntibodyByMarker")
-//	public List<SummaryAntibodyDomain> getAntibodyByMarker(String accid) {
-//		
-//		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
-//
-//		try {
-//			results = antibodyService.getAntibodyByMarker(accid);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return results;
-//	}
-//
-//	@POST
-//	@ApiOperation(value = "Get list of antibody domains by reference jnumid")
-//	@Path("/getAntibodyByRef")
-//	public List<SummaryAntibodyDomain> getAntibodyByRef(String jnumid) {
-//		
-//		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
-//
-//		try {
-//			results = antibodyService.getAntibodyByRef(jnumid);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return results;
-//	}	
 	
 	@GET
 	@ApiOperation(value = "Get list of antibody domains by marker accession id")

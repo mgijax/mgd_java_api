@@ -9,9 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
@@ -97,60 +95,36 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 		
 		return results;
 	}
-	
-	@GET
+
+	@POST
 	@ApiOperation(value = "Get list of antibody domains by marker accession id")
 	@Path("/getAntibodyByMarker")
-	public SearchResults<SummaryAntibodyDomain> getAntibodyByMarker(
-		@QueryParam("accid") String accid,
-		@QueryParam("offset") int offset,
-		@QueryParam("limit") int limit
-		) {
-
-		SearchResults<SummaryAntibodyDomain> results = new SearchResults<SummaryAntibodyDomain>();
+	public List<SummaryAntibodyDomain> getAntibodyByMarker(String accid) {
+		
+		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 
 		try {
-			results = antibodyService.getAntibodyByMarker(accid, offset, limit);
+			results = antibodyService.getAntibodyByMarker(accid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
-	}	
-	
-	@GET
-	@ApiOperation(value = "Get list of antibody domains by reference jnum id")
+	}
+
+	@POST
+	@ApiOperation(value = "Get list of antibody domains by reference jnumid")
 	@Path("/getAntibodyByRef")
-	public SearchResults<SummaryAntibodyDomain> getAntibodyByRef(
-		@QueryParam("accid") String accid,
-		@QueryParam("offset") int offset,
-		@QueryParam("limit") int limit
-		) {
-
-		SearchResults<SummaryAntibodyDomain> results = new SearchResults<SummaryAntibodyDomain>();
+	public List<SummaryAntibodyDomain> getAntibodyByRef(String jnumid) {
+		
+		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
 
 		try {
-			results = antibodyService.getAntibodyByRef(accid, offset, limit);
+			results = antibodyService.getAntibodyByRef(jnumid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
-	}
-	
-	@GET
-	@ApiOperation(value = "Download TSV file.")
-	@Path("/downloadAntibodyByMarker")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response downloadAntibodyByMarker(@QueryParam("accid") String accid) {
-		return antibodyService.downloadAntibodyByMarker(accid);
-	}
-	
-	@GET
-	@ApiOperation(value = "Download TSV file.")
-	@Path("/downloadAntibodyByRef")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response downloadAntibodyByRef(@QueryParam("accid") String accid) {
-		return antibodyService.downloadAntibodyByRef(accid);
 	}	
 }

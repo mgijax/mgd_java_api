@@ -8,6 +8,7 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
@@ -646,13 +647,175 @@ and a._antibody_key = aa._antibody_key
 		return results;
 	}
 
-	@Transactional	
-	public List<SummaryAntibodyDomain> getAntibodyByMarker(String accid) {
-		// return list of antibody domains by marker acc id
+//	@Transactional	
+//	public List<SummaryAntibodyDomain> getAntibodyByMarker(String accid) {
+//		// return list of antibody domains by marker acc id
+//
+//		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
+//		
+//		String cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid,  a2.accid as markerid" +
+//				"\nfrom GXD_Antibody a, GXD_AntibodyMarker am, ACC_Accession a1, ACC_Accession a2" +		
+//				"\nwhere a._antibody_key = am._antibody_key" +
+//				"\nand a._antibody_key = a1._object_key" +
+//				"\nand a1._mgitype_key = 6" +
+//				"\nand a1._logicaldb_key = 1" +
+//				"\nand am._marker_key = a2._object_key" +
+//				"\nand a2._mgitype_key = 2" +
+//				"\nand a2._logicaldb_key = 1" +
+//				"\nand a2.preferred = 1" +
+//				"\nand a2.accID = '" + accid + "'" +
+//				"\norder by antibodyName, antibodyid";
+//
+//		log.info(cmd);	
+//		
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//			while (rs.next()) {
+//				SummaryAntibodyDomain domain = new SummaryAntibodyDomain();
+//				AntibodyDomain adomain = new AntibodyDomain();
+//				adomain = translator.translate(antibodyDAO.get(rs.getInt("_antibody_key")));	
+//				antibodyDAO.clear();
+//				domain.setAntibodyKey(adomain.getAntibodyKey());
+//				domain.setAntibodyID(adomain.getAccID());
+//				domain.setAntibodyName(adomain.getAntibodyName());
+//				domain.setAntibodyClass(adomain.getAntibodyClass());
+//				domain.setAntibodyType(adomain.getAntibodyType());
+//				domain.setAntibodyOrganism(adomain.getOrganism());
+//				domain.setAntibodyNote(adomain.getAntibodyNote());
+//				domain.setAntigenID(adomain.getAntigen().getAccID());
+//				domain.setAntigenName(adomain.getAntigen().getAntigenName());			
+//				domain.setAntigenOrganism(adomain.getAntigen().getProbeSource().getOrganism());
+//				domain.setAntigenNote(adomain.getAntigen().getAntigenNote());
+//				domain.setRegionCovered(adomain.getAntigen().getRegionCovered());
+//	 
+//				List<String> markerIDs = new ArrayList<String>();
+//				List<String> markerSymbols = new ArrayList<String>();
+//				for (int i = 0; i < adomain.getMarkers().size(); i++) {
+//					markerIDs.add(adomain.getMarkers().get(i).getMarkerMGIID());
+//					markerSymbols.add(adomain.getMarkers().get(i).getMarkerSymbol());
+//				}
+//				domain.setMarkerSymbol(String.join(",", markerSymbols));				
+//
+//				for (int i = 0; i < adomain.getRefAssocs().size(); i++) {
+//					if (adomain.getRefAssocs().get(i).getAllowOnlyOne() == 1) {
+//						domain.setJnumID(adomain.getRefAssocs().get(i).getJnumid());
+//						domain.setShortCitation(adomain.getRefAssocs().get(i).getShort_citation());
+//					}
+//				}
+//				
+//				List<String> aliases = new ArrayList<String>();
+//				if (adomain.getAliases() != null) {
+//					for (int i = 0; i < adomain.getAliases().size(); i++) {
+//						aliases.add(adomain.getAliases().get(i).getAlias());
+//					}
+//				}
+//				domain.setAliases(String.join(",", aliases));				
+//				
+//				results.add(domain);
+//			}
+//			sqlExecutor.cleanup();
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}		
+//
+//		return results;
+//	}
 
-		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
+//	@Transactional	
+//	public List<SummaryAntibodyDomain> getAntibodyByRef(String jnumid) {
+//		// return list of probe domains by reference jnumid
+//
+//		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
+//		
+//		String cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid" +
+//				"\nfrom GXD_Antibody a, ACC_Accession a1, MGI_Reference_Assoc r, BIB_Citation_Cache rc" +		
+//				"\nwhere a._antibody_key = a1._object_key" +
+//				"\nand a1._mgitype_key = 6" +
+//				"\nand a1._logicaldb_key = 1" +				
+//				"\nand a._antibody_key = r._object_key" +				
+//				"\nand r._mgitype_key = 6" +
+//				"\nand r._refs_key = rc._refs_key" +
+//				"\nand rc.jnumid = '" + jnumid + "'" +
+//				"\norder by antibodyName, antibodyid";
+//
+//		log.info(cmd);	
+//		
+//		try {
+//			ResultSet rs = sqlExecutor.executeProto(cmd);
+//			while (rs.next()) {
+//				SummaryAntibodyDomain domain = new SummaryAntibodyDomain();
+//				AntibodyDomain adomain = new AntibodyDomain();
+//				adomain = translator.translate(antibodyDAO.get(rs.getInt("_antibody_key")));	
+//				antibodyDAO.clear();
+//				domain.setAntibodyKey(adomain.getAntibodyKey());
+//				domain.setAntibodyID(adomain.getAccID());
+//				domain.setAntibodyName(adomain.getAntibodyName());
+//				domain.setAntibodyClass(adomain.getAntibodyClass());
+//				domain.setAntibodyType(adomain.getAntibodyType());
+//				domain.setAntibodyOrganism(adomain.getOrganism());
+//				domain.setAntibodyNote(adomain.getAntibodyNote());
+//				domain.setAntigenID(adomain.getAntigen().getAccID());
+//				domain.setAntigenName(adomain.getAntigen().getAntigenName());			
+//				domain.setAntigenOrganism(adomain.getAntigen().getProbeSource().getOrganism());
+//				domain.setAntigenNote(adomain.getAntigen().getAntigenNote());
+//				domain.setRegionCovered(adomain.getAntigen().getRegionCovered());
+//	 
+//				List<String> markerIDs = new ArrayList<String>();
+//				List<String> markerSymbols = new ArrayList<String>();
+//				if (adomain.getMarkers() != null) {
+//					for (int i = 0; i < adomain.getMarkers().size(); i++) {
+//						markerIDs.add(adomain.getMarkers().get(i).getMarkerMGIID());
+//						markerSymbols.add(adomain.getMarkers().get(i).getMarkerSymbol());
+//					}
+//				}
+//				domain.setMarkerID(String.join(",", markerIDs));
+//				domain.setMarkerSymbol(String.join(",", markerSymbols));				
+//
+//				for (int i = 0; i < adomain.getRefAssocs().size(); i++) {
+//					if (adomain.getRefAssocs().get(i).getAllowOnlyOne() == 1) {
+//						domain.setJnumID(adomain.getRefAssocs().get(i).getJnumid());
+//						domain.setShortCitation(adomain.getRefAssocs().get(i).getShort_citation());
+//					}
+//				}
+//				
+//				List<String> aliases = new ArrayList<String>();
+//				if (adomain.getAliases() != null) {
+//					for (int i = 0; i < adomain.getAliases().size(); i++) {
+//						aliases.add(adomain.getAliases().get(i).getAlias());
+//					}
+//				}
+//				domain.setAliases(String.join(",", aliases));				
+//
+//				results.add(domain);
+//			}
+//			sqlExecutor.cleanup();
+//		}			
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}		
+//
+//		return results;
+//	}
+
+	public String getAntibodyByMarkerSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting antibody by marker acc id
 		
-		String cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid,  a2.accid as markerid" +
+		String cmd;
+
+		if (returnCount) {
+			cmd = "\nselect count(distinct a._antibody_key)" +
+					"\nfrom GXD_Antibody a, GXD_AntibodyMarker am, ACC_Accession a2" +		
+					"\nwhere a._antibody_key = am._antibody_key" +
+					"\nand am._marker_key = a2._object_key" +
+					"\nand a2._mgitype_key = 2" +
+					"\nand a2._logicaldb_key = 1" +
+					"\nand a2.preferred = 1" +
+					"\nand a2.accID = '" + accid + "'";
+			return cmd;
+		}
+		
+		cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid,  a2.accid as markerid" +
 				"\nfrom GXD_Antibody a, GXD_AntibodyMarker am, ACC_Accession a1, ACC_Accession a2" +		
 				"\nwhere a._antibody_key = am._antibody_key" +
 				"\nand a._antibody_key = a1._object_key" +
@@ -662,9 +825,37 @@ and a._antibody_key = aa._antibody_key
 				"\nand a2._mgitype_key = 2" +
 				"\nand a2._logicaldb_key = 1" +
 				"\nand a2.preferred = 1" +
-				"\nand a2.accID = '" + accid + "'" +
-				"\norder by antibodyName, antibodyid";
+				"\nand a2.accID = '" + accid + "'";
+		cmd = addPaginationSQL(cmd, "antibodyName, antibodyid", offset, limit);
 
+		return cmd;
+	}
+
+	@Transactional	
+	public SearchResults<SummaryAntibodyDomain> getAntibodyByMarker(String accid, int offset, int limit) {
+		// return list of antibody domains by marker accession id
+
+		SearchResults<SummaryAntibodyDomain> results = new SearchResults<SummaryAntibodyDomain>();
+		List<SummaryAntibodyDomain> summaryResults = new ArrayList<SummaryAntibodyDomain>();
+		
+		String cmd = getAntibodyByRefSQL(accid, offset, limit, true);
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				antibodyDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = getAntibodyByRefSQL(accid, offset, limit, false);
 		log.info(cmd);	
 		
 		try {
@@ -709,8 +900,8 @@ and a._antibody_key = aa._antibody_key
 					}
 				}
 				domain.setAliases(String.join(",", aliases));				
-				
-				results.add(domain);
+
+				summaryResults.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}
@@ -718,16 +909,25 @@ and a._antibody_key = aa._antibody_key
 			e.printStackTrace();
 		}		
 
+		results.items = summaryResults;
 		return results;
-	}
-
-	@Transactional	
-	public List<SummaryAntibodyDomain> getAntibodyByRef(String jnumid) {
-		// return list of probe domains by reference jnumid
-
-		List<SummaryAntibodyDomain> results = new ArrayList<SummaryAntibodyDomain>();
+	}			
+	
+	public String getAntibodyByRefSQL (String accid, int offset, int limit, boolean returnCount) {
 		
-		String cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid" +
+		String cmd;
+
+		if (returnCount) {
+			cmd = "\nselect count(distinct a._antibody_key) as total_count" +
+					"\nfrom GXD_Antibody a, MGI_Reference_Assoc r, BIB_Citation_Cache rc" +		
+					"\nwhere a._antibody_key = r._object_key" +				
+					"\nand r._mgitype_key = 6" +
+					"\nand r._refs_key = rc._refs_key" +
+					"\nand rc.jnumid = '" + accid;
+			return cmd;
+		}
+		
+		cmd = "\nselect distinct a._antibody_key, a.antibodyName, a1.accid as antibodyid" +
 				"\nfrom GXD_Antibody a, ACC_Accession a1, MGI_Reference_Assoc r, BIB_Citation_Cache rc" +		
 				"\nwhere a._antibody_key = a1._object_key" +
 				"\nand a1._mgitype_key = 6" +
@@ -735,9 +935,37 @@ and a._antibody_key = aa._antibody_key
 				"\nand a._antibody_key = r._object_key" +				
 				"\nand r._mgitype_key = 6" +
 				"\nand r._refs_key = rc._refs_key" +
-				"\nand rc.jnumid = '" + jnumid + "'" +
-				"\norder by antibodyName, antibodyid";
+				"\nand rc.jnumid = '" + accid;
+		cmd = addPaginationSQL(cmd, "antibodyName, antibodyid", offset, limit);
 
+		return cmd;
+	}
+
+	@Transactional	
+	public SearchResults<SummaryAntibodyDomain> getAntibodyByRef(String accid, int offset, int limit) {
+		// return list of antibody domains by reference jnum id
+
+		SearchResults<SummaryAntibodyDomain> results = new SearchResults<SummaryAntibodyDomain>();
+		List<SummaryAntibodyDomain> summaryResults = new ArrayList<SummaryAntibodyDomain>();
+		
+		String cmd = getAntibodyByRefSQL(accid, offset, limit, true);
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				antibodyDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = getAntibodyByRefSQL(accid, offset, limit, false);
 		log.info(cmd);	
 		
 		try {
@@ -786,14 +1014,49 @@ and a._antibody_key = aa._antibody_key
 				}
 				domain.setAliases(String.join(",", aliases));				
 
-				results.add(domain);
+				summaryResults.add(domain);
 			}
 			sqlExecutor.cleanup();
-		}			
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}		
 
+		results.items = summaryResults;
 		return results;
+	}		
+
+	public Response downloadAntibodyByMarker (String accid) {
+		String cmd = getAntibodyByMarkerSQL (accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getAntibodyByMarker", accid), new ResultFormatter());
+	}
+	
+	public Response downloadAntibodyByRef (String accid) {
+		String cmd = getAntibodyByRefSQL (accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getAntibodyByRef", accid), new ResultFormatter());
+	}
+
+	public static class ResultFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+                    {"MGI ID","antibodyID"},
+                    {"Name","antibodyName"},
+                    {"Alias(es)","aliases"},
+                    {"Organism","antibodyOrganism"},
+                    {"Type","antibodyType"},
+                    {"Class","antibodyClass"},
+                    {"Notes","antibodyNote"},
+                    {"Antigen ID","antigenID"},
+                    {"Antigen Name","antigenName"},
+                    {"Antigen Organism","antigenOrganism"},
+                    {"Antigen Region","regionCovered"},
+                    {"Antigen Notes","antigenNote"},
+                    {"Markers","markerSymbol"},
+                    {"Reference ID","jnumID"},
+                    {"Citation","shortCitation"},
+			};
+			return formatTsvHelper(obj, cols);
+		}
 	}	
+	
 }

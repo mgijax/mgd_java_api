@@ -194,22 +194,6 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return markerService.getNextGmSequence();
 	}
 	
-//	@POST
-//	@ApiOperation(value = "Get list of marker domains by reference jnumid")
-//	@Path("/getMarkerByRef")
-//	public List<SummaryMarkerDomain> getMarkerByRef(String jnumid) {
-//		
-//		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
-//
-//		try {
-//			results = markerService.getMarkerByRef(jnumid);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return results;
-//	}
-	
 	@GET
 	@ApiOperation(value = "Get list of marker domains by reference jnum id")
 	@Path("/getMarkerByRef")
@@ -235,7 +219,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@Path("/downloadMarkerByRef")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response downloadMarkerByRef(@QueryParam("accid") String accid) {
-		return markerService.downloadMarkerByJnum(accid);
+		return markerService.downloadMarkerByRef(accid);
 	}
 	
 	@GET

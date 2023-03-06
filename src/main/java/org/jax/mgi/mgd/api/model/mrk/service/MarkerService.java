@@ -878,41 +878,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 		return cmd;
 	}
-	
-//	@Transactional	
-//	public List<SummaryMarkerDomain> getMarkerByRef(String jnumid) {
-//		// return list of summary marker domains by reference jnum id
-//
-//		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
-//		
-//		String cmd = "\nselect * from MRK_SummaryByReference_View where jnumid = '" + jnumid + "'";
-//		
-//		log.info(cmd);	
-//		
-//		try {
-//			ResultSet rs = sqlExecutor.executeProto(cmd);
-//			while (rs.next()) {
-//				SummaryMarkerDomain domain = new SummaryMarkerDomain();
-//				domain.setJnumID(jnumid);
-//				domain.setMarkerKey(rs.getString("_marker_key"));
-//				domain.setSymbol(rs.getString("symbol"));
-//				domain.setName(rs.getString("name"));
-//			    domain.setAccID(rs.getString("accid"));
-//				domain.setMarkerStatus(rs.getString("markerStatus"));
-//				domain.setMarkerType(rs.getString("markerType"));
-//				domain.setFeatureTypes(rs.getString("featureTypes"));
-//				domain.setSynonyms(rs.getString("synonyms"));				
-//				results.add(domain);
-//				markerDAO.clear();
-//			}
-//			sqlExecutor.cleanup();
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}		
-//
-//		return results;
-//	}
 
 	@Transactional	
 	public SearchResults<SummaryMarkerDomain> getMarkerByRef(String accid, int offset, int limit) {
@@ -967,7 +932,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		return results;
 	}		
 
-	public Response downloadMarkerByJnum (String accid) {
+	public Response downloadMarkerByRef (String accid) {
 		String cmd = getMarkerByRefSQL (accid, -1, -1, false);
 		return download(cmd, getTsvFileName("getMarkerByRef", accid), new ResultFormatter());
 	}

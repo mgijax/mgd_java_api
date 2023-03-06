@@ -232,7 +232,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	
 	@GET
 	@ApiOperation(value = "Download TSV file.")
-	@Path("/downloadGenotypeByRef")
+	@Path("/downloadMarkerByRef")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response downloadMarkerByRef(@QueryParam("accid") String accid) {
 		return markerService.downloadMarkerByJnum(accid);

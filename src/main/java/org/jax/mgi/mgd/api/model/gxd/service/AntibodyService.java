@@ -653,7 +653,7 @@ and a._antibody_key = aa._antibody_key
 		String cmd;
 
 		if (returnCount) {
-			cmd = "\nselect count(distinct a._antibody_key)" +
+			cmd = "\nselect count(distinct a._antibody_key) as total_count" +
 					"\nfrom GXD_Antibody a, GXD_AntibodyMarker am, ACC_Accession a2" +		
 					"\nwhere a._antibody_key = am._antibody_key" +
 					"\nand am._marker_key = a2._object_key" +

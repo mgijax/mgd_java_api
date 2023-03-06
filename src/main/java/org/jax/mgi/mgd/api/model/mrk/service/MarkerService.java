@@ -932,7 +932,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		return results;
 	}		
 
-	public Response downloadMarkerByJnum (String accid) {
+	public Response downloadMarkerByRef (String accid) {
 		String cmd = getMarkerByRefSQL (accid, -1, -1, false);
 		return download(cmd, getTsvFileName("getMarkerByRef", accid), new ResultFormatter());
 	}

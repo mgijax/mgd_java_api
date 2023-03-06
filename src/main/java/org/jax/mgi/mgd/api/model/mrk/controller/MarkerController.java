@@ -219,7 +219,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@Path("/downloadMarkerByRef")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response downloadMarkerByRef(@QueryParam("accid") String accid) {
-		return markerService.downloadMarkerByJnum(accid);
+		return markerService.downloadMarkerByRef(accid);
 	}
 	
 	@GET

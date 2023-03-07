@@ -317,7 +317,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-
 			
 			if (domain.get(i).getPreferred() == null || domain.get(i).getPreferred().isEmpty()) {
 				isPreferred = "1";
@@ -331,6 +330,11 @@ public class AccessionService extends BaseService<AccessionDomain> {
 			}
 			else {
 				isPrivate = domain.get(i).getIsPrivate();
+			}
+			
+			// doi ids numeric may be too big to split
+			if (domain.get(i).getLogicaldbKey().equals("65")) {
+				doSplit = "0";
 			}
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
@@ -348,11 +352,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				String refsKey = "-1";
 				if (domain.get(i).getReferences() != null) {
 				    refsKey = domain.get(i).getReferences().get(0).getRefsKey();
-				}
-				
-				// doi ids numeric may be too big to split
-				if (domain.get(i).getLogicaldbKey().equals("65")) {
-					doSplit = "0";
 				}
 				
 				cmd = "select count(*) from ACC_insert ("

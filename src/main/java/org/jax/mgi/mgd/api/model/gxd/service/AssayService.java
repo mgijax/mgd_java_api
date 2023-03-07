@@ -1285,13 +1285,11 @@ public class AssayService extends BaseService<AssayDomain> {
 	// ----------- GET/DOWNLOAD ASSAYS -------------------------------------------------------
 	// ---------------------------------------------------------------------------------------
 
-	// -------------------------------------------------------------
 	// get assay by allele
 
 	@Transactional	
 	public List<SlimAssayDomain> getAssayByAllele(String accid) {
 		// return list of assay domains by allele acc id
-
 		String cmd = getAssayBySQL("allele", accid);
 		return processSlimAssayDomain(cmd);
 	}
@@ -1301,7 +1299,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		return download(cmd, getTsvFileName("getAssayByAllele", accid), new AssayFormatter());
 	}
 
-	// -------------------------------------------------------------
 	// get assay by antibody
 
 	@Transactional	
@@ -1316,7 +1313,6 @@ public class AssayService extends BaseService<AssayDomain> {
 	    return download(cmd, getTsvFileName("getAssayByAntibody", accid), new AssayFormatter());
 	}
 
-	// -------------------------------------------------------------
 	// get assay by marker
 		
 	@Transactional	
@@ -1331,7 +1327,6 @@ public class AssayService extends BaseService<AssayDomain> {
 	    return download(cmd, getTsvFileName("getAssayByMarker", accid), new AssayFormatter());
 	}
 
-	// -------------------------------------------------------------
 	// get assay by probe
 		
 	@Transactional	
@@ -1346,7 +1341,6 @@ public class AssayService extends BaseService<AssayDomain> {
 	    return download(cmd, getTsvFileName("getAssayByProbe", accid), new AssayFormatter());
 	}
 
-	// -------------------------------------------------------------
 	// get assay by reference
 		
 	@Transactional	
@@ -1361,7 +1355,6 @@ public class AssayService extends BaseService<AssayDomain> {
 	    return download(cmd, getTsvFileName("getAssayByReference", accid), new AssayFormatter());
 	}
 
-	// -------------------------------------------------------------
 	// Formatter for assay downloads. 
 	public static class AssayFormatter implements TsvFormatter {
 		public String format (ResultSet obj) {
@@ -1377,8 +1370,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 	}
 
-	//
 	public String getAssayBySQL (String queryType, String accid) {
+		
 		String cmd ;
 		String select = "\nselect distinct e._assay_key, ea.accid as assayid, ma.accid as markerid, m.symbol as markersymbol, at.assaytype, at.sequenceNum, r.jnumid, r.short_citation " ;
 		String from = "\nfrom gxd_expression e, acc_accession ea, mrk_marker m,  acc_accession ma, gxd_assaytype at, bib_citation_cache r " ;
@@ -1394,6 +1387,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			"\nand e._assaytype_key = at._assaytype_key " +
 			"\nand e._refs_key = r._refs_key " +
 			"";
+		
 		switch (queryType) {
 		case "allele":
 			from += ", gxd_genotype g, gxd_allelegenotype ag, acc_accession aa ";
@@ -1442,14 +1436,13 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		cmd = select + from + where + orderby;
 		return cmd;
-
 	}
 
-	// -------------------------------------------------------------
-	//
-	List<SlimAssayDomain> processSlimAssayDomain(String cmd) {
+	public List<SlimAssayDomain> processSlimAssayDomain(String cmd) {
+		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 		log.info("processSlimAssayDomain: " + cmd);	
+		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -1470,6 +1463,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	// ---------------------------------------------------------------------------------------
 	// ----------- GET/DOWNLOAD RESULTS ------------------------------------------------------
 	// ---------------------------------------------------------------------------------------
+	
 	// results by cell type
 
 	@Transactional	
@@ -1493,7 +1487,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		return download(cmd, getTsvFileName("getResultByCellType", accid), new ResultFormatter());
 	}
 	
-	// ---------------------------------------------------------------------------------------
 	// results by marker
 
 	@Transactional	
@@ -1516,7 +1509,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		String cmd = getResultBySQL("marker", accid, -1, -1, false);
 		return download(cmd, getTsvFileName("getResultByMarker", accid), new ResultFormatter());
 	}
-	// ---------------------------------------------------------------------------------------
+
 	// result by reference
 
 	@Transactional	
@@ -1540,7 +1533,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		return download(cmd, getTsvFileName("getResultByRef", accid), new ResultFormatter());
 	}
 	
-	// ---------------------------------------------------------------------------------------
 	// result by structure
 
 	@Transactional	
@@ -1564,8 +1556,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		return download(cmd, getTsvFileName("getResultByStructure", accid), new ResultFormatter());
 	}
 
-	// -------------------------------------------------------
-
 	public static class ResultFormatter implements TsvFormatter {
 		public String format (ResultSet obj) {
 			String[][] cols = {
@@ -1587,11 +1577,13 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 	
 	public String getResultBySQL(String queryType, String accid, int offset, int limit, boolean returnCount) {
+		
 		String cmd;
 		String joinPoint;
 		int mgiTypeKey;
 		int logicalDbKey;
 		String stageClause = "";
+		
 		switch (queryType) {
 		case "reference":
 			joinPoint = "_refs_key";
@@ -1658,9 +1650,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 		return cmd;
 	}
-
 	
-	// ---------------------------------------------------------------------------------------
 	@Transactional	
 	public Long processSummaryResultCount(String cmd) {
 		// return count of summary results domains using search cmd

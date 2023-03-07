@@ -934,10 +934,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	public Response downloadMarkerByRef (String accid) {
 		String cmd = getMarkerByRefSQL (accid, -1, -1, false);
-		return download(cmd, getTsvFileName("getMarkerByRef", accid), new ResultFormatter());
+		return download(cmd, getTsvFileName("getMarkerByRef", accid), new MarkerFormatter());
 	}
 
-	public static class ResultFormatter implements TsvFormatter {
+	public static class MarkerFormatter implements TsvFormatter {
 		public String format (ResultSet obj) {
 			String[][] cols = {
                 	{"Symbol", "symbol"},

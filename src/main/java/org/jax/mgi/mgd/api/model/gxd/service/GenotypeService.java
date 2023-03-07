@@ -964,10 +964,10 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 	public Response downloadGenotypeByJnum (String accid) {
 		String cmd = getGenotypeByRefSQL (accid, -1, -1, false);
-		return download(cmd, getTsvFileName("getGenotypeByRef", accid), new ResultFormatter());
+		return download(cmd, getTsvFileName("getGenotypeByRef", accid), new GenotypeFormatter());
 	}
 
-	public static class ResultFormatter implements TsvFormatter {
+	public static class GenotypeFormatter implements TsvFormatter {
 		public String format (ResultSet obj) {
 			String[][] cols = {
                 	{"Genotype ID", "genotypeid"},

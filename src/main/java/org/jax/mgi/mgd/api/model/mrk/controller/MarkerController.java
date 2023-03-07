@@ -197,7 +197,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	@GET
 	@ApiOperation(value = "Get list of marker domains by reference jnum id")
 	@Path("/getMarkerByRef")
-	public SearchResults<SummaryMarkerDomain> getGenotypeByRef(
+	public SearchResults<SummaryMarkerDomain> getMarkerByRef(
 		@QueryParam("accid") String accid,
 		@QueryParam("offset") int offset,
 		@QueryParam("limit") int limit

@@ -337,6 +337,11 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				doSplit = "0";
 			}
 			
+                        // doi ids numeric may be too big to split
+                        if (domain.get(i).getLogicaldbKey().equals("65")) {
+                                doSplit = "0";
+                        }
+
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				
 				// minimum domain info for create:

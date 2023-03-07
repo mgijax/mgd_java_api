@@ -304,6 +304,7 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		Boolean modified = false;
 		String isPreferred = "1";
 		String isPrivate = "0";
+                String doSplit = "1";
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processAccession/nothing to process");
@@ -332,6 +333,11 @@ public class AccessionService extends BaseService<AccessionDomain> {
 				isPrivate = domain.get(i).getIsPrivate();
 			}
 			
+                        // doi ids numeric may be too big to split
+                        if (domain.get(i).getLogicaldbKey().equals("65")) {
+                                doSplit = "0";
+                        }
+
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 				
 				// minimum domain info for create:
@@ -357,7 +363,8 @@ public class AccessionService extends BaseService<AccessionDomain> {
 							+ ",'" + mgiTypeName + "'"
 							+ "," + refsKey
 							+ "," + isPreferred
-							+ "," + isPrivate + ",1)";
+							+ "," + isPrivate
+                                                        + "," + doSplit + ")";
 				log.info("cmd: " + cmd);
 				Query query = accessionDAO.createNativeQuery(cmd);
 				query.getResultList();

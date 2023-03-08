@@ -1369,35 +1369,32 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return results;
 	}
 
-	// ----------------------------------------------------------------------------------------
-	// -------- GET/DOWNLOAD ALLELES ----------------------------------------------------------
-	// ----------------------------------------------------------------------------------------
-
-	public String getAlleleByImagePaneSQL(String key) {
-		String cmd = "\nselect distinct a._allele_key"
-			    + "\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, all_allele a" 
-			    + "\nwhere i._image_key = " + key
-			    + "\nand i._image_key = ip._image_key" 
-			    + "\nand ip._imagepane_key = ipa._imagepane_key" 
-			    + "\nand ipa._mgitype_key = 11"
-			    + "\nand ipa._object_key = a._allele_key";
-		return cmd;
-	}
+	//
+	// allele by image
+	//
+	
 	@Transactional	
 	public List<SlimAlleleDomain> getAlleleByImagePane(SlimImageDomain searchDomain) {
 		// return list of alleles that are associated with image panes of given image
 	
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
-
-		String cmd = getAlleleByImagePaneSQL(searchDomain.getImageKey());
+		
+		String cmd = "\nselect distinct a._allele_key"
+			    + "\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, all_allele a" 
+			    + "\nwhere i._image_key = " + searchDomain.getImageKey()
+			    + "\nand i._image_key = ip._image_key" 
+			    + "\nand ip._imagepane_key = ipa._imagepane_key" 
+			    + "\nand ipa._mgitype_key = 11"
+			    + "\nand ipa._object_key = a._allele_key";
 		log.info(cmd);
+		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleDomain domain = new SlimAlleleDomain();
 				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));
 				alleleDAO.clear();
-				results.add(domain);				
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}
@@ -1407,38 +1404,32 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		return results;	
 	}
+	
+	// ----------------------------------------------------------------------------------------
+	// -------- GET/DOWNLOAD ALLELES ----------------------------------------------------------
+	// ----------------------------------------------------------------------------------------
 
-	public Response downloadAlleleByImagePane (int key) {
-		String cmd = getAlleleByImagePaneSQL(""+key);
-		return download (cmd, getTsvFileName("getAlleleByImagePane", ""+key), new AlleleFormatter());
-	}
-
-	@Transactional	
-	public List<SummaryAlleleDomain> getAlleleByMarker(String accid) {
-		// return list of allele domains by marker acc id
-		String cmd = getAlleleBySQL("marker", accid);
-		return processSummaryDomain(cmd);
-	}
-
-	public Response downloadAlleleByMarker (String accid) {
-		String cmd = getAlleleBySQL("marker", accid);
-		return download (cmd, getTsvFileName("getAlleleByMarker", accid), new AlleleFormatter());
-	}
-
-	@Transactional	
-	public List<SummaryAlleleDomain> getAlleleByRef(String accid) {
-		// return list of allele domains by reference jnumid
-		String cmd = getAlleleBySQL("reference", accid);
-		return processSummaryDomain(cmd);
-	}	
-
-	public Response downloadAlleleByRef (String accid) {
-		String cmd = getAlleleBySQL("reference", accid);
-		return download (cmd, getTsvFileName("getAlleleByRef", accid), new AlleleFormatter());
-	}
-
-	private List<SummaryAlleleDomain> processSummaryDomain(String cmd) {
-		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
+	private SearchResults<SummaryAlleleDomain> processSummarySQL(String cmdCount, String cmd, int offset, int limit) {
+		// return search results of allele domain based on SQL cmd
+		
+		SearchResults<SummaryAlleleDomain> results = new SearchResults<SummaryAlleleDomain>();
+		List<SummaryAlleleDomain> summaryResults = new ArrayList<SummaryAlleleDomain>();
+		
+		log.info(cmdCount);
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmdCount);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				alleleDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		log.info(cmd);	
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -1455,44 +1446,29 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				domain.setPheno(rs.getString("pheno"));				
 				domain.setSynonyms(rs.getString("synonyms"));
 				domain.setAttrs(rs.getString("attrs"));
-				results.add(domain);
+				summaryResults.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}	
+		
+		results.items = summaryResults;
 		return results;
-	}
+	}	
 	
-	public static class AlleleFormatter implements TsvFormatter {
-		public String format (ResultSet obj) {
-			String[][] cols = {
-                    		{"Symbol", "symbol"},
-                    		{"MGI ID","alleleid"},
-                    		{"Name", "name"},
-                    		{"Synonyms", "synonyms"},
-                    		{"Transmission", "transmission"},
-                    		{"Allele Status", "status"},
-                    		{"Generation Type", "alleletype"},
-                    		{"Attributes", "attrs"},
-                    		{"MP Annotations", "pheno"},
-                    		{"Disease Annotations", "diseases"}
-			};
-			return formatTsvHelper(obj, cols);
-		}
-	}
-
 	/* 
 	 * I started with most of the following being a view (all except the joining with the
 	 * accid parameter). The performance was terrible, 18-20 seconds. By putting it all in one big query
 	 * execution time is cut to 4 sec. 
-	 */
-	public String getAlleleBySQL (String queryType, String accid) {
+	 */	
+	public String getAlleleBySQL (String queryType, String accid, int offset, int limit, boolean returnCount) {
 		// allelediseases = allele key + comman separated list of diseases
 		String cmd = "";
 
 		switch (queryType) {
+		
 		case "marker":
 			cmd +=  "with alleles as ("
 			+ "\nselect a._allele_key "
@@ -1503,6 +1479,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			+ "\nand aa.accid = '" + accid + "'),"
 			;
 			break;
+			
 		case "reference":
 			cmd += "with alleles as ("
   			+ "\n  select ra._object_key as _allele_key"
@@ -1514,6 +1491,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
   			+ "\n  and aa.accid = '" + accid + "'),"
 			;
 			break;
+			
 		default:
 			throw new RuntimeException("Unknown queryType: " + queryType);
 		}
@@ -1628,8 +1606,107 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		;
 
 		// Finally, the sorting
-		cmd += "\norder by trans.term desc, astatus.term, a.symbol " ;
+		//cmd += "\norder by trans.term desc, astatus.term, a.symbol" ;
 
 		return cmd;
 	}
+	
+	public static class AlleleFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+                    		{"Symbol", "symbol"},
+                    		{"MGI ID","alleleid"},
+                    		{"Name", "name"},
+                    		{"Synonyms", "synonyms"},
+                    		{"Transmission", "transmission"},
+                    		{"Allele Status", "status"},
+                    		{"Generation Type", "alleletype"},
+                    		{"Attributes", "attrs"},
+                    		{"MP Annotations", "pheno"},
+                    		{"Disease Annotations", "diseases"}
+			};
+			return formatTsvHelper(obj, cols);
+		}
+	}
+
+	//
+	// allele by marker
+	// getAlleleByMarker() -> getAlleleByMarkerSQL(), processSummarySQL()
+	// downloadAlleleByMarker() -> getAlleleBySQL()
+	//
+	
+	@Transactional	
+	public SearchResults<SummaryAlleleDomain> getAlleleByMarker(String accid, int offset, int limit) {
+		// return list of allele domains by marker acc id
+		String cmdCount = getAlleleByMarkerSQL(accid, offset, limit, true);
+		String cmd = getAlleleByMarkerSQL(accid, offset, limit, false);
+		return processSummarySQL(cmdCount, cmd, offset, limit);
+	}
+	
+	public String getAlleleByMarkerSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting allele by marker id
+		
+		String cmd;
+
+		if (returnCount) {
+			cmd =  "\nselect count(a._allele_key) as total_count "
+					+ "\nfrom all_allele a, acc_accession aa "
+					+ "\nwhere a._marker_key = aa._object_key "
+					+ "\nand aa._mgitype_key = 2 "
+					+ "\nand aa._logicaldb_key = 1 "
+					+ "\nand aa.accid = '" + accid + "'";
+			return cmd;
+		}
+		
+		cmd = getAlleleBySQL("marker", accid, offset, limit, returnCount);
+		cmd = addPaginationSQL(cmd, "trans.term desc, astatus.term, a.symbol", offset, limit);
+
+		return cmd;
+	}
+	
+	public Response downloadAlleleByMarker (String accid) {
+		String cmd = getAlleleByMarkerSQL(accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getAlleleByMarker", accid), new AlleleFormatter());
+	}	
+	
+	//
+	// allele by reference
+	// getAlleleByRef() -> getAlleleByRefSQL(), processSummarySQL()
+	// downloadAlleleByRef() -> getAlleleBySQL()
+	//	
+
+	@Transactional	
+	public SearchResults<SummaryAlleleDomain> getAlleleByRef(String accid, int offset, int limit) {
+		// return list of allele domains by reference jnumid
+		String cmdCount = getAlleleByRefSQL(accid, offset, limit, true);
+		String cmd = getAlleleByRefSQL(accid, offset, limit, false);		
+		return processSummarySQL(cmdCount, cmd, offset, limit);
+	}
+
+	public String getAlleleByRefSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting allele by reference acc id
+		
+		String cmd;
+
+		if (returnCount) {
+			cmd = "\nselect count(ra._object_key) as total_count"
+					+ "\nfrom MGI_Reference_Assoc ra, ACC_Accession aa"
+					+ "\nwhere ra._mgitype_key = 11"
+					+ "\nand ra._refs_key = aa._object_key"
+					+ "\nand aa._mgitype_key = 1"
+					+ "\nand aa._logicaldb_key = 1"
+					+ "\nand aa.accid = '" + accid + "'";
+			return cmd;
+		}
+		
+		cmd = getAlleleBySQL("reference", accid, offset, limit, returnCount);
+		cmd = addPaginationSQL(cmd, "trans.term desc, astatus.term, a.symbol", offset, limit);
+
+		return cmd;
+	}
+	
+	public Response downloadAlleleByRef (String accid) {
+		String cmd = getAlleleByRefSQL(accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getAlleleByRef", accid), new AlleleFormatter());
+	}	
 }	

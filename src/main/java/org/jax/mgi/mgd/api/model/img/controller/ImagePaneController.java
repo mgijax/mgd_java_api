@@ -5,10 +5,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.GXDImagePaneDomain;
@@ -83,21 +86,33 @@ public class ImagePaneController extends BaseController<ImagePaneDomain> {
 		return results;
 	}
 	
-	@POST
-	@ApiOperation(value = "Get Summary Image Panes by Ref key")
-	@Path("/getSummaryByReference")
-	public List<SummaryImagePaneDomain> getSummaryByReference(Integer key) {
-	
-		List<SummaryImagePaneDomain> results = new ArrayList<SummaryImagePaneDomain>();
+	@GET
+	@ApiOperation(value = "Get list of image pane domains by reference jnum id")
+	@Path("/getImagePaneByRef")
+	public SearchResults<SummaryImagePaneDomain> getImagePaneByRef(
+		@QueryParam("accid") String accid,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
+
+		SearchResults<SummaryImagePaneDomain> results = new SearchResults<SummaryImagePaneDomain>();
 
 		try {
-			results = imagePaneService.getSummaryByReference(key);
+			results = imagePaneService.getImagePaneByRef(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
 	}
+	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadImagePaneByRef")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response downloadMarkerByRef(@QueryParam("accid") String accid) {
+		return imagePaneService.downloadImagePaneByRef(accid);
+	}	
 	
 	@POST
 	@ApiOperation(value = "Process")

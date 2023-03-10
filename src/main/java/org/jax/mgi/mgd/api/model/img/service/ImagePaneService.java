@@ -8,7 +8,6 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.img.dao.ImagePaneDAO;
@@ -143,49 +142,17 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 		return results;	
 	}
 	
-	public String getImagePaneByRefSQL (String accid, int offset, int limit, boolean returnCount) {
-		// SQL for selecting imagepane summary by acc id
-		
-		String cmd;
-
-		if (returnCount) {
-			cmd = "\nselect count(_imagepane_key) as total_count from IMG_Image_SummaryByReference_View where jnumid = '" + accid + "'";
-			return cmd;
-		}
-		
-		cmd = "\nselect * from IMG_Image_SummaryByReference_View where jnumid = '" + accid + "'";
-		cmd = addPaginationSQL(cmd, "figurelabel, panelabel, symbol", offset, limit);
-
-		return cmd;
-	}
-
 	@Transactional	
-	public SearchResults<SummaryImagePaneDomain> getImagePaneByRef(String accid, int offset, int limit) {
-		// return list of image pane domains by reference jnum id
-
-		SearchResults<SummaryImagePaneDomain> results = new SearchResults<SummaryImagePaneDomain>();
-		List<SummaryImagePaneDomain> summaryResults = new ArrayList<SummaryImagePaneDomain>();
+	public List<SummaryImagePaneDomain> getSummaryByReference(Integer key) {
+		// return list of full size image panes by reference (_refs_key)
+		// class = Expression
+		// type = Full Size
+	
+		List<SummaryImagePaneDomain> results = new ArrayList<SummaryImagePaneDomain>();
 		
-		String cmd = getImagePaneByRefSQL(accid, offset, limit, true);
+		String cmd = "\nselect * from IMG_Image_SummaryByReference_View where _refs_key = " + key;
 		log.info(cmd);
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				results.total_count = rs.getLong("total_count");
-				results.offset = offset;
-				results.limit = limit;
-				imagePaneDAO.clear();				
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}	
-		
-		cmd = getImagePaneByRefSQL(accid, offset, limit, false);
-		log.info(cmd);	
-		
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
@@ -209,38 +176,16 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 				domain.setMarkerid(rs.getString("markerid"));
 				domain.setMarkerSymbol(rs.getString("symbol"));
 				domain.setAssayType(rs.getString("assaytype"));
-				summaryResults.add(domain);				
-				imagePaneDAO.clear();
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-		}		
-
-		results.items = summaryResults;
-		return results;
-	}		
-
-	public Response downloadImagePaneByRef (String accid) {
-		String cmd = getImagePaneByRefSQL (accid, -1, -1, false);
-		return download(cmd, getTsvFileName("getImagePaneByRef", accid), new ImagePaneFormatter());
-	}
-
-	public static class ImagePaneFormatter implements TsvFormatter {
-		public String format (ResultSet obj) {
-			String[][] cols = {
-                	{"Image", "imageid"},
-                	{"Figure", "figureLabel"},
-                	{"Pane", "paneLabel"},
-                	{"Specimen", "specimenLabel"},
-                	{"Assay (Gene)", "symbol"},
-                	{"Assay Type", "assaytype"},
-                	{"Specimen Note", "specimenNote"},
-			};
-			return formatTsvHelper(obj, cols);
 		}
-	}	
+		
+		return results;	
+	}
 	
 	@Transactional
 	public Boolean process(String parentKey, List<ImagePaneDomain> domain, User user) {

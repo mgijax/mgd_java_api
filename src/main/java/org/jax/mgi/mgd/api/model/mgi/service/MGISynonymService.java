@@ -124,9 +124,9 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 			
 			// use 2 single-quotes
-			if (domain.get(i).getSynonym().contains("'")) {
-				domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));
-			}
+//			if (domain.get(i).getSynonym().contains("'")) {
+//				domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));
+//			}
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
@@ -180,13 +180,14 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSynonym update");
-                                // trimming the synonym will create empty string if all spaces
-                                String synonym = domain.get(i).getSynonym().trim();
-                                if (synonym == null || synonym.isEmpty()) {
-                                    log.info("cannot update synonym to empty, blank or null");
-                                    continue;
 
-                                }
+				// trimming the synonym will create empty string if all spaces
+				String synonym = domain.get(i).getSynonym().trim();
+                if (synonym == null || synonym.isEmpty()) {
+                	log.info("cannot update synonym to empty, blank or null");
+                	continue;
+                }
+                
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 		
 				entity.setSynonymType(synonymTypeDAO.get(Integer.valueOf(domain.get(i).getSynonymTypeKey())));

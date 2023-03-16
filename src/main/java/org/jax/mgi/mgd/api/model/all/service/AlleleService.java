@@ -633,11 +633,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		
 		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
-			where = where + "\nand a.symbol ilike '" + searchDomain.getSymbol() + "'" ;
+			value = searchDomain.getSymbol().replaceAll("'", "''");
+			where = where + "\nand a.symbol ilike '" + value + "'" ;
 		}
 
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
-			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'" ;
+			value = searchDomain.getName().replaceAll("'", "''");
+			where = where + "\nand a.name ilike '" + value + "'" ;
 		}
 		
 		if (searchDomain.getIsExtinct() != null && !searchDomain.getIsExtinct().isEmpty()) {

@@ -429,10 +429,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
-			where = where + "\nand m.symbol ilike '" + searchDomain.getSymbol() + "'" ;
+			value = searchDomain.getSymbol().replaceAll("'", "''");
+			where = where + "\nand m.symbol ilike '" + value + "'" ;
 		}
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
-			where = where + "\nand m.name ilike '" + searchDomain.getName() + "'" ;
+			value = searchDomain.getName().replaceAll("'", "''");
+			where = where + "\nand m.name ilike '" + value + "'" ;
 		}
 		if (searchDomain.getChromosome() != null && !searchDomain.getChromosome().isEmpty()) {
 			where = where + "\nand m.chromosome = '" + searchDomain.getChromosome() + "'" ;

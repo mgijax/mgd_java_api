@@ -344,33 +344,33 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		Boolean from_marker = false;
 		Boolean do_union = false;
 		
-		String union = "union \nselect a.*\n" + 
-				"from gxd_antibody a, gxd_antibodyalias aa\n" + 
-				"where a._antibody_key = aa._antibody_key\n" + 
-				"and aa.alias ilike '";
+		String union = "union \nselect a.*" + 
+				"\nfrom gxd_antibody a, gxd_antibodyalias aa" + 
+				"\nwhere a._antibody_key = aa._antibody_key";
 
 		//log.info("Antibody name: " + searchDomain.getAntibodyName());
 		if(searchDomain.getAntibodyName() != null && ! searchDomain.getAntibodyName().isEmpty()) {
 			value = searchDomain.getAntibodyName().replaceAll("'", "''");
 			where = where + "\n and a.antibodyName ilike '" + value +  "'";
 			do_union = true;
-		}
+		}	
 		//log.info("Antibody typeKey: " + searchDomain.getAntibodyTypeKey());
 		if(searchDomain.getAntibodyTypeKey() != null && ! searchDomain.getAntibodyTypeKey().isEmpty()) {
 			where = where + "\n and a._antibodyType_key = " + searchDomain.getAntibodyTypeKey();
-		}
+		}		
 		//log.info("Antibody classKey: " + searchDomain.getAntibodyClassKey());
 		if(searchDomain.getAntibodyClassKey() != null && ! searchDomain.getAntibodyClassKey().isEmpty()) {
 			where = where + "\n and a._antibodyClass_key = " + searchDomain.getAntibodyClassKey();
-		}
+		}		
 		//log.info("Antibody organismKey: " + searchDomain.getOrganismKey());
 		if(searchDomain.getOrganismKey() != null && ! searchDomain.getOrganismKey().isEmpty()) {
 			where = where + "\n and a._organism_key = " + searchDomain.getOrganismKey();
-		}
+		}		
 		//log.info("antibody note: " + searchDomain.getAntibodyNote());
 		if(searchDomain.getAntibodyNote() != null && ! searchDomain.getAntibodyNote().isEmpty()) {
 			where = where + "\n and a.antibodyNote ilike '" + searchDomain.getAntibodyNote() + "'";
 		}
+		
 		if (searchDomain.getAntigen() != null)  {
 			if( searchDomain.getAntigen().getAccID() != null && ! searchDomain.getAntigen().getAccID().isEmpty()) {
 				//log.info("antigen ID is specified");
@@ -503,8 +503,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
         		value = searchDomain.getAliases().get(0).getShort_citation().replace("'",  "''");
                 where = where + "\nand aref.short_citation ilike '" + value + "'";
                 from_aliasref = true;
-        }
-	        if (searchDomain.getAliases().get(0).getJnumid() != null && !searchDomain.getAliases().get(0).getJnumid().isEmpty()) {
+			}
+			if (searchDomain.getAliases().get(0).getJnumid() != null && !searchDomain.getAliases().get(0).getJnumid().isEmpty()) {
         		//log.info("Adding alias jnum id/assoc type clause");
                 where = where + "\nand aref.jnumid = '" + searchDomain.getAliases().get(0).getJnumid() + "'";
 	            from_aliasref = true;
@@ -567,7 +567,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		if (do_union == true) {
-			String union_text = union + searchDomain.getAntibodyName() +  "'";
+			value = searchDomain.getAntibodyName().replaceAll("'", "''");
+			String union_text = union + "\nand aa.alias ilike '" + value +  "'";
 			cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + union_text + "\n" + orderBy;
 		}
 		log.info(cmd);

@@ -227,7 +227,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		// name
 		if (searchDomain.getAntigenName() != null && ! searchDomain.getAntigenName().isEmpty()) {
 			value = searchDomain.getAntigenName().replaceAll("'", "''");
-			where = where + "\nand a.antigenName ilike '" +value + "'";
+			where = where + "\nand a.antigenName ilike '" + value + "'";
 		}
 		
 		// region covered

@@ -124,9 +124,9 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 		for (int i = 0; i < domain.size(); i++) {
 			
 			// use 2 single-quotes
-			if (domain.get(i).getSynonym().contains("'")) {
-				domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));
-			}
+			//if (domain.get(i).getSynonym().contains("'")) {
+				//domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));
+			//}
 			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	

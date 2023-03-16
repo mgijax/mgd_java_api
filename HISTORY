@@ -4,6 +4,14 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-22-36
+DATE: 03/16/2023
+STAFF: lec
+wts2-1134/fl2-244/Auto-incorrect function in Synonym field in Allele Module
+#       modified:   src/main/java/org/jax/mgi/mgd/api/model/all/service/AlleleService.java
+#       modified:   src/main/java/org/jax/mgi/mgd/api/model/mgi/service/MGISynonymService.java
+#       modified:   src/main/java/org/jax/mgi/mgd/api/model/mrk/service/MarkerService.java
+
 TAG: mgd_java_api-6-0-22-35
 DATE: 03/07/2023
 STAFF: lec

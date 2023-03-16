@@ -397,13 +397,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand r._referencetype_key =" + searchDomain.getReferenceType();
 		}		
 		if (searchDomain.getAuthors() != null && !searchDomain.getAuthors().isEmpty()) {
-			where = where + "\nand r.authors ilike '" + searchDomain.getAuthors() + "'";
+			value = searchDomain.getAuthors().replaceAll("'","''");
+			where = where + "\nand r.authors ilike '" + value + "'";
 		}
 		if (searchDomain.getTitle() != null && !searchDomain.getTitle().isEmpty()) {
-			where = where + "\nand r.title ilike '" + searchDomain.getTitle() + "'";
+			value = searchDomain.getTitle().replaceAll("'","''");
+			where = where + "\nand r.title ilike '" + value + "'";
 		}
 		if (searchDomain.getJournal() != null && !searchDomain.getJournal().isEmpty()) {
-			where = where + "\nand r.journal ilike '" + searchDomain.getJournal() + "'";
+			value = searchDomain.getJournal().replaceAll("'","''");
+			where = where + "\nand r.journal ilike '" + value + "'";
 		}
 		if (searchDomain.getVol() != null && !searchDomain.getVol().isEmpty()) {
 			where = where + "\nand r.vol ilike '" + searchDomain.getVol() + "'";

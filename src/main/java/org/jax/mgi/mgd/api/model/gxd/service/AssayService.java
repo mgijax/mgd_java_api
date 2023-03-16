@@ -582,8 +582,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		if (searchDomain.getSpecimens() != null) {
 			
-			value = searchDomain.getSpecimens().get(0).getSpecimenLabel();
-			value = value.replace("'",  "''");
+			value = searchDomain.getSpecimens().get(0).getSpecimenLabel().replaceAll("'","''");
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.specimenLabel ilike '" + value + "'";				
 				from_specimen = true;
@@ -674,7 +673,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// gels
 		
 		if (searchDomain.getGelLanes() != null) {
-			value = searchDomain.getGelLanes().get(0).getLaneLabel();
+			value = searchDomain.getGelLanes().get(0).getLaneLabel().replaceAll("'","''");
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.laneLabel ilike '" + value + "'";				
 				from_gellane = true;

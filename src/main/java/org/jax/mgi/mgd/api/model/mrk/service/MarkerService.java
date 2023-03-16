@@ -549,7 +549,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				from_synonym = true;
 			}
 			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
-				value = searchDomain.getSynonyms().get(0).getSynonym().replaceAll("'", "\'");
+				value = searchDomain.getSynonyms().get(0).getSynonym().replaceAll("'", "\\'");
 				where = where + "\nand ms.synonym ilike E'" + value + "'";
 				from_synonym = true;
 			}

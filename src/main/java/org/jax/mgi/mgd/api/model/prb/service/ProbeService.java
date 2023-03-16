@@ -472,7 +472,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
-			where = where + "\nand p.name ilike '" + searchDomain.getName() + "'" ;
+			value = searchDomain.getName().replaceAll("'", "''");
+			where = where + "\nand p.name ilike '" + value + "'" ;
 		}
 
 		if (searchDomain.getRegionCovered() != null && !searchDomain.getRegionCovered().isEmpty()) {

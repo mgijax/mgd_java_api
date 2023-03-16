@@ -828,8 +828,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// synonym, j:
 		if (searchDomain.getSynonyms() != null) {
 			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
-				value = searchDomain.getSynonyms().get(0).getSynonym().replaceAll("'", "\\\\'");
-				where = where + "\nand ms.synonym ilike E'" + value + "'";				
+				value = searchDomain.getSynonyms().get(0).getSynonym().replaceAll("'", "''");
+				where = where + "\nand ms.synonym ilike '" + value + "'";				
 				from_synonym = true;
 			}
 			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {

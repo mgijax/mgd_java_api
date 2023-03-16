@@ -199,17 +199,12 @@ public class AntigenService extends BaseService<AntigenDomain> {
 	public List<SlimAntigenDomain> search(AntigenDomain searchDomain) {
 
 		List<SlimAntigenDomain> results = new ArrayList<SlimAntigenDomain>();
-		
-		log.info("domain toString: " + searchDomain.toString());
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select a.*";
 		String from = "from gxd_antigen a";
 		String where = "where a._antigen_key is not null";
 		String orderBy = "order by a.antigenName";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
-		//String value;
+		String value;
 		Boolean from_accession = false;
 		Boolean from_source = false;
 		Boolean from_antibody = false;
@@ -217,7 +212,6 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		
 		// if parameter exists, then add to where-clause
 		// creation/modification by/date
-		log.info("createdBy: " + searchDomain.getCreatedBy() + " modifiedBy: " + searchDomain.getModifiedBy() + " createDate: " + searchDomain.getCreation_date() + "modDate" + searchDomain.getModification_date());
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
 			from = from + cmResults[0];
@@ -232,7 +226,8 @@ public class AntigenService extends BaseService<AntigenDomain> {
 
 		// name
 		if (searchDomain.getAntigenName() != null && ! searchDomain.getAntigenName().isEmpty()) {
-			where = where + "\nand a.antigenName ilike '" + searchDomain.getAntigenName() + "'";
+			value = searchDomain.getAntigenName().replaceAll("'", "''");
+			where = where + "\nand a.antigenName ilike '" +value + "'";
 		}
 		
 		// region covered

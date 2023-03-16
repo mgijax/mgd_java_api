@@ -153,6 +153,8 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 					refsKey = "null";
 				}
 				
+			        domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));
+
 				cmd = "select count(*) from MGI_insertSynonym ("
 							+ user.get_user_key().intValue()
 							+ "," + parentKey
@@ -185,7 +187,6 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 		
 				entity.setSynonymType(synonymTypeDAO.get(Integer.valueOf(domain.get(i).getSynonymTypeKey())));
-			        domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));
 				entity.setSynonym(domain.get(i).getSynonym());
 				
 				// reference can be null

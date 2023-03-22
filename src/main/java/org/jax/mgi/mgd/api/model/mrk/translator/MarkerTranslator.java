@@ -59,6 +59,10 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setName(entity.getName());
 		domain.setChromosome(entity.getChromosome());
 		
+		if (entity.getLocationCache().getGenomicChromosome() != null) {
+			domain.setGenonmicChromosome(entity.getLocationCache().getGenomicChromosome());
+		}
+		
 		if (entity.getCytogeneticOffset() != null) {
 			domain.setCytogeneticOffset(entity.getCytogeneticOffset());
 		}
@@ -287,6 +291,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// biotypes 
 		if (entity.getBiotypes() != null && !entity.getBiotypes().isEmpty()) {
+			log.info("size of entity.getBiotypes:" + entity.getBiotypes().size());
 			Iterable<SeqMarkerBiotypeDomain> bio = biotypeTranslator.translateEntities(entity.getBiotypes());
 			domain.setBiotypes(IteratorUtils.toList(bio.iterator()));
 			domain.getBiotypes().sort(Comparator.comparing(SeqMarkerBiotypeDomain::getRawbiotype, String.CASE_INSENSITIVE_ORDER));

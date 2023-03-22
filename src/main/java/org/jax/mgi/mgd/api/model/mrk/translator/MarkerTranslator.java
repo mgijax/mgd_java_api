@@ -60,7 +60,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setChromosome(entity.getChromosome());
 		
 		if (entity.getLocationCache().getGenomicChromosome() != null) {
-			domain.setGenonmicChromosome(entity.getLocationCache().getGenomicChromosome());
+			domain.setGenomicChromosome(entity.getLocationCache().getGenomicChromosome());
 		}
 		
 		if (entity.getCytogeneticOffset() != null) {

@@ -23,7 +23,7 @@ public class MarkerDomain extends BaseDomain {
 	private String symbol;
 	private String name;
 	private String chromosome;
-	private String genonmicChromosome;
+	private String genomicChromosome;
 	private String cytogeneticOffset;
 	private String cmOffset;
 	private String organismKey;

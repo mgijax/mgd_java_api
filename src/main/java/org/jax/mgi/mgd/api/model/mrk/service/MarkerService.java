@@ -856,7 +856,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			while (rs.next()) {				
 				SlimMarkerDomain domain = new SlimMarkerDomain();				
 				domain.setSymbol(rs.getString("nextSequence"));				
-				results.add(domain);			}
+				results.add(domain);			
+			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
@@ -881,7 +882,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			while (rs.next()) {				
 				SlimMarkerDomain domain = new SlimMarkerDomain();				
 				domain.setSymbol(rs.getString("nextSequence"));				
-				results.add(domain);			}
+				results.add(domain);			
+			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {

@@ -194,6 +194,13 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return markerService.getNextGmSequence();
 	}
 	
+	@POST
+	@ApiOperation(value = "Get next Rr symbol that is available in the sequence")
+	@Path("/getNextRrSequence")
+	public List<SlimMarkerDomain> getNextRrSequence() {
+		return markerService.getNextRrSequence();
+	}
+	
 	@GET
 	@ApiOperation(value = "Get list of marker domains by reference jnum id")
 	@Path("/getMarkerByRef")

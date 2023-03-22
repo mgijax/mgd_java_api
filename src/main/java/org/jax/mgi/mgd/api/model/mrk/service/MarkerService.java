@@ -866,6 +866,31 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		return results;
 	}	
 	
+	@Transactional	
+	public List<SlimMarkerDomain> getNextRrSequence() {
+		// return next Rr symbol that is available in the sequence
+		
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+		
+		String cmd = "\nselect 'Rr' || (max(substring(symbol from 3)::int) + 1) as nextSequence from mrk_marker where symbol ~ '^Rr[\\d]+$'"
+				+ "\nand substring(symbol from 3)::int <= 948";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {				
+				SlimMarkerDomain domain = new SlimMarkerDomain();				
+				domain.setSymbol(rs.getString("nextSequence"));				
+				results.add(domain);			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 	public String getMarkerByRefSQL (String accid, int offset, int limit, boolean returnCount) {
 		// SQL for selecting marker by acc id
 		

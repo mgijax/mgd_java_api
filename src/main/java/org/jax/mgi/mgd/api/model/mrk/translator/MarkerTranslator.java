@@ -287,12 +287,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		// par accession ids editable for mouse
-		else if (entity.getOrganism().get_organism_key() == 1
-				&& entity.getParToGene() != null) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsNonMouse());
-			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
-		}		
+//		else if (entity.getOrganism().get_organism_key() == 1
+//				&& entity.getParToGene() != null) {
+//			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsNonMouse());
+//			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+//			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
+//		}		
 		
 		// accession ids non-editable for mouse
 		if (entity.getOrganism().get_organism_key() == 1 && entity.getNonEditAccessionIdsMouse() != null && !entity.getNonEditAccessionIdsMouse().isEmpty()) {

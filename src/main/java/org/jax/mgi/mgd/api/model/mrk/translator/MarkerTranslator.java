@@ -10,13 +10,11 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipMarkerPARDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipMarkerQTLCandidateDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipMarkerQTLInteractionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipMarkerTSSDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
-import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipMarkerPARTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipMarkerQTLCandidateTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipMarkerQTLInteractionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipMarkerTSSTranslator;
@@ -46,7 +44,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private RelationshipMarkerTSSTranslator markerTSSTranslator = new RelationshipMarkerTSSTranslator();
 	private RelationshipMarkerQTLCandidateTranslator markerQTLCandidateTranslator = new RelationshipMarkerQTLCandidateTranslator();
 	private RelationshipMarkerQTLInteractionTranslator markerQTLInteractionTranslator = new RelationshipMarkerQTLInteractionTranslator();
-	private RelationshipMarkerPARTranslator markerPARTranslator = new RelationshipMarkerPARTranslator();
 	private SeqMarkerBiotypeTranslator biotypeTranslator = new SeqMarkerBiotypeTranslator();
 
 	@Override
@@ -247,12 +244,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
     		}
     		domain.setQtlInteractionToGene(markerqtli);
 			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-		}
-		
-		// one-to-many par-to-gene relationships
-		if (entity.getParToGene() != null && !entity.getParToGene().isEmpty()) {
-    		Iterable<RelationshipMarkerPARDomain> relationships = markerPARTranslator.translateEntities(entity.getParToGene());
-			domain.setParToGene(IteratorUtils.toList(relationships.iterator()));
 		}		
 		
 		// one-to-many marker aliases
@@ -285,14 +276,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsNonMouse());
 			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
-		}
-		// par accession ids editable for mouse
-//		else if (entity.getOrganism().get_organism_key() == 1
-//				&& entity.getParToGene() != null) {
-//			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsNonMouse());
-//			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
-//			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
-//		}		
+		}		
 		
 		// accession ids non-editable for mouse
 		if (entity.getOrganism().get_organism_key() == 1 && entity.getNonEditAccessionIdsMouse() != null && !entity.getNonEditAccessionIdsMouse().isEmpty()) {

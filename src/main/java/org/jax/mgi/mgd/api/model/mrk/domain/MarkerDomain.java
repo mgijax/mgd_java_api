@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipMarkerPARDomain;
 import org.jax.mgi.mgd.api.model.seq.domain.SeqMarkerBiotypeDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.MarkerFeatureTypeDomain;
 
@@ -69,6 +70,7 @@ public class MarkerDomain extends BaseDomain {
 	private List<SlimMarkerDomain> tssToGene;
 	private List<SlimMarkerDomain> qtlCandidateToGene;
 	private List<SlimMarkerDomain> qtlInteractionToGene;
+	private List<RelationshipMarkerPARDomain> parToGene;
 	private List<SlimMarkerDomain> aliases;
 	 
 	// exists in domain, but not populated by marker translator

@@ -23,6 +23,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerPAR;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerQTLCandidate;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerQTLInteraction;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerTSS;
@@ -198,6 +199,9 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause="marker1")
 	private List<RelationshipMarkerQTLInteraction> qtlInteractionToGene;
 	
+	@OneToMany()
+	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	private List<RelationshipMarkerPAR> parToGene;
 	
 	@OneToMany()
 	@JoinTable(name = "mrk_alias",	

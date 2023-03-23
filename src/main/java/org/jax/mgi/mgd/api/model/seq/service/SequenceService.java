@@ -97,60 +97,62 @@ public class SequenceService extends BaseService<SequenceDomain> {
 
 	public String getSequenceByMarkerSQL(String accid, int offset, int limit, boolean returnCount) {
 	    String cmd;
+	    
 	    if (returnCount) {
-		cmd = "\nselect count(*) as total_count" + 
-			"\nfrom seq_marker_cache s, acc_accession aa" + 
-	    		"\nwhere s._marker_key = aa._object_key" + 
-			"\nand aa._mgitype_key = 2" + 
-			"\nand aa._logicaldb_key = 1" + 
-			"\nand aa.accid = '" + accid + "'"; 
+			cmd = "\nselect count(*) as total_count" + 
+				"\nfrom seq_marker_cache s, acc_accession aa" + 
+		    		"\nwhere s._marker_key = aa._object_key" + 
+				"\nand aa._mgitype_key = 2" + 
+				"\nand aa._logicaldb_key = 1" + 
+				"\nand aa.accid = '" + accid + "'"; 
 	    } else {
-	    	cmd = "select " +
-		"\n  s._sequence_key, " +
-		"\n  s.accid, " +
-		"\n  REPLACE(sa.url,'@@@@', s.accid) as url, " +
-		"\n  t1.term as sequenceType, " +
-		"\n  ss.length, " +
-		"\n  ss.description, " +
-		"\n  pss.strain, " +
-		"\n  array_to_string(array_agg(DISTINCT concat(m.symbol, '|', aa.accid)), ','::text) AS markers" +
-		"\nfrom " +
-		"\n  seq_marker_cache s, " +
-		"\n  acc_logicaldb sd, " +
-		"\n  acc_actualdb sa, " +
-		"\n  voc_term t1, " +
-		"\n  seq_sequence ss, " +
-		"\n  mrk_marker m, " +
-		"\n  seq_source_assoc sr, " +
-		"\n  prb_source pso, " +
-		"\n  prb_strain pss, " +
-		"\n  acc_accession aa," +
-		"\n  seq_marker_cache s2, " +
-		"\n  acc_accession aa2" +
-		"\nwhere s._sequencetype_key = t1._term_key" +
-		"\nand s._logicaldb_key = sd._logicaldb_key" +
-		"\nand s._sequence_key = ss._sequence_key" +
-		"\nand s._marker_key = m._marker_key" +
-		"\nand s._organism_key = 1 " +
-		"\nand s._sequence_key = sr._sequence_key" +
-		"\nand s._logicaldb_key = sa._logicaldb_key" +
-		"\nand not (sa._logicaldb_key in (13,41) and sa.name != 'UniProt')" +
-		"\nand not (sa._logicaldb_key = 9 and sa.name != 'GenBank')" +
-		"\nand sr._source_key = pso._source_key" +
-		"\nand pso._strain_key = pss._strain_key" +
-		"\nand m._marker_key = aa._object_key" +
-		"\nand aa._mgitype_key = 2 " +
-		"\nand aa._logicaldb_key = 1" +
-		"\nand aa.preferred = 1" +
-		"\nand s._sequence_key = s2._sequence_key" +
-		"\nand s2._marker_key = aa2._object_key" +
-		"\nand aa2._mgitype_key = 2" +
-		"\nand aa2._logicaldb_key = 1" +
-		"\nand aa2.accid = '" + accid + "'" +
-		"\ngroup by s._sequence_key, s.accid, sd.name, sa.url, t1.term, t1.sequencenum, ss.length, ss.description, pss.strain" +
-		"";
-		cmd = addPaginationSQL(cmd, "t1.sequencenum, sd.name, ss.length desc", offset, limit);
+	    	cmd = "\nselect " +
+			"\n  s._sequence_key, " +
+			"\n  s.accid, " +
+			"\n  REPLACE(sa.url,'@@@@', s.accid) as url, " +
+			"\n  t1.term as sequenceType, " +
+			"\n  ss.length, " +
+			"\n  ss.description, " +
+			"\n  pss.strain, " +
+			"\n  array_to_string(array_agg(DISTINCT concat(m.symbol, '|', aa.accid)), ','::text) AS markers" +
+			"\nfrom " +
+			"\n  seq_marker_cache s, " +
+			"\n  acc_logicaldb sd, " +
+			"\n  acc_actualdb sa, " +
+			"\n  voc_term t1, " +
+			"\n  seq_sequence ss, " +
+			"\n  mrk_marker m, " +
+			"\n  seq_source_assoc sr, " +
+			"\n  prb_source pso, " +
+			"\n  prb_strain pss, " +
+			"\n  acc_accession aa," +
+			"\n  seq_marker_cache s2, " +
+			"\n  acc_accession aa2" +
+			"\nwhere s._sequencetype_key = t1._term_key" +
+			"\nand s._logicaldb_key = sd._logicaldb_key" +
+			"\nand s._sequence_key = ss._sequence_key" +
+			"\nand s._marker_key = m._marker_key" +
+			"\nand s._organism_key = 1 " +
+			"\nand s._sequence_key = sr._sequence_key" +
+			"\nand s._logicaldb_key = sa._logicaldb_key" +
+			"\nand not (sa._logicaldb_key in (13,41) and sa.name != 'UniProt')" +
+			"\nand not (sa._logicaldb_key = 9 and sa.name != 'GenBank')" +
+			"\nand sr._source_key = pso._source_key" +
+			"\nand pso._strain_key = pss._strain_key" +
+			"\nand m._marker_key = aa._object_key" +
+			"\nand aa._mgitype_key = 2 " +
+			"\nand aa._logicaldb_key = 1" +
+			"\nand aa.preferred = 1" +
+			"\nand s._sequence_key = s2._sequence_key" +
+			"\nand s2._marker_key = aa2._object_key" +
+			"\nand aa2._mgitype_key = 2" +
+			"\nand aa2._logicaldb_key = 1" +
+			"\nand aa2.accid = '" + accid + "'" +
+			"\ngroup by s._sequence_key, s.accid, sd.name, sa.url, t1.term, t1.sequencenum, ss.length, ss.description, pss.strain" +
+			"";
+			cmd = addPaginationSQL(cmd, "t1.sequencenum, sd.name, ss.length desc", offset, limit);
 	    }
+	    
 	    return cmd;
 	}
 

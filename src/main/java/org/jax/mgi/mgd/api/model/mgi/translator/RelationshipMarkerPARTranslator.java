@@ -12,7 +12,7 @@ public class RelationshipMarkerPARTranslator extends BaseEntityDomainTranslator<
 
 		domain.setRelationshipKey(String.valueOf(entity.get_relationship_key()));
 		domain.setObjectKey1(String.valueOf(entity.get_object_key_1()));
-		domain.setSymbol(entity.getMarker());
+		domain.setSymbol(entity.getSymbol());
 		
 		return domain;
 	}

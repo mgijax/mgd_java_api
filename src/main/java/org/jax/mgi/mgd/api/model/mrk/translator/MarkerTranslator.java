@@ -269,7 +269,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		// accession ids editable for non-mouse;  exclude organisms used in entrezload
-		else if ((entity.getOrganism().get_organism_key() == 1 && entity.getParToGene() != null)
+		else if (entity.getOrganism().get_organism_key() != 1
 				&& entity.getOrganism().get_organism_key() != 2
 				&& entity.getOrganism().get_organism_key() != 10
 				&& entity.getOrganism().get_organism_key() != 11
@@ -282,6 +282,13 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 				&& entity.getOrganism().get_organism_key() != 95
 				&& entity.getEditAccessionIdsNonMouse() != null 
 				&& !entity.getEditAccessionIdsNonMouse().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsNonMouse());
+			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
+		}
+		// par accession ids editable for mouse
+		else if (entity.getOrganism().get_organism_key() == 1
+				&& entity.getParToGene() != null) {
 			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsNonMouse());
 			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));

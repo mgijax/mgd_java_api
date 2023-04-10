@@ -16,6 +16,7 @@ public class SummaryProbeDomain extends BaseDomain {
 	private String segmentType;
 	private String primer1Sequence;
 	private String primer2Sequence;
+	private String regionCovered;	
 	private String organism;
 	private String aliases;
 	private String jnumIDs;

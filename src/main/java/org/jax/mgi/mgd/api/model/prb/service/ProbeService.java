@@ -972,6 +972,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		+ "\n  p.name, "
 		+ "\n  p.primer1sequence, "
 		+ "\n  p.primer2sequence, "
+		+ "\n  p.regioncovered, "
 		+ "\n  pj.jnums, "
 		+ "\n  pm.markers, "
 		+ "\n  pm.markerids, "
@@ -1122,6 +1123,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				domain.setSegmentType(rs.getString("segmentType"));
 				domain.setPrimer1Sequence(rs.getString("primer1sequence"));
 				domain.setPrimer2Sequence(rs.getString("primer2sequence"));
+				domain.setRegionCovered(rs.getString("regionCovered"));				
 				domain.setOrganism(rs.getString("organism"));
 				domain.setMarkerID(rs.getString("markerids"));
 				domain.setMarkerSymbol(rs.getString("markers"));
@@ -1177,6 +1179,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 				{"Type",       "segmentType"},
 				{"Markers",    "markers"},
 				{"Marker IDs", "markerids"},
+				{"Region Covered", "regionCovered"},
 				{"Primer Sequence 1", "primer1sequence"},
 				{"Primer Sequence 2", "primer2sequence"},
 				{"Aliases",    "aliases"},

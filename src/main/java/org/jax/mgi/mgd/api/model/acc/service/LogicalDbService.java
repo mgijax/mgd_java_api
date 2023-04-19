@@ -521,14 +521,11 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		//       17 | IMAGE
 		//       44 | MGC
 		//       49 | NIA
-		//       46 | NIA 15K
 		//       50 | NIA 7.4K
 		//       51 | RIKEN
-		//       25 | RIKEN Cluster
 		//       26 | RIKEN (FANTOM)
 		//       48 | RPCI-23
 		//       52 | RPCI-24
-		//       80 | UniSTS
 		//       16 | WashU	
 		
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
@@ -539,7 +536,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				+ "\nunion"
 				+ "\nselect _logicaldb_key, name, 1 as org"
 				+ "\nfrom acc_logicaldb"
-				+ "\nwhere _logicaldb_key in (12,82,17,44,49,46,50,51,25,26,48,52,80,16)"
+				+ "\nwhere _logicaldb_key in (12,82,17,44,49,50,51,26,48,52,16)"
 				+ "\norder by org, name";
 		log.info(cmd);
 		

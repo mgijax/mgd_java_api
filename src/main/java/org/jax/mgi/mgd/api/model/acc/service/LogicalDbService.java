@@ -565,13 +565,12 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 
         // 43 | IMAGE Clone Libraries
         // 18 | dbEST Libraries
-        // 46 | NIA 15K
 		
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 
 		String cmd = "select _logicaldb_key, name"
 				+ "\nfrom acc_logicaldb"
-				+ "\nwhere _logicaldb_key in (18, 43, 46)"
+				+ "\nwhere _logicaldb_key in (18, 43)"
 				+ "\norder by name";
 		log.info(cmd);
 		

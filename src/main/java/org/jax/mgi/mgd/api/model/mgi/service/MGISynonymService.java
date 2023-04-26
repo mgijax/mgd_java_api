@@ -122,11 +122,6 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
-<<<<<<< HEAD
-			
-=======
-						
->>>>>>> fl2b
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
 				// if synonym is null/empty, then skip
@@ -156,13 +151,8 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				if (refsKey == null || refsKey.isEmpty()) {
 					refsKey = "null";
 				}
-<<<<<<< HEAD
-				
-			        domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));
-=======
-					
+	
 				domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));				
->>>>>>> fl2b
 
 				cmd = "select count(*) from MGI_insertSynonym ("
 							+ user.get_user_key().intValue()

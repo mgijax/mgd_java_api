@@ -15,6 +15,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
@@ -396,13 +397,16 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			where = where + "\nand r._referencetype_key =" + searchDomain.getReferenceType();
 		}		
 		if (searchDomain.getAuthors() != null && !searchDomain.getAuthors().isEmpty()) {
-			where = where + "\nand r.authors ilike '" + searchDomain.getAuthors() + "'";
+			value = searchDomain.getAuthors().replaceAll("'","''");
+			where = where + "\nand r.authors ilike '" + value + "'";
 		}
 		if (searchDomain.getTitle() != null && !searchDomain.getTitle().isEmpty()) {
-			where = where + "\nand r.title ilike '" + searchDomain.getTitle() + "'";
+			value = searchDomain.getTitle().replaceAll("'","''");
+			where = where + "\nand r.title ilike '" + value + "'";
 		}
 		if (searchDomain.getJournal() != null && !searchDomain.getJournal().isEmpty()) {
-			where = where + "\nand r.journal ilike '" + searchDomain.getJournal() + "'";
+			value = searchDomain.getJournal().replaceAll("'","''");
+			where = where + "\nand r.journal ilike '" + value + "'";
 		}
 		if (searchDomain.getVol() != null && !searchDomain.getVol().isEmpty()) {
 			where = where + "\nand r.vol ilike '" + searchDomain.getVol() + "'";
@@ -2177,50 +2181,100 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return a.equals(b);
 	}
 
-	@Transactional	
-	public List<SummaryReferenceDomain> getRefByAllele(SummaryReferenceDomain searchDomain) {
-		// return list of reference domains by allele acc id
+	// ----------------------------------------------------------
+	// get references by allele
 
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+	public String getRefByAlleleSQL(String accid, int offset, int limit, boolean returnCount) {
+		String cmd;
+		if (returnCount) {
+			cmd = "\nselect count(*) as total_count";
+		} else {
+			cmd = "\nselect a.accid, br._primary, r.*" ;
+		}
+		cmd += "\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r  join bib_refs br on r._refs_key = br._refs_key" + 
+			"\nwhere a.accid = '" + accid + "'" + 
+			"\nand a._mgitype_key = 11" + 
+			"\nand a._logicaldb_key = 1" + 
+			"\nand a._object_key = ar._object_key" + 
+			"\nand ar._mgitype_key = 11" + 				
+			"\nand ar._refs_key = r._refs_key";
+		if (!returnCount) cmd = addPaginationSQL(cmd, "r._refs_key desc", offset, limit);
+		return cmd;
+	}
+
+	@Transactional	
+	public SearchResults<SummaryReferenceDomain> getRefByAllele(String accid, int offset, int limit) {
+		// return list of reference domains by allele acc id
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
+
+		String cmd = getRefByAlleleSQL(accid, offset, limit, true);
+		results.total_count = processSummaryReferenceCount(cmd);
 		
-		String cmd = "\nselect a.accid, r.*" + 
-				"\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r" + 
-				"\nwhere a.accid = '" + searchDomain.getAccID() + "'" + 
-				"\nand a._mgitype_key = 11" + 
-				"\nand a._object_key = ar._object_key" + 
-				"\nand ar._mgitype_key = 11" + 				
-				"\nand ar._refs_key = r._refs_key";
-		
-		results = processSummaryReferenceDomain(searchDomain, cmd);	
+		cmd = getRefByAlleleSQL(accid, offset, limit, false);
+		results.items = processSummaryReferenceDomain(accid, offset, limit, cmd);
 		return results;
 	}
 	
 	@Transactional	
-	public List<SummaryReferenceDomain> getRefByMarker(SummaryReferenceDomain searchDomain) {
-		// return list of reference domains by marker acc id
+	public Response downloadRefByAllele(String accid) {
+		String cmd = getRefByAlleleSQL(accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getRefByAllele", accid), new ReferenceFormatter());
+	}
+	
+	// ----------------------------------------------------------
+	// get references by marker
 
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
-		
-		String cmd = "\nselect a.accid, r.*" + 
-				"\nfrom mrk_reference mr, acc_accession a, bib_summary_view r" + 
-				"\nwhere mr._marker_key = a._object_key" + 
-				"\nand a._mgitype_key = 2" + 
-				"\nand a.accid = '" + searchDomain.getAccID() + "'" + 
-				"\nand mr._refs_key = r._refs_key";
-		
-		results = processSummaryReferenceDomain(searchDomain, cmd);
+	public String getRefByMarkerSQL(String accid, int offset, int limit, boolean returnCount) {
+		String cmd;
+		if (returnCount) {
+			cmd = "\nselect count(*) as total_count";
+		} else {
+			cmd = "\nselect a.accid, br._primary, r.*";
+		}
+		cmd += "\nfrom mrk_reference mr, acc_accession a, bib_summary_view r join bib_refs br on r._refs_key = br._refs_key" + 
+			"\nwhere mr._marker_key = a._object_key" + 
+			"\nand a._mgitype_key = 2" + 
+			"\nand a._logicaldb_key = 1" + 
+			"\nand a.accid = '" + accid + "'" + 
+			"\nand mr._refs_key = r._refs_key";
+		if (!returnCount) cmd = addPaginationSQL(cmd, "r._refs_key desc", offset, limit);
+		return cmd;
+	}
+
+	@Transactional	
+	public SearchResults<SummaryReferenceDomain> getRefByMarker(String accid, int offset, int limit) {
+		// return list of reference domains by marker acc id
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
+
+		String cmd = getRefByMarkerSQL(accid, offset, limit, true);	
+		results.total_count = processSummaryReferenceCount(cmd);
+
+		cmd = getRefByMarkerSQL(accid, offset, limit, false);
+		results.items = processSummaryReferenceDomain(accid, offset, limit, cmd);
 		return results;
 	}	
-	
+
 	@Transactional	
-	public List<SummaryReferenceDomain> getRefBySearch(SummaryReferenceDomain searchDomain) {
+	public Response downloadRefByMarker(String accid) {
+		String cmd = getRefByMarkerSQL(accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getRefByMarker", accid), new ReferenceFormatter());
+	}
+
+	// ----------------------------------------------------------
+	// get references by search domain
+
+	public String getRefBySearchSQL(SummaryReferenceDomain searchDomain, int offset, int limit, boolean returnCount) {
 		// return list of reference domains by searchDomain
 		// accession ids; authors; title; journal; volume; and year.
 		
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
-				
-		String cmd = "\nselect null as accid, r.* from bib_summary_view r";
+		String cmd ;
+		if (returnCount) {
+	       		cmd = "\nselect count(*) as total_count from bib_summary_view r join bib_refs br on r._refs_key = br._refs_key";
+		} else {
+			cmd = "\nselect null as accid, br._primary, r.* from bib_summary_view r join bib_refs br on r._refs_key = br._refs_key";
+		}
 		String where = "\nwhere r._refs_key is not null";				
+		int initialWhereLength = where.length();
 		String value = "";
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
@@ -2237,6 +2291,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		if (searchDomain.getAuthors() != null && !searchDomain.getAuthors().isEmpty()) {
 			where = where + "\nand r.authors ilike '" + searchDomain.getAuthors() + "'";
+		}
+		if (searchDomain.getPrimaryAuthor() != null && !searchDomain.getPrimaryAuthor().isEmpty()) {
+			where = where + "\nand br._primary ilike '" + searchDomain.getPrimaryAuthor() + "'";
 		}
 		if (searchDomain.getTitle() != null && !searchDomain.getTitle().isEmpty()) {
 			where = where + "\nand r.title ilike '" + searchDomain.getTitle() + "'";
@@ -2269,53 +2326,90 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 		}
 		
+		if (where.length() == initialWhereLength) {
+			throw new RuntimeException("No conditions added to where clause.");
+		}
+
 		cmd = cmd + where;
-		results = processSummaryReferenceDomain(searchDomain, cmd);	
+
+		if (!returnCount) cmd = addPaginationSQL(cmd, "r._refs_key desc", offset, limit);
+		
+		return cmd;
+	}
+
+	@Transactional	
+	public SearchResults<SummaryReferenceDomain> getRefBySearch(SummaryReferenceDomain searchDomain) {
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
+		// return list of reference domains by searchDomain
+		// accession ids; authors; title; journal; volume; and year.
+		String cmd = getRefBySearchSQL(searchDomain, searchDomain.getOffset(), searchDomain.getLimit(), true);
+		results.total_count = processSummaryReferenceCount(cmd);
+
+		cmd = getRefBySearchSQL(searchDomain, searchDomain.getOffset(), searchDomain.getLimit(), false);
+		results.items = processSummaryReferenceDomain(searchDomain.getAccID(), searchDomain.getOffset(), searchDomain.getLimit(), cmd);	
 		return results;
 	}
 	
 	@Transactional	
-	public List<SummaryReferenceDomain> processSummaryReferenceDomain(SummaryReferenceDomain searchDomain, String cmd) {
+	public Response downloadRefBySearch(SummaryReferenceDomain searchDomain) {
+		String cmd = getRefBySearchSQL(searchDomain, -1, -1, false);
+		return download(cmd, getTsvFileName("getRefBySearch", null), new ReferenceFormatter());
+	}
+	
+	@Transactional	
+	public Long processSummaryReferenceCount(String cmd) {
+		// return count of summary reference domains using search cmd
+
+		Long total_count = null;
+		
+		log.info(cmd);
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				total_count = rs.getLong("total_count");
+				referenceDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+
+		return total_count;
+	}
+	
+	@Transactional	
+	public List<SummaryReferenceDomain> processSummaryReferenceDomain(String accid, int offset, int limit, String cmd) {
 		// return list of reference domains by acc id
 
 		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
 		
-		String offset = "0";
-		String limit = "250";
-		
-		if (searchDomain.getOffset() != null && !searchDomain.getOffset().isEmpty()) {
-			offset = searchDomain.getOffset();
-		}
-		
-		if (searchDomain.getLimit() != null && !searchDomain.getLimit().isEmpty()) {
-			limit = searchDomain.getLimit();
-		}
-		
-		cmd = cmd + "\norder by numericpart desc";
-		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryReferenceDomain domain = new SummaryReferenceDomain();
-				domain.setAccID(searchDomain.getAccID());
+				domain.setAccID(accid);
 				domain.setOffset(offset);
 				domain.setLimit(limit);
 				domain.setRefsKey(rs.getString("_refs_key"));
 				domain.setJnum(rs.getString("numericpart"));
-				domain.setJnumID(rs.getString("jnumid"));
+				domain.setJnumid(rs.getString("jnumid"));
 				domain.setShort_citation(rs.getString("short_citation"));
 				domain.setAuthors(rs.getString("authors"));
+				domain.setPrimaryAuthor(rs.getString("_primary"));
 				domain.setTitle(rs.getString("title"));	
 				domain.setJournal(rs.getString("journal"));
 				domain.setYear(rs.getString("year"));
 				domain.setMgiid(rs.getString("mgiid"));	
 				domain.setPubmedid(rs.getString("pubmedid"));
+				domain.setDoiid(rs.getString("doiid"));
 				domain.setVol(rs.getString("vol"));
 				domain.setReferencetype(rs.getString("referencetype"));
 				domain.setReferenceAbstract(rs.getString("abstract"));	
 				domain.setHasAllele(rs.getBoolean("has_alleles"));
+				domain.setHasGenotype(rs.getBoolean("has_genotype"));
 				domain.setHasAntibody(rs.getBoolean("has_antibodies"));
 				domain.setHasAssay(rs.getBoolean("has_gxdassays"));
 				domain.setHasAssayResult(rs.getBoolean("has_gxdresults"));
@@ -2324,6 +2418,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setHasGXDIndex(rs.getBoolean("has_gxdindex"));
 				domain.setHasMarker(rs.getBoolean("has_markers"));
 				domain.setHasProbe(rs.getBoolean("has_probes"));					
+				domain.setHasMapping(rs.getBoolean("has_mapping"));					
 				results.add(domain);
 				referenceDAO.clear();
 			}
@@ -2335,4 +2430,20 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		return results;
 	}	
+
+	public static class ReferenceFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+				{"J:#",       	"jnumid"},
+				{"PubMed ID",   "pubmedid"},
+				{"RefType",     "referencetype"},
+				{"Title",       "title"},
+				{"Authors",     "authors"},
+				{"Journal",     "journal"},
+				{"Year",        "year"},
+				{"Abstract",    "abstract"}
+			};
+			return formatTsvHelper(obj, cols);
+		}
+	}
 }

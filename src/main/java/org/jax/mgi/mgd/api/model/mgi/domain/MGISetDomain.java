@@ -23,5 +23,6 @@ public class MGISetDomain extends BaseDomain {
 	
 	private List<MGISetMemberDomain> genotypeClipboardMembers;		
 	private List<MGISetMemberDomain> celltypeClipboardMembers;
-	
-}   	
+	private List<MGISetMemberDomain> emapaClipboardMembers;
+
+}

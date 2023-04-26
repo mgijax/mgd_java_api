@@ -9,6 +9,27 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+/* Start download functionality imports */
+/*
+import java.util.List;
+import java.lang.StringBuffer;
+import java.lang.Exception;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.io.IOException;
+import java.io.Writer;
+import java.io.BufferedWriter;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException; 
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+*/
+/* End download functionality imports */
+
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -176,5 +197,5 @@ public abstract class BaseController<T extends BaseDomain> {
 	//public abstract SearchResults<T> getResults(Integer key);
 	public abstract SearchResults<T> update(T object, User user);
 	public abstract SearchResults<T> delete(Integer key, User user);
-
+	
 }

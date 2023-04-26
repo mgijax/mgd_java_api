@@ -11,6 +11,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
@@ -31,7 +32,6 @@ import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTranslator;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
-import org.jax.mgi.mgd.api.model.seq.domain.SeqSummaryDomain;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimTermDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -127,6 +127,11 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		// execute persist/insert/send to database
 		markerDAO.persist(entity);
 
+		// process marker accession ids that can be edited
+		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
+			accessionService.process(String.valueOf(entity.get_marker_key()), domain.getEditAccessionIds(), mgiTypeName, user);
+		}
+		
 		// mouse only stuff		
 		if (domain.getOrganismKey().equals("1")) {		
 
@@ -225,6 +230,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			entity.setCmOffset(Double.valueOf(domain.getCmOffset()));
 		}
 
+		// process marker accession ids that can be edited
+		if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
+			if (accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
+				modified = true;
+			}
+		}
+		
 		// mouse only stuff		
 		log.info("processMarker/getOrganism");		
 		if (domain.getOrganismKey().equals("1")) {			
@@ -273,13 +285,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			// process marker reference
 			if (domain.getRefAssocs() != null && !domain.getRefAssocs().isEmpty()) {
 				if (referenceAssocService.process(domain.getMarkerKey(), domain.getRefAssocs(), mgiTypeKey, user)) {
-					modified = true;
-				}
-			}
-			
-			// process marker nucleotide accession ids
-			if (domain.getEditAccessionIds() != null && !domain.getEditAccessionIds().isEmpty()) {
-				if (accessionService.process(domain.getMarkerKey(), domain.getEditAccessionIds(), mgiTypeName, user)) {
 					modified = true;
 				}
 			}
@@ -392,7 +397,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String from = "from mrk_marker m";
 		String where = "where m._organism_key";
 		String orderBy = "order by m._marker_type_key, m.symbol";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_editorNote = false;
 		Boolean from_sequenceNote = false;
@@ -424,10 +428,12 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}
 		
 		if (searchDomain.getSymbol() != null && !searchDomain.getSymbol().isEmpty()) {
-			where = where + "\nand m.symbol ilike '" + searchDomain.getSymbol() + "'" ;
+			value = searchDomain.getSymbol().replaceAll("'", "''");
+			where = where + "\nand m.symbol ilike '" + value + "'" ;
 		}
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
-			where = where + "\nand m.name ilike '" + searchDomain.getName() + "'" ;
+			value = searchDomain.getName().replaceAll("'", "''");
+			where = where + "\nand m.name ilike '" + value + "'" ;
 		}
 		if (searchDomain.getChromosome() != null && !searchDomain.getChromosome().isEmpty()) {
 			where = where + "\nand m.chromosome = '" + searchDomain.getChromosome() + "'" ;
@@ -544,8 +550,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				from_synonym = true;
 			}
 			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
+<<<<<<< HEAD
                                 value = searchDomain.getSynonyms().get(0).getSynonym().replaceAll("'", "\\\\'");
                                 where = where + "\nand ms.synonym ilike E'" + value + "'";
+=======
+				value = searchDomain.getSynonyms().get(0).getSynonym().replaceAll("'", "''");
+				where = where + "\nand ms.synonym ilike '" + value + "'";
+>>>>>>> fl2b
 				from_synonym = true;
 			}
 			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {
@@ -764,8 +775,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand m._marker_key = mr._object_key";
 		}
 		if (from_editAccession == true) {
-			from = from + ", mrk_accref1_view acc1";
+			from = from + ", acc_accession acc1";
 			where = where + "\nand m._marker_key = acc1._object_key";
+			where = where + "\nand acc1._mgitype_key = 2";
 		}
 		if (from_noneditAccession == true) {
 			from = from + ", mrk_accref2_view acc2";
@@ -848,7 +860,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			while (rs.next()) {				
 				SlimMarkerDomain domain = new SlimMarkerDomain();				
 				domain.setSymbol(rs.getString("nextSequence"));				
-				results.add(domain);			}
+				results.add(domain);			
+			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
@@ -859,20 +872,79 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	}	
 	
 	@Transactional	
-	public List<SummaryMarkerDomain> getMarkerByRef(String jnumid) {
-		// return list of summary marker domains by reference jnum id
+	public List<SlimMarkerDomain> getNextRrSequence() {
+		// return next Rr symbol that is available in the sequence
+		
+		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
+		
+		String cmd = "\nselect 'Rr' || (max(substring(symbol from 3)::int) + 1) as nextSequence from mrk_marker where symbol ~ '^Rr[\\d]+$'"
+				+ "\nand substring(symbol from 3)::int <= 948";
+		log.info(cmd);
 
-		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {				
+				SlimMarkerDomain domain = new SlimMarkerDomain();				
+				domain.setSymbol(rs.getString("nextSequence"));				
+				results.add(domain);			
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		String cmd = "\nselect * from MRK_SummaryByReference_View where jnumid = '" + jnumid + "'";
+		return results;
+	}
+	
+	public String getMarkerByRefSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting marker by acc id
 		
+		String cmd;
+
+		if (returnCount) {
+			cmd = "\nselect count(_marker_key) as total_count from MRK_SummaryByReference_View where jnumid = '" + accid + "'";
+			return cmd;
+		}
+		
+		cmd = "\nselect * from MRK_SummaryByReference_View where jnumid = '" + accid + "'";
+		cmd = addPaginationSQL(cmd, "markerstatus, symbol", offset, limit);
+
+		return cmd;
+	}
+
+	@Transactional	
+	public SearchResults<SummaryMarkerDomain> getMarkerByRef(String accid, int offset, int limit) {
+		// return list of marker domains by reference jnum id
+
+		SearchResults<SummaryMarkerDomain> results = new SearchResults<SummaryMarkerDomain>();
+		List<SummaryMarkerDomain> summaryResults = new ArrayList<SummaryMarkerDomain>();
+		
+		String cmd = getMarkerByRefSQL(accid, offset, limit, true);
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				markerDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = getMarkerByRefSQL(accid, offset, limit, false);
 		log.info(cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryMarkerDomain domain = new SummaryMarkerDomain();
-				domain.setJnumID(jnumid);
+				domain.setJnumID(accid);
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				domain.setName(rs.getString("name"));
@@ -880,8 +952,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				domain.setMarkerStatus(rs.getString("markerStatus"));
 				domain.setMarkerType(rs.getString("markerType"));
 				domain.setFeatureTypes(rs.getString("featureTypes"));
-				domain.setSynonyms(rs.getString("synonyms"));				
-				results.add(domain);
+				domain.setSynonyms(rs.getString("synonyms"));	
+				summaryResults.add(domain);
 				markerDAO.clear();
 			}
 			sqlExecutor.cleanup();
@@ -890,8 +962,29 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			e.printStackTrace();
 		}		
 
+		results.items = summaryResults;
 		return results;
+	}		
+
+	public Response downloadMarkerByRef (String accid) {
+		String cmd = getMarkerByRefSQL (accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getMarkerByRef", accid), new MarkerFormatter());
 	}
+
+	public static class MarkerFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+                	{"Symbol", "symbol"},
+                	{"Marker Status", "markerSTatus"},
+                	{"MGI ID", "accid"},
+                	{"Name", "name"},
+                	{"Synonyms", "synonyms"},
+                	{"Feature Type", "featureTypes"},
+                	{"Marker Type", "markerType"},
+			};
+			return formatTsvHelper(obj, cols);
+		}
+	}	
 	
 	@Transactional	
 	public MarkerDomain getSummaryLinks(MarkerDomain domain) {
@@ -934,52 +1027,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		}		
 
 		return domain;
-	}
-	
-	@Transactional	
-	public List<SeqSummaryDomain> getSequenceByMarker(String accid) {
-		// return list of sequence summary domains by marker accid
-
-		List<SeqSummaryDomain> results = new ArrayList<SeqSummaryDomain>();
-		
-		String cmd = "\nselect distinct s._sequence_key, s.accid, t1.term as sequenceType, ss.length, ss.description, m.symbol, pss.strain, aa.accid as markerAccid" + 
-				"\nfrom seq_marker_cache s, voc_term t1, seq_sequence ss, mrk_marker m, seq_source_assoc sr, prb_source pso, prb_strain pss, acc_accession aa" + 
-				"\nwhere s._sequencetype_key = t1._term_key" + 
-				"\nand s._sequence_key = ss._sequence_key" + 
-				"\nand s._marker_key = m._marker_key" + 
-				"\nand s._organism_key = 1" + 
-				"\nand s._sequence_key = sr._sequence_key" + 
-				"\nand sr._source_key = pso._source_key" +
-				"\nand pso._strain_key = pss._strain_key" +
-				"\nand m._marker_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 2" + 
-				"\nand aa.accid = '" + accid + "'" + 
-				"\norder by s._sequence_key";
-				//"\norder by s.accid";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SeqSummaryDomain domain = new SeqSummaryDomain();
-				domain.setAccID(rs.getString("accid"));
-				domain.setSequenceType(rs.getString("sequenceType"));
-				domain.setLength(rs.getString("length"));
-				domain.setStrain(rs.getString("strain"));
-				domain.setMarkerSymbol(rs.getString("symbol"));
-				domain.setMarkerAccID(rs.getString("markerAccid"));				
-				domain.setDescription(rs.getString("description"));
-				results.add(domain);
-				markerDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
 	}
 	
 	@Transactional	
@@ -1070,7 +1117,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean hasChromosome = false;
 		
 		String cmd = "";
-		String select = "select m._marker_key ";
+		String select = "select distinct m._marker_key ";
 		String from = "from mrk_marker m";
 		String where = "where m._marker_status_key not in (2,3)";
 		
@@ -1100,11 +1147,16 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			where = where + "\nand m._marker_type_key in (" + searchDomain.getMarkerTypeKey() + ")";
 		}
 		
-		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	
+		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {
 			String mgiid = searchDomain.getAccID().toUpperCase();
-			if (!mgiid.contains("MGI:")) {
-				mgiid = "MGI:" + mgiid;
+			if (searchDomain.getOrganismKey() == null || searchDomain.getOrganismKey().isEmpty()) {
+				if (!mgiid.contains("MGI:")) {
+					mgiid = "MGI:" + mgiid;
+				}
 			}
+			else if (searchDomain.getOrganismKey().equals("1") && !mgiid.contains("MGI:")) {
+				mgiid = "MGI:" + mgiid;
+			}			
 			where = where + "\nand lower(acc.accID) = '" + mgiid.toLowerCase() + "'";	
 			from_accession = true;
 		}
@@ -1113,8 +1165,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from = from + ", mrk_acc_view acc";
 			where = where + "\nand m._marker_key = acc._object_key"
 					+ "\nand acc._mgitype_key = 2"
-					+ "\nand acc._logicaldb_key = 1"
-					+ "\nand acc.preferred = 1";
+					+ "\nand acc.preferred = 1";		
+			if (searchDomain.getOrganismKey() == null || searchDomain.getOrganismKey().isEmpty()) {
+				where = where + "\nand acc._logicaldb_key = 1";
+			}
+			else if (searchDomain.getOrganismKey().equals("1")) {
+				where = where + "\nand acc._logicaldb_key = 1";
+			}			
 		}
 		
 		cmd = "\n" + select + "\n" + from + "\n" + where;

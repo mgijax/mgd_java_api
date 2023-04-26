@@ -8,8 +8,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
@@ -218,10 +220,13 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}
 
-	@POST
+	// -----------------------------------------------------
+	// get assay by allele
+
+	@GET
 	@ApiOperation(value = "Get list of assay domains by allele accession id")
 	@Path("/getAssayByAllele")
-	public List<SlimAssayDomain> getAssayByAllele(String accid) {
+	public List<SlimAssayDomain> getAssayByAllele(@QueryParam("accid") String accid) {
 		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 
@@ -230,14 +235,24 @@ public class AssayController extends BaseController<AssayDomain> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return results;
 	}
 	
-	@POST
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAssayByAllele")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAssayByAllele(@QueryParam("accid") String accid) {
+		return assayService.downloadAssayByAllele(accid);
+	}
+	
+	// -----------------------------------------------------
+	// get assay by antibody
+
+	@GET
 	@ApiOperation(value = "Get list of assay domains by antibody accession id")
 	@Path("/getAssayByAntibody")
-	public List<SlimAssayDomain> getAssayByAntibody(String accid) {
+	public List<SlimAssayDomain> getAssayByAntibody(@QueryParam("accid") String accid) {
 		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 
@@ -250,10 +265,21 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}	
 	
-	@POST
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAssayByAntibody")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAssayByAntibody(@QueryParam("accid") String accid) {
+		return assayService.downloadAssayByAntibody(accid);
+	}
+	
+	// -----------------------------------------------------
+	// get assay by marker
+
+	@GET
 	@ApiOperation(value = "Get list of assay domains by marker accession id")
 	@Path("/getAssayByMarker")
-	public List<SlimAssayDomain> getAssayByMarker(String accid) {
+	public List<SlimAssayDomain> getAssayByMarker(@QueryParam("accid") String accid) {
 		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 
@@ -266,10 +292,21 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}	
 	
-	@POST
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAssayByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAssayByMarker(@QueryParam("accid") String accid) {
+		return assayService.downloadAssayByMarker(accid);
+	}
+
+	// -----------------------------------------------------
+	// get assay by probe
+
+	@GET
 	@ApiOperation(value = "Get list of assay domains by probe accession id")
 	@Path("/getAssayByProbe")
-	public List<SlimAssayDomain> getAssayByProbe(String accid) {
+	public List<SlimAssayDomain> getAssayByProbe(@QueryParam("accid") String accid) {
 		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 
@@ -282,10 +319,21 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAssayByProbe")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAssayByProbe(@QueryParam("accid") String accid) {
+		return assayService.downloadAssayByProbe(accid);
+	}
+
+	// -----------------------------------------------------
+	// get assay by probe
+
+	@GET
 	@ApiOperation(value = "Get list of assay domains by jnumid")
 	@Path("/getAssayByRef")
-	public List<SlimAssayDomain> getAssayByRef(String jnumid) {
+	public List<SlimAssayDomain> getAssayByRef(@QueryParam("accid") String jnumid) {
 		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
 
@@ -298,31 +346,62 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAssayByRef")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAssayByRef(@QueryParam("accid") String accid) {
+		return assayService.downloadAssayByRef(accid);
+	}
+
+	// -----------------------------------------------------
+	// get result by cell type
+
+	@GET
 	@ApiOperation(value = "Get list of summary result domains by cell type")
 	@Path("/getResultByCellType")
-	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByCellType(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+        ) {
 		
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 
 		try {
-			results = assayService.getResultByCellType(searchDomain);
+			results = assayService.getResultByCellType(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
 	}	
+
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadResultByCellType")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadResultByCellType(@QueryParam("accid") String accid) {
+             return assayService.downloadResultByCellType(accid);
+	}
 	
-	@POST
+	
+	// -----------------------------------------------------
+	// get result by marker
+
+	@GET
 	@ApiOperation(value = "Get list of summary result domains by markerid")
 	@Path("/getResultByMarker")
-	public SearchResults<SummaryResultDomain> getResultByMarker(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByMarker(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+        ) {
 		
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 
 		try {
-			results = assayService.getResultByMarker(searchDomain);
+			results = assayService.getResultByMarker(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -330,36 +409,73 @@ public class AssayController extends BaseController<AssayDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadResultByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadResultByMarker(@QueryParam("accid") String accid) {
+             return assayService.downloadResultByMarker(accid);
+	}
+	
+	// -----------------------------------------------------
+	// get result by reference
+
+	@GET
 	@ApiOperation(value = "Get list of summary result domains by reference jnumid")
 	@Path("/getResultByRef")
-	public SearchResults<SummaryResultDomain> getResultByRef(SummaryResultDomain searchDomain) {
-		
+	public SearchResults<SummaryResultDomain> getResultByRef(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+        ) {
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 
 		try {
-			results = assayService.getResultByRef(searchDomain);
+			results = assayService.getResultByRef(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
 	}
+
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadResultByRef")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadResultByRef(@QueryParam("accid") String accid) {
+             return assayService.downloadResultByRef(accid);
+	}
 	
-	@POST
+	// -----------------------------------------------------
+	// get result by structure
+
+	@GET
 	@ApiOperation(value = "Get list of summary result domains by structure")
 	@Path("/getResultByStructure")
-	public SearchResults<SummaryResultDomain> getResultByStructure(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByStructure(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+        ) {
 		
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
 
 		try {
-			results = assayService.getResultByStructure(searchDomain);
+			results = assayService.getResultByStructure(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
 	}	
+	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadResultByStructure")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadResultByStructure(@QueryParam("accid") String accid) {
+             return assayService.downloadResultByStructure(accid);
+	}
 	
 }

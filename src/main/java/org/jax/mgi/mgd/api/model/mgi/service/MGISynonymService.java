@@ -122,7 +122,11 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 		// for each row, determine whether to perform an insert, delete or update
 		
 		for (int i = 0; i < domain.size(); i++) {
+<<<<<<< HEAD
 			
+=======
+						
+>>>>>>> fl2b
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
 				// if synonym is null/empty, then skip
@@ -152,8 +156,13 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 				if (refsKey == null || refsKey.isEmpty()) {
 					refsKey = "null";
 				}
+<<<<<<< HEAD
 				
 			        domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));
+=======
+					
+				domain.get(i).setSynonym(domain.get(i).getSynonym().replaceAll("'", "''"));				
+>>>>>>> fl2b
 
 				cmd = "select count(*) from MGI_insertSynonym ("
 							+ user.get_user_key().intValue()
@@ -177,13 +186,14 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 				log.info("processSynonym update");
-                                // trimming the synonym will create empty string if all spaces
-                                String synonym = domain.get(i).getSynonym().trim();
-                                if (synonym == null || synonym.isEmpty()) {
-                                    log.info("cannot update synonym to empty, blank or null");
-                                    continue;
 
-                                }
+				// trimming the synonym will create empty string if all spaces
+				String synonym = domain.get(i).getSynonym().trim();
+                if (synonym == null || synonym.isEmpty()) {
+                	log.info("cannot update synonym to empty, blank or null");
+                	continue;
+                }
+                
 				MGISynonym entity = synonymDAO.get(Integer.valueOf(domain.get(i).getSynonymKey()));
 		
 				entity.setSynonymType(synonymTypeDAO.get(Integer.valueOf(domain.get(i).getSynonymTypeKey())));

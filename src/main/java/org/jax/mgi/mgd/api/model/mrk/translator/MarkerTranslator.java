@@ -59,6 +59,12 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		domain.setName(entity.getName());
 		domain.setChromosome(entity.getChromosome());
 		
+		if (entity.getLocationCache() != null) {
+			if (entity.getLocationCache().getGenomicChromosome() != null) {
+				domain.setGenomicChromosome(entity.getLocationCache().getGenomicChromosome());
+			}
+		}
+		
 		if (entity.getCytogeneticOffset() != null) {
 			domain.setCytogeneticOffset(entity.getCytogeneticOffset());
 		}
@@ -238,7 +244,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
     		}
     		domain.setQtlInteractionToGene(markerqtli);
 			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-		}
+		}		
 		
 		// one-to-many marker aliases
 		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
@@ -247,22 +253,47 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 			domain.getAliases().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
 		}
 
-		// accession ids editable
-		if (entity.getEditAccessionIds() != null && !entity.getEditAccessionIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIds());
+		// accession ids editable for mouse
+		if (entity.getOrganism().get_organism_key() == 1 && entity.getEditAccessionIdsMouse() != null && !entity.getEditAccessionIdsMouse().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsMouse());
 			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
+		// accession ids editable for non-mouse;  exclude organisms used in entrezload
+		else if (entity.getOrganism().get_organism_key() != 1
+				&& entity.getOrganism().get_organism_key() != 2
+				&& entity.getOrganism().get_organism_key() != 10
+				&& entity.getOrganism().get_organism_key() != 11
+				&& entity.getOrganism().get_organism_key() != 13
+				&& entity.getOrganism().get_organism_key() != 40
+				&& entity.getOrganism().get_organism_key() != 63
+				&& entity.getOrganism().get_organism_key() != 84
+				&& entity.getOrganism().get_organism_key() != 86				
+				&& entity.getOrganism().get_organism_key() != 94
+				&& entity.getOrganism().get_organism_key() != 95
+				&& entity.getEditAccessionIdsNonMouse() != null 
+				&& !entity.getEditAccessionIdsNonMouse().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getEditAccessionIdsNonMouse());
+			domain.setEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+			domain.getEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
+		}		
 		
-		// accession ids non-editable 
-		if (entity.getNonEditAccessionIds() != null && !entity.getNonEditAccessionIds().isEmpty()) {
-			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIds());
+		// accession ids non-editable for mouse
+		if (entity.getOrganism().get_organism_key() == 1 && entity.getNonEditAccessionIdsMouse() != null && !entity.getNonEditAccessionIdsMouse().isEmpty()) {
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIdsMouse());
+			domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
+			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
+		}
+		// accession ids non-editable for non-mouse
+		else if (entity.getOrganism().get_organism_key() != 1 && entity.getNonEditAccessionIdsNonMouse() != null && !entity.getNonEditAccessionIdsNonMouse().isEmpty()) {		
+			Iterable<AccessionDomain> acc = accessionTranslator.translateEntities(entity.getNonEditAccessionIdsNonMouse());
 			domain.setNonEditAccessionIds(IteratorUtils.toList(acc.iterator()));
 			domain.getNonEditAccessionIds().sort(Comparator.comparing(AccessionDomain::getLogicaldb).thenComparing(AccessionDomain::getAccID));
 		}
 		
 		// biotypes 
 		if (entity.getBiotypes() != null && !entity.getBiotypes().isEmpty()) {
+			log.info("size of entity.getBiotypes:" + entity.getBiotypes().size());
 			Iterable<SeqMarkerBiotypeDomain> bio = biotypeTranslator.translateEntities(entity.getBiotypes());
 			domain.setBiotypes(IteratorUtils.toList(bio.iterator()));
 			domain.getBiotypes().sort(Comparator.comparing(SeqMarkerBiotypeDomain::getRawbiotype, String.CASE_INSENSITIVE_ORDER));

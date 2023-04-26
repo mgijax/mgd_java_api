@@ -16,12 +16,11 @@ import lombok.Setter;
 @Table(name="bib_associateddata_view")
 public class ReferenceAssociatedData extends BaseEntity {
 
-	// REMOVE ONCE NEW REFERENCE SUMMARY IS INSTALLED
-
 	@Id
 	private int _refs_key;
 	private int has_alleles;
 	private int has_antibodies;
+	private int has_genotype;
 	private int has_go;
 	private int has_gxdindex;
 	private int has_gxdimages;

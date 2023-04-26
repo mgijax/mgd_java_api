@@ -9,7 +9,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -79,15 +81,53 @@ public class ExptsController extends BaseController<ExptsDomain> {
 		return results;
 	}
 
-	@POST
-	@ApiOperation(value = "Get list of experiments domains by marker accession id")
+	// ----------------------
+	// get by marker
+
+	@GET
+	@ApiOperation(value = "Get list of experiments domains by marker id")
 	@Path("/getExptsByMarker")
-	public List<SlimExptsDomain> getExptsByMarker(String accid) {
-		
-		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
+	public SearchResults<SlimExptsDomain> getExptsByMarker(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+		) {
+
+		SearchResults<SlimExptsDomain> results = new SearchResults<SlimExptsDomain>();
 
 		try {
-			results = exptsService.getExptsByMarker(accid);
+			results = exptsService.getExptsByMarker(accid, offset, limit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
+
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadExptsByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadExptsByMarker(@QueryParam("accid") String accid) {
+             return exptsService.downloadExptsByMarker(accid);
+	}
+
+	// ----------------------
+	// get by ref
+
+	@GET
+	@ApiOperation(value = "Get list of experiments domains by jnum id")
+	@Path("/getExptsByRef")
+	public SearchResults<SlimExptsDomain> getExptsByRef(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+		) {
+
+		SearchResults<SlimExptsDomain> results = new SearchResults<SlimExptsDomain>();
+
+		try {
+			results = exptsService.getExptsByRef(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -95,19 +135,11 @@ public class ExptsController extends BaseController<ExptsDomain> {
 		return results;
 	}
 	
-	@POST
-	@ApiOperation(value = "Get list of experiments domains by reference jnumid")
-	@Path("/getExptsByRef")
-	public List<SlimExptsDomain> getExptsByRef(String jnumid) {
-		
-		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
-
-		try {
-			results = exptsService.getExptsByRef(jnumid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadExptsByRef")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadExptsByRef(@QueryParam("accid") String accid) {
+             return exptsService.downloadExptsByRef(accid);
+	}
 }

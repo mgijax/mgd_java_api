@@ -9,7 +9,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleDomain;
@@ -213,10 +215,10 @@ public class AlleleController extends BaseController<AlleleDomain> {
 	@POST
 	@ApiOperation(value = "Get Allele/Image Panes Assoc by Image key")
 	@Path("/getAlleleByImagePane")
-	public List<SlimAlleleDomain> getAlleleByImage(SlimImageDomain searchDomain) {
-	
-		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+	public List<SlimAlleleDomain> getAlleleByImagePane(SlimImageDomain searchDomain) {
 
+		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
+		
 		try {
 			results = alleleService.getAlleleByImagePane(searchDomain);
 		} catch (Exception e) {
@@ -225,16 +227,20 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		
 		return results;
 	}
-
-	@POST
+	
+	@GET
 	@ApiOperation(value = "Get list of allele domains by marker accession id")
 	@Path("/getAlleleByMarker")
-	public List<SummaryAlleleDomain> getAlleleByMarker(String accid) {
-		
-		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
+	public SearchResults<SummaryAlleleDomain> getAlleleByMarker(
+		@QueryParam("accid") String accid,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
+
+		SearchResults<SummaryAlleleDomain> results = new SearchResults<SummaryAlleleDomain>();
 
 		try {
-			results = alleleService.getAlleleByMarker(accid);
+			results = alleleService.getAlleleByMarker(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -242,19 +248,39 @@ public class AlleleController extends BaseController<AlleleDomain> {
 		return results;
 	}
 	
-	@POST
-	@ApiOperation(value = "Get list of allele domains by reference jnumid")
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAlleleByMarker")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAlleleByMarker(@QueryParam("accid") String accid) {
+		return alleleService.downloadAlleleByMarker(accid);
+	}
+	
+	@GET
+	@ApiOperation(value = "Get list of allele domains by reference jnum id")
 	@Path("/getAlleleByRef")
-	public List<SummaryAlleleDomain> getAlleleByRef(String jnumid) {
-		
-		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
+	public SearchResults<SummaryAlleleDomain> getAlleleByRef(
+		@QueryParam("accid") String accid,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
+
+		SearchResults<SummaryAlleleDomain> results = new SearchResults<SummaryAlleleDomain>();
 
 		try {
-			results = alleleService.getAlleleByRef(jnumid);
+			results = alleleService.getAlleleByRef(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
+	}
+	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadAlleleByRef")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response downloadAlleleByRef(@QueryParam("accid") String accid) {
+		return alleleService.downloadAlleleByRef(accid);
 	}	
 }

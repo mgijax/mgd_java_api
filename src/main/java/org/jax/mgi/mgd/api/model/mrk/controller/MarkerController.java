@@ -11,7 +11,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -22,7 +24,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerOfficialChromDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SummaryMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.search.MarkerUtilitiesForm;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerService;
-import org.jax.mgi.mgd.api.model.seq.domain.SeqSummaryDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -52,6 +53,12 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	public SearchResults<MarkerDomain> create(MarkerDomain domain, User user) {	
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		results = markerService.create(domain, user);
+		
+		// if non-mouse, then return
+		if (!results.items.get(0).getOrganismKey().equals("1")) {
+			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
+			return results;
+		}
 		
 		// to update the mrk_location_cache table						
 		try {
@@ -90,6 +97,12 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		SearchResults<MarkerDomain> results = new SearchResults<MarkerDomain>();
 		results = markerService.update(domain, user);
 
+		// if non-mouse, then return
+		if (!results.items.get(0).getOrganismKey().equals("1")) {
+			results = markerService.getResults(Integer.valueOf(results.items.get(0).getMarkerKey()));
+			return results;
+		}
+		
 		// to update the mrk_location_cache table						
 		try {
 			log.info("processMarker/mrkLocationUtilities");
@@ -182,14 +195,25 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get list of marker domains by reference jnumid")
+	@ApiOperation(value = "Get next Rr symbol that is available in the sequence")
+	@Path("/getNextRrSequence")
+	public List<SlimMarkerDomain> getNextRrSequence() {
+		return markerService.getNextRrSequence();
+	}
+	
+	@GET
+	@ApiOperation(value = "Get list of marker domains by reference jnum id")
 	@Path("/getMarkerByRef")
-	public List<SummaryMarkerDomain> getMarkerByRef(String jnumid) {
-		
-		List<SummaryMarkerDomain> results = new ArrayList<SummaryMarkerDomain>();
+	public SearchResults<SummaryMarkerDomain> getMarkerByRef(
+		@QueryParam("accid") String accid,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
+
+		SearchResults<SummaryMarkerDomain> results = new SearchResults<SummaryMarkerDomain>();
 
 		try {
-			results = markerService.getMarkerByRef(jnumid);
+			results = markerService.getMarkerByRef(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -197,20 +221,12 @@ public class MarkerController extends BaseController<MarkerDomain> {
 		return results;
 	}
 	
-	@POST
-	@ApiOperation(value = "Get list of sequence domains by marker acc id")
-	@Path("/getSequenceByMarker")
-	public List<SeqSummaryDomain> getSequenceByMarker(String accid) {
-		
-		List<SeqSummaryDomain> results = new ArrayList<SeqSummaryDomain>();
-
-		try {
-			results = markerService.getSequenceByMarker(accid);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadMarkerByRef")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response downloadMarkerByRef(@QueryParam("accid") String accid) {
+		return markerService.downloadMarkerByRef(accid);
 	}
 	
 	@GET

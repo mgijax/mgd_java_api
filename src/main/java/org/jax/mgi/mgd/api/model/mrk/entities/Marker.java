@@ -131,19 +131,33 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause="preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
-	// editable only accession ids
+	// editable only accession ids for mouse
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` in (8,9)")
 	@OrderBy(clause ="accid")
-	private List<Accession> editAccessionIds;
+	private List<Accession> editAccessionIdsMouse;
 	
-	// non-editable accession ids
+	// editable only accession ids for non-mouse
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` in (8,9,55,114)")
+	@OrderBy(clause ="accid")
+	private List<Accession> editAccessionIdsNonMouse;
+	
+	// non-editable accession ids for mouse
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,117,118)")
 	@OrderBy(clause ="accid")
-	private List<Accession> nonEditAccessionIds;
+	private List<Accession> nonEditAccessionIdsMouse;
+	
+	// non-editable accession ids for non-mouse
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,114,117,118)")
+	@OrderBy(clause ="accid")
+	private List<Accession> nonEditAccessionIdsNonMouse;
 	
 	@OneToMany()
 	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
@@ -183,7 +197,6 @@ public class Marker extends BaseEntity {
 	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@OrderBy(clause="marker1")
 	private List<RelationshipMarkerQTLInteraction> qtlInteractionToGene;
-	
 	
 	@OneToMany()
 	@JoinTable(name = "mrk_alias",	

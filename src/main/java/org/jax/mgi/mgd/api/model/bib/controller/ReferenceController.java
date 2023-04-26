@@ -14,6 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
@@ -197,15 +198,22 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return referenceService.validateJnumImage(domain);
 	}
 	
-	@POST
+	// -----------------------------------------------------
+	// get reference by allele
+
+	@GET
 	@ApiOperation(value = "Get list of reference domains by allele accession id")
 	@Path("/getRefByAllele")
-	public List<SummaryReferenceDomain> getRefByAllele(SummaryReferenceDomain searchDomain) {
-		
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+	public SearchResults<SummaryReferenceDomain> getRefByAllele(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+		) {
+
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 
 		try {
-			results = referenceService.getRefByAllele(searchDomain);
+			results = referenceService.getRefByAllele(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -213,28 +221,54 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		return results;
 	}
 	
-	@POST
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefByAllele")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefByAllele(@QueryParam("accid") String accid) {
+             return referenceService.downloadRefByAllele(accid);
+	}
+	
+	// -----------------------------------------------------
+	// get reference by marker
+
+	@GET
 	@ApiOperation(value = "Get list of reference domains by marker accession id")
 	@Path("/getRefByMarker")
-	public List<SummaryReferenceDomain> getRefByMarker(SummaryReferenceDomain searchDomain) {
-		
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+	public SearchResults<SummaryReferenceDomain> getRefByMarker(
+                @QueryParam("accid") String accid,
+                @QueryParam("offset") int offset,
+                @QueryParam("limit") int limit
+		) {
+
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 
 		try {
-			results = referenceService.getRefByMarker(searchDomain);
+			results = referenceService.getRefByMarker(accid, offset, limit);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return results;
 	}
+
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefByMarker")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefByMarker(@QueryParam("accid") String accid) {
+             return referenceService.downloadRefByMarker(accid);
+	}
 	
+	// -----------------------------------------------------
+	// get reference by search
+
 	@POST
 	@ApiOperation(value = "Get list of reference domains by search domain")
 	@Path("/getRefBySearch")
-	public List<SummaryReferenceDomain> getRefBySearch(SummaryReferenceDomain searchDomain) {
+	public SearchResults<SummaryReferenceDomain> getRefBySearch(SummaryReferenceDomain searchDomain) {
 		
-		List<SummaryReferenceDomain> results = new ArrayList<SummaryReferenceDomain>();
+		SearchResults<SummaryReferenceDomain> results = new SearchResults<SummaryReferenceDomain>();
 
 		try {
 			results = referenceService.getRefBySearch(searchDomain);
@@ -243,5 +277,29 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 		}
 		
 		return results;
-	}	
+	}
+	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadRefBySearch")
+        @Produces(MediaType.TEXT_PLAIN)
+	public Response downloadRefBySearch(
+		@QueryParam("accID") String accID,
+		@QueryParam("authors") String authors,
+		@QueryParam("primaryAuthor") String primaryAuthor,
+		@QueryParam("title") String title,
+		@QueryParam("journal") String journal,
+		@QueryParam("vol") String vol,
+		@QueryParam("year") String year
+	) {
+	     SummaryReferenceDomain searchDomain = new SummaryReferenceDomain();
+	     searchDomain.setAccID(accID);
+	     searchDomain.setAuthors(authors);
+	     searchDomain.setPrimaryAuthor(primaryAuthor);
+	     searchDomain.setTitle(title);
+	     searchDomain.setJournal(journal);
+	     searchDomain.setVol(vol);
+	     searchDomain.setYear(year);
+             return referenceService.downloadRefBySearch(searchDomain);
+	}
 }

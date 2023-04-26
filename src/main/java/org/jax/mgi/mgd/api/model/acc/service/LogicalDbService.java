@@ -521,14 +521,11 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		//       17 | IMAGE
 		//       44 | MGC
 		//       49 | NIA
-		//       46 | NIA 15K
 		//       50 | NIA 7.4K
 		//       51 | RIKEN
-		//       25 | RIKEN Cluster
 		//       26 | RIKEN (FANTOM)
 		//       48 | RPCI-23
 		//       52 | RPCI-24
-		//       80 | UniSTS
 		//       16 | WashU	
 		
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
@@ -539,7 +536,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				+ "\nunion"
 				+ "\nselect _logicaldb_key, name, 1 as org"
 				+ "\nfrom acc_logicaldb"
-				+ "\nwhere _logicaldb_key in (12,82,17,44,49,46,50,51,25,26,48,52,80,16)"
+				+ "\nwhere _logicaldb_key in (12,82,17,44,49,50,51,26,48,52,16)"
 				+ "\norder by org, name";
 		log.info(cmd);
 		
@@ -568,13 +565,12 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 
         // 43 | IMAGE Clone Libraries
         // 18 | dbEST Libraries
-        // 46 | NIA 15K
 		
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
 
 		String cmd = "select _logicaldb_key, name"
 				+ "\nfrom acc_logicaldb"
-				+ "\nwhere _logicaldb_key in (18, 43, 46)"
+				+ "\nwhere _logicaldb_key in (18, 43)"
 				+ "\norder by name";
 		log.info(cmd);
 		
@@ -612,7 +608,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				+ "\nunion"
 				+ "\nselect _logicaldb_key, name, 2 as org"
 				+ "\nfrom acc_logicaldb"
-				+ "\nwhere _logicaldb_key in (37,39,40,54,56,57,58,70,71,83,87,90,91,92,93,94,154,161,177,184,188,200,206,207,208,213,215,216,217,219,220,224)"
+				+ "\nwhere _logicaldb_key in (37,39,40,54,56,57,58,70,71,83,84,87,90,91,93,94,154,161,177,184,188,200,202,206,207,208,213,215,216,217,219,220,221,224)"
 				+ "\norder by org, name";
 		log.info(cmd);
 		

@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
 import org.jax.mgi.mgd.api.model.gxd.service.HTSampleService;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberCellTypeDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
@@ -72,6 +73,22 @@ public class HTSampleController extends BaseController<HTSampleDomain> {
 		
 		try {
 			results = htSampleService.getCellTypeHTSampleBySetUser(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@ApiOperation(value = "Get EMAPA Set Members by HT Sample and Set/User")
+	@Path("/getEmapaHTSampleBySetUser")
+	public List<MGISetMemberEmapaDomain> getEmapaHTSampleBySetUser(SlimHTDomain domain) {
+			
+		List<MGISetMemberEmapaDomain> results = new ArrayList<MGISetMemberEmapaDomain>();
+		
+		try {
+			results = htSampleService.getEmapaHTSampleBySetUser(domain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -48,13 +48,28 @@ public class TermDomain extends BaseDomain {
 	// for GORel synonyms only
 	private List<MGISynonymDomain> goRelSynonyms;
 	
-	// for cell type term synonyms only
-	private List<MGISynonymDomain> celltypeSynonyms;
+	// exact synonyms
+	private List<MGISynonymDomain> exactSynonyms;
 	
 	// translated at end of GET and search
 	private List<TermDomain> dagParents;
+	// for nodes that are in a dagParents list, the child relationship 
+	private String edgeLabel; 
 	
+	// only for cell type, emapa, and emaps terms
 	// set at the end of GET and search
-	private String cellTypeAnnotCount;
+	private String annotCount;
+
+	// only for emapa and emaps terms
+	private String stagesearch;
+	private Integer theilerstage;
+	private Integer startstage;
+	private Integer endstage;
+	private String dpcmin;
+	private String dpcmax;
+	
+	// only for emaps terms - its associated EMAPA key/ID
+	private String emapaTermKey;
+	private String emapaTermID;
 }
 

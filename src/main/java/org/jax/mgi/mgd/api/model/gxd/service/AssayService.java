@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceCitationCacheDAO;
@@ -344,7 +344,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		log.info("processAssay/process MGI_resetSequenceNum: " + cmd);
 		query = assayDAO.createNativeQuery(cmd);
 		query.getResultList();
-
+		
 		// process order reset
 		cmd = "select count(*) from MGI_resetSequenceNum ('GXD_GelLane'," + entity.get_assay_key() + "," + user.get_user_key() + ")";
 		log.info("processAssay/process MGI_resetSequenceNum: " + cmd);
@@ -582,8 +582,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		if (searchDomain.getSpecimens() != null) {
 			
-			value = searchDomain.getSpecimens().get(0).getSpecimenLabel();
-			value = value.replace("'",  "''");
+			value = searchDomain.getSpecimens().get(0).getSpecimenLabel().replaceAll("'","''");
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.specimenLabel ilike '" + value + "'";				
 				from_specimen = true;
@@ -674,7 +673,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// gels
 		
 		if (searchDomain.getGelLanes() != null) {
-			value = searchDomain.getGelLanes().get(0).getLaneLabel();
+			value = searchDomain.getGelLanes().get(0).getLaneLabel().replaceAll("'","''");
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.laneLabel ilike '" + value + "'";				
 				from_gellane = true;
@@ -1281,191 +1280,167 @@ public class AssayService extends BaseService<AssayDomain> {
 		return results;
 	}
 
+	// ---------------------------------------------------------------------------------------
+	// ----------- GET/DOWNLOAD ASSAYS -------------------------------------------------------
+	// ---------------------------------------------------------------------------------------
+
+	// get assay by allele
+
 	@Transactional	
 	public List<SlimAssayDomain> getAssayByAllele(String accid) {
 		// return list of assay domains by allele acc id
-
-		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
-		
-		String cmd = "\n(select distinct s._assay_key, m._marker_key, m.symbol, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
-				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_gellane s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
-				"\nwhere a._allele_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 11" +
-				"\nand aa.accid = '" + accid + "'" +
-				"\nand a._allele_key = g._allele_key" +
-				"\nand g._genotype_key = s._genotype_key" +
-				"\nand s._assay_key = ga._assay_key" +
-				"\nand ga._marker_key = m._marker_key" +
-				"\nand ga._assaytype_key = t1._assaytype_key" +
-				"\nand ga._refs_key = b._refs_key" +
-				"\nand ga._assay_key = ag._object_key" +
-				"\nand ag._mgitype_key = 8" +
-				"\nunion" +
-				"\nselect distinct s._assay_key, m._marker_key, m.symbol, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" +
-				"\nfrom all_allele a, acc_accession aa, gxd_allelegenotype g, gxd_specimen s, gxd_assay ga, mrk_marker m, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
-				"\nwhere a._allele_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 11" +
-				"\nand aa.accid = '" + accid + "'" +
-				"\nand a._allele_key = g._allele_key" +
-				"\nand g._genotype_key = s._genotype_key" +
-				"\nand s._assay_key = ga._assay_key" +
-				"\nand ga._marker_key = m._marker_key" +	
-				"\nand ga._assaytype_key = t1._assaytype_key" +
-				"\nand ga._refs_key = b._refs_key" +	
-				"\nand ga._assay_key = ag._object_key" +
-				"\nand ag._mgitype_key = 8" +				
-				"\n)" +
-				"\norder by symbol, sequenceNum, short_citation, accid";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimAssayDomain domain = new SlimAssayDomain();
-				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				results.add(domain);
-				assayDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
+		String cmd = getAssayBySQL("allele", accid);
+		return processSlimAssayDomain(cmd);
 	}
+
+	public Response downloadAssayByAllele(String accid) {
+		String cmd = getAssayBySQL("allele", accid);
+		return download(cmd, getTsvFileName("getAssayByAllele", accid), new AssayFormatter());
+	}
+
+	// get assay by antibody
 
 	@Transactional	
 	public List<SlimAssayDomain> getAssayByAntibody(String accid) {
 		// return list of assay domains by antibody acc id
-
-		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
-		
-		String cmd = "\nselect distinct g._assay_key, p._antibody_key, p.antibodyname, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
-				"\nfrom gxd_antibody p, acc_accession aa, gxd_assay g, gxd_antibodyprep ap, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
-				"\nwhere p._antibody_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 6" +
-				"\nand aa.accid = '" + accid + "'" +
-				"\nand p._antibody_key = ap._antibody_key" +
-				"\nand ap._antibodyprep_key = g._antibodyprep_key" +
-				"\nand g._assaytype_key = t1._assaytype_key" +
-				"\nand g._refs_key = b._refs_key" +
-				"\nand g._assay_key = ag._object_key" +
-				"\nand ag._mgitype_key = 8" +				
-				"\norder by p.antibodyname, t1.sequenceNum, b.short_citation, ag.accid";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimAssayDomain domain = new SlimAssayDomain();
-				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				results.add(domain);
-				assayDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
+		String cmd = getAssayBySQL("antibody", accid);
+		return processSlimAssayDomain(cmd);
 	}
+
+	public Response downloadAssayByAntibody(String accid) {
+	    String cmd = getAssayBySQL("antibody", accid);
+	    return download(cmd, getTsvFileName("getAssayByAntibody", accid), new AssayFormatter());
+	}
+
+	// get assay by marker
 		
 	@Transactional	
 	public List<SlimAssayDomain> getAssayByMarker(String accid) {
 		// return list of assay domains by marker acc id
-
-		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
-		
-		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
-				"\nfrom mrk_marker m, acc_accession aa, gxd_assay g, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
-				"\nwhere m._marker_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 2" +
-				"\nand aa.accid = '" + accid + "'" +
-				"\nand m._marker_key = g._marker_key" +
-				"\nand g._assaytype_key = t1._assaytype_key" +
-				"\nand g._refs_key = b._refs_key" +
-				"\nand g._assay_key = ag._object_key" +
-				"\nand ag._mgitype_key = 8" +				
-				"\norder by m.symbol, t1.sequenceNum, b.short_citation, ag.accid";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimAssayDomain domain = new SlimAssayDomain();
-				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				results.add(domain);
-				assayDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
+		String cmd = getAssayBySQL("marker", accid);
+		return processSlimAssayDomain(cmd);
 	}
 
+	public Response downloadAssayByMarker(String accid) {
+	    String cmd = getAssayBySQL("marker", accid);
+	    return download(cmd, getTsvFileName("getAssayByMarker", accid), new AssayFormatter());
+	}
+
+	// get assay by probe
+		
 	@Transactional	
 	public List<SlimAssayDomain> getAssayByProbe(String accid) {
 		// return list of assay domains by probe acc id
-
-		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
-		
-		String cmd = "\nselect distinct g._assay_key, p._probe_key, p.name, t1.sequenceNum, t1.assaytype, b.short_citation, ag.accid" + 
-				"\nfrom prb_probe p, acc_accession aa, gxd_assay g, gxd_probeprep ap, gxd_assaytype t1, bib_citation_cache b, acc_accession ag" + 
-				"\nwhere p._probe_key = aa._object_key" + 
-				"\nand aa._mgitype_key = 3" +
-				"\nand aa.accid = '" + accid + "'" +
-				"\nand p._probe_key = ap._probe_key" +
-				"\nand ap._probeprep_key = g._probeprep_key" +
-				"\nand g._assaytype_key = t1._assaytype_key" +
-				"\nand g._refs_key = b._refs_key" +
-				"\nand g._assay_key = ag._object_key" +
-				"\nand ag._mgitype_key = 8" +				
-				"\norder by p.name, t1.sequenceNum, b.short_citation, ag.accid";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimAssayDomain domain = new SlimAssayDomain();
-				domain = slimtranslator.translate(assayDAO.get(rs.getInt("_assay_key")));
-				results.add(domain);
-				assayDAO.clear();
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
+		String cmd = getAssayBySQL("probe", accid);
+		return processSlimAssayDomain(cmd);
 	}
+		
+	public Response downloadAssayByProbe(String accid) {
+	    String cmd = getAssayBySQL("probe", accid);
+	    return download(cmd, getTsvFileName("getAssayByProbe", accid), new AssayFormatter());
+	}
+
+	// get assay by reference
 		
 	@Transactional	
 	public List<SlimAssayDomain> getAssayByRef(String jnumid) {
 		// return list of assay domains by reference jnum id
+		String cmd = getAssayBySQL("reference", jnumid);
+		return processSlimAssayDomain(cmd);
+	}
 
+	public Response downloadAssayByRef(String accid) {
+	    String cmd = getAssayBySQL("reference", accid);
+	    return download(cmd, getTsvFileName("getAssayByReference", accid), new AssayFormatter());
+	}
+
+	// Formatter for assay downloads. 
+	public static class AssayFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+				{"Assay ID",       "assayid"},
+				{"Gene",           "markersymbol"},
+				{"Gene MGI ID",    "markerid"},
+				{"Assay Type",     "assaytype"},
+				{"Reference J#",   "jnumid"},
+				{"Short Citation", "short_citation"},
+			};
+			return formatTsvHelper(obj, cols);
+		}
+	}
+
+	public String getAssayBySQL (String queryType, String accid) {
+		
+		String cmd ;
+		String select = "\nselect distinct e._assay_key, ea.accid as assayid, ma.accid as markerid, m.symbol as markersymbol, at.assaytype, at.sequenceNum, r.jnumid, r.short_citation " ;
+		String from = "\nfrom gxd_expression e, acc_accession ea, mrk_marker m,  acc_accession ma, gxd_assaytype at, bib_citation_cache r " ;
+		String where = "\nwhere e._assay_key = ea._object_key " +
+			"\nand ea._mgitype_key = 8 " +
+			"\nand ea._logicaldb_key = 1 " +
+			"\nand ea.preferred = 1 " +
+			"\nand e._marker_key = m._marker_key " +
+			"\nand m._marker_key = ma._object_key " +
+			"\nand ma._mgitype_key = 2 " +
+			"\nand ma._logicaldb_key = 1 " +
+			"\nand ma.preferred = 1 " +
+			"\nand e._assaytype_key = at._assaytype_key " +
+			"\nand e._refs_key = r._refs_key " +
+			"";
+		
+		switch (queryType) {
+		case "allele":
+			from += ", gxd_genotype g, gxd_allelegenotype ag, acc_accession aa ";
+
+			where += "\n and e._genotype_key = g._genotype_key " +
+				"\n and g._genotype_key = ag._genotype_key " +
+				"\n and ag._allele_key = aa._object_key " +
+				"\n and aa._mgitype_key = 11 " +
+				"\n and aa._logicaldb_key = 1 " +
+				"\n and aa.accid = '" + accid + "'" +
+				"\n";
+			break;
+		case "antibody":
+			from += ", gxd_assay a, gxd_antibodyprep ap, acc_accession aa ";
+
+			where += "\n and e._assay_key = a._assay_key " + 
+			       "\n    and a._antibodyprep_key = ap._antibodyprep_key " +
+			       "\n    and ap._antibody_key = aa._object_key " +
+			       "\n    and aa._mgitype_key = 6 " +
+			       "\n    and aa._logicaldb_key = 1 " +
+			       "\n    and aa.accid = '" + accid + "'" +
+			       "\n";
+			break;
+		case "probe":
+			from += ", gxd_assay a, gxd_probeprep pp, acc_accession pa ";
+
+			where += "\n and e._assay_key = a._assay_key " + 
+			       "\n    and a._probeprep_key = pp._probeprep_key " +
+			       "\n    and pp._probe_key = pa._object_key " +
+			       "\n    and pa._mgitype_key = 3 " +
+			       "\n    and pa._logicaldb_key = 1 " +
+			       "\n    and pa.accid = '" + accid + "'" +
+			       "\n";
+			break;
+		case "marker":
+			where += "\nand ma.accid = '" + accid + "'";
+			break;
+		case "reference":
+			where += "\nand r.jnumid = '" + accid + "'";
+			break;
+		default:
+			throw new RuntimeException("Unknown queryType: " + queryType);
+		}
+
+		String orderby = "\norder by m.symbol, at.sequenceNum, r.short_citation, ea.accid ";
+
+		cmd = select + from + where + orderby;
+		return cmd;
+	}
+
+	public List<SlimAssayDomain> processSlimAssayDomain(String cmd) {
+		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
-		
-		String cmd = "\nselect distinct g._assay_key, m._marker_key, m.symbol, t1.sequenceNum, b.short_citation, ag.accid" + 
-				"\nfrom bib_citation_cache b, gxd_assay g, gxd_assaytype t1, mrk_marker m, acc_accession ag " + 
-				"\nwhere b.jnumid = '" + jnumid + "'" +
-				"\nand b._refs_key = g._refs_key" +
-				"\nand m._marker_key = g._marker_key" +
-				"\nand g._assaytype_key = t1._assaytype_key" +				
-				"\nand g._assay_key = ag._object_key" +
-				"\nand ag._mgitype_key = 8" +				
-				"\norder by m.symbol, t1.sequenceNum, b.short_citation, ag.accid";
-		
-		log.info(cmd);	
+		log.info("processSlimAssayDomain: " + cmd);	
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
@@ -1479,137 +1454,204 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			log.info("error: " + e.toString());	
 		}		
-
 		return results;
 	}
+
+	// ---------------------------------------------------------------------------------------
+	// ----------- GET/DOWNLOAD RESULTS ------------------------------------------------------
+	// ---------------------------------------------------------------------------------------
 	
+	// results by cell type
+
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByCellType(SummaryResultDomain searchDomain) {
+	public SearchResults<SummaryResultDomain> getResultByCellType(String accid, int offset, int limit) {
 		// return list of summary results domains by cell type id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
-		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(*) as total_count" +
-				"\nfrom acc_accession a, gxd_expression e" +
-				"\nwhere a._object_key = e._celltype_term_key" +
-				"\nand a._mgitype_key = 13" +
-				"\nand a._logicaldb_key = 173" +
-				"\nand a.accid = '" + searchDomain.getCellTypeID() + "'";
-		results.total_count = processSummaryResultCount(searchDomain, cmd);
+		String cmd = getResultBySQL("celltype", accid, offset, limit, true);
+		results.total_count = processSummaryResultCount(cmd);
 		
-		cmd = "\nselect e._expression_key" +
-				"\nfrom acc_accession a," +
-				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
-				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
-				"\nwhere e._emapa_term_key = st._term_key" +
-				"\nand e._marker_key = m._marker_key" +
-				"\nand e._assaytype_key = gt._assaytype_key" +
-				"\nand a._object_key = e._celltype_term_key" +
-				"\nand a._mgitype_key = 13" +
-				"\nand a._logicaldb_key = 173" +
-				"\nand a.accid = '" + searchDomain.getCellTypeID() + "'";
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		cmd = getResultBySQL("celltype", accid, offset, limit, false);
+		results.items = processSummaryResultDomain(accid, offset, limit, cmd);
 		
-		results.items = summaryResults;
 		return results;
 	}
-	
+
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByMarker(SummaryResultDomain searchDomain) {
+	public Response downloadResultByCellType(String accid) {
+		String cmd = getResultBySQL("celltype", accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getResultByCellType", accid), new ResultFormatter());
+	}
+	
+	// results by marker
+
+	@Transactional	
+	public SearchResults<SummaryResultDomain> getResultByMarker(String accid, int offset, int limit) {
 		// return list of summary results domains by marker acc id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
-		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(*) as total_count" +
-				"\nfrom acc_accession a, gxd_expression e" +
-				"\nwhere a._object_key = e._marker_key" +
-				"\nand a._mgitype_key = 2" +
-				"\nand a._logicaldb_key = 1" +
-				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";
-		results.total_count = processSummaryResultCount(searchDomain, cmd);
+		String cmd = getResultBySQL("marker", accid, offset, limit, true);
+		results.total_count = processSummaryResultCount(cmd);
 		
-		cmd = "\nselect e._expression_key" +
-				"\nfrom acc_accession a," +
-				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
-				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
-				"\nwhere e._emapa_term_key = st._term_key" +
-				"\nand e._marker_key = m._marker_key" +
-				"\nand e._assaytype_key = gt._assaytype_key" +
-				"\nand a._object_key = e._marker_key" +
-				"\nand a._mgitype_key = 2" +
-				"\nand a._logicaldb_key = 1" +
-				"\nand a.accid = '" + searchDomain.getMarkerID() + "'";
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		cmd = getResultBySQL("marker", accid, offset, limit, false);
+		results.items = processSummaryResultDomain(accid, offset, limit, cmd);
 
-		results.items = summaryResults;
 		return results;
 	}
 	
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByRef(SummaryResultDomain searchDomain) {
+	public Response downloadResultByMarker(String accid) {
+		String cmd = getResultBySQL("marker", accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getResultByMarker", accid), new ResultFormatter());
+	}
+
+	// result by reference
+
+	@Transactional	
+	public SearchResults<SummaryResultDomain> getResultByRef(String accid, int offset, int limit) {
 		// return list of summary results domains by reference jnum id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
-		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
 		
-		String cmd = "\nselect count(*) as total_count" +
-				"\nfrom bib_citation_cache c, gxd_expression e" +
-				"\nwhere c._refs_key = e._refs_key" + 
-				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";
-		results.total_count = processSummaryResultCount(searchDomain, cmd);
+		String cmd = getResultBySQL("reference", accid, offset, limit, true);
+		results.total_count = processSummaryResultCount(cmd);
 		
-		cmd = "\nselect e._expression_key" +
-				"\nfrom bib_citation_cache c," +
-				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
-				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
-				"\nwhere e._emapa_term_key = st._term_key" +
-				"\nand e._marker_key = m._marker_key" +
-				"\nand e._assaytype_key = gt._assaytype_key" +
-				"\nand c._refs_key = e._refs_key" + 
-				"\nand c.jnumid = '" + searchDomain.getJnumid() + "'";	
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
+		cmd = getResultBySQL("reference", accid, offset, limit, false);
+		results.items = processSummaryResultDomain(accid, offset, limit, cmd);
 
-		results.items = summaryResults;
 		return results;
 	}
 	
 	@Transactional	
-	public SearchResults<SummaryResultDomain> getResultByStructure(SummaryResultDomain searchDomain) {
+	public Response downloadResultByRef(String accid) {
+		String cmd = getResultBySQL("reference", accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getResultByRef", accid), new ResultFormatter());
+	}
+	
+	// result by structure
+
+	@Transactional	
+	public SearchResults<SummaryResultDomain> getResultByStructure(String accid, int offset, int limit) {
 		// return list of summary results domains by structure/emapa id
 
 		SearchResults<SummaryResultDomain> results = new SearchResults<SummaryResultDomain>();
-		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
+
+		String cmd = getResultBySQL ("structure", accid, offset, limit, true);
+		results.total_count = processSummaryResultCount(cmd);
 		
-		String cmd = "\nselect count(*) as total_count" +
-				"\nfrom acc_accession a, gxd_expression e" +
-				"\nwhere a._object_key = e._emapa_term_key" +
-				"\nand a._mgitype_key = 13" +
-				"\nand a._logicaldb_key = 169" +
-				"\nand a.accid = '" + searchDomain.getStructureID() + "'";
-		results.total_count = processSummaryResultCount(searchDomain, cmd);
+		cmd = getResultBySQL ("structure", accid, offset, limit, false);
+		results.items = processSummaryResultDomain(accid, offset, limit, cmd);
 		
-		cmd = "\nselect e._expression_key" +
-				"\nfrom acc_accession a,"+
-				"\ngxd_expression e left outer join voc_term ct on (e._celltype_term_key = ct._term_key)," +
-				"\nvoc_term st, mrk_marker m, gxd_assaytype gt" +
-				"\nwhere e._emapa_term_key = st._term_key" +
-				"\nand e._marker_key = m._marker_key" +
-				"\nand e._assaytype_key = gt._assaytype_key" +				
-				"\nand a._object_key = e._emapa_term_key" +
-				"\nand a._mgitype_key = 13" +
-				"\nand a._logicaldb_key = 169" +
-				"\nand a.accid = '" + searchDomain.getStructureID() + "'";
-		summaryResults = processSummaryResultDomain(searchDomain, cmd);
-		
-		results.items = summaryResults;
 		return results;
 	}
 	
 	@Transactional	
-	public Long processSummaryResultCount(SummaryResultDomain searchDomain, String cmd) {
+	public Response downloadResultByStructure(String accid) {
+		String cmd = getResultBySQL ("structure", accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getResultByStructure", accid), new ResultFormatter());
+	}
+
+	public static class ResultFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+				{"Assay ID",       "assayid"},
+				{"Marker Symbol",  "markersymbol"},
+				{"Assay Type",     "assaytype"},
+				{"Age",            "age"},
+				{"Stage",          "stage"},
+				{"Structure",      "structure"},
+				{"Cell Type",      "celltype"},
+				{"Strength",       "strength"},
+				{"Specimen Label", "specimenlabel"},
+				{"Mutant Allele",  "mutantalleles"},
+				{"IsConditional",  "isConditional"},
+				{"Result Note",    "resultNote"}
+			};
+			return formatTsvHelper(obj, cols);
+		}
+	}
+	
+	public String getResultBySQL(String queryType, String accid, int offset, int limit, boolean returnCount) {
+		
+		String cmd;
+		String joinPoint;
+		int mgiTypeKey;
+		int logicalDbKey;
+		String stageClause = "";
+		
+		switch (queryType) {
+		case "reference":
+			joinPoint = "_refs_key";
+			mgiTypeKey = 1;
+			logicalDbKey = 1;
+			break;
+		case "marker":
+			joinPoint = "_marker_key";
+			mgiTypeKey = 2;
+			logicalDbKey = 1;
+			break;
+		case "celltype":
+			joinPoint = "_celltype_term_key";
+			mgiTypeKey = 13;
+			logicalDbKey = 173;
+			break;
+		case "structure":
+			joinPoint = "_emapa_term_key";
+			mgiTypeKey = 13;
+			logicalDbKey = 169;
+        		if (accid.startsWith("EMAPS:")) {
+				int alen = accid.length();
+				String stage = accid.substring(alen-2, alen);
+				accid = "EMAPA:" + accid.substring(6, alen-2);
+				stageClause = "\nand e._stage_key = " + stage;
+        		}
+			break;
+		default:
+			throw new RuntimeException("Unrecognized parameter value: " + queryType);
+		}
+
+		if (returnCount) {
+			cmd = "\nselect count(*) as total_count" +
+				"\nfrom acc_accession a, gxd_expression e" +
+				"\nwhere a._object_key = e." + joinPoint +
+				"\nand a._mgitype_key = " + mgiTypeKey +
+				"\nand a._logicaldb_key = " + logicalDbKey + 
+				"\nand a.accid = '" + accid + "'"
+				+ stageClause;
+		} else {
+			cmd = "\nselect e._expression_key, aa.accid as assayid, m.symbol as markersymbol, gt.assaytype, e.age, e._stage_key as stage, st.term as structure, ct.term as celltype, e.strength, e.resultnote, sp.specimenlabel, mn.note as mutantalleles, gg.isconditional" +
+				"\nfrom acc_accession a, acc_accession aa," +
+				"\ngxd_expression e " +
+				"\n     left outer join voc_term ct on (e._celltype_term_key = ct._term_key)" +
+				"\n     left outer join gxd_specimen sp on (e._specimen_key = sp._specimen_key)" +
+				"\n     left outer join mgi_note mn on (e._genotype_key = mn._object_key and mn._notetype_key = 1016)," +
+				"\nvoc_term st, mrk_marker m, gxd_assaytype gt, gxd_genotype gg" +
+				"\nwhere e._emapa_term_key = st._term_key" +
+				"\nand e._genotype_key = gg._genotype_key" +
+				"\nand e._marker_key = m._marker_key" +
+				"\nand e._assaytype_key = gt._assaytype_key" +
+				"\nand aa._object_key = e._assay_key" +
+				"\nand aa._mgitype_key = 8" +
+				"\nand aa._logicaldb_key = 1" +
+				"\nand aa.preferred = 1" +
+				"\nand a._object_key = e." + joinPoint + 
+				"\nand a._mgitype_key = " + mgiTypeKey +
+				"\nand a._logicaldb_key = " + logicalDbKey + 
+				"\nand a.accid = '" + accid + "'"
+				+ stageClause;
+			cmd = addPaginationSQL(cmd,
+			          "e.isforgxd desc, e._stage_key, st.term, ct.term, m.symbol, gt.sequenceNum, aa.accid, sp.specimenlabel",
+				  offset, limit);
+		}
+		return cmd;
+	}
+	
+	@Transactional	
+	public Long processSummaryResultCount(String cmd) {
 		// return count of summary results domains using search cmd
 
 		Long total_count = null;
@@ -1621,7 +1663,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				total_count = rs.getLong("total_count");
 				expressionCacheDAO.clear();				
 			}
-			//sqlExecutor.cleanup();
+			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1631,34 +1673,19 @@ public class AssayService extends BaseService<AssayDomain> {
 	}
 	
 	@Transactional	
-	public List<SummaryResultDomain> processSummaryResultDomain(SummaryResultDomain searchDomain, String cmd) {
+	public List<SummaryResultDomain> processSummaryResultDomain(String id, int offset, int limit, String cmd) {
 		// return list of summary results domains by search cmd
 
 		List<SummaryResultDomain> summaryResults = new ArrayList<SummaryResultDomain>();
-		
-		String offset = "0";
-		String limit = "250";
-		
-		if (searchDomain.getOffset() != null && !searchDomain.getOffset().isEmpty()) {
-			offset = searchDomain.getOffset();
-		}
-		
-		if (searchDomain.getLimit() != null && !searchDomain.getLimit().isEmpty()) {
-			limit = searchDomain.getLimit();
-		}
-		
+
 		// attach most of the sorting rules
-		cmd = cmd + "\norder by e._stage_key, st.term, ct.term, m.symbol, gt.sequenceNum";
-		cmd = cmd + "\noffset " + offset + "\nlimit " + limit;
 		log.info(cmd);	
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryResultDomain domain = new SummaryResultDomain();
-				domain = summaryresulttranslator.translate(expressionCacheDAO.get(rs.getInt("_expression_key")));				
-				domain.setOffset(offset);
-				domain.setLimit(limit);
+				domain = summaryresulttranslator.translate(expressionCacheDAO.get(rs.getInt("_expression_key")));
 				summaryResults.add(domain);
 				expressionCacheDAO.clear();				
 			}
@@ -1667,16 +1694,6 @@ public class AssayService extends BaseService<AssayDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}		
-
-		// attach all sort rules
-		Comparator<SummaryResultDomain> c1 = Comparator.comparingInt(SummaryResultDomain::getStageKey);	
-		Comparator<SummaryResultDomain> c2 = Comparator.comparing(SummaryResultDomain::getStructure);			 
-		Comparator<SummaryResultDomain> c3 = Comparator.comparing(SummaryResultDomain::getCellType);
-		Comparator<SummaryResultDomain> c4 = Comparator.comparing(SummaryResultDomain::getMarkerSymbol);
-		Comparator<SummaryResultDomain> c5 = Comparator.comparingInt(SummaryResultDomain::getAssayTypeSequenceNum);
-		Comparator<SummaryResultDomain> c6 = Comparator.comparing(SummaryResultDomain::getSpecimenLabel);
-		Comparator<SummaryResultDomain> compareAll = c1.thenComparing(c2).thenComparing(c3).thenComparing(c4).thenComparing(c5).thenComparing(c6);	
-		summaryResults.sort(compareAll);
 
 		return summaryResults;
 	}

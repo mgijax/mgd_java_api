@@ -9,6 +9,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
@@ -484,8 +485,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			rdomain.setObjectKey1(alleleKey);
 			rdomain.setObjectKey2(domain.getDriverGenes().get(i).getMarkerKey());
 
-			// has_driver
-			rdomain.setRelationshipTermKey("36770349");
+			// driver_component
+			rdomain.setRelationshipTermKey("111172001");
 
 			// not specified
 			rdomain.setQualifierKey("11391898");
@@ -636,7 +637,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
-			where = where + "\nand a.name ilike '" + searchDomain.getName() + "'" ;
+			value = searchDomain.getName().replaceAll("'", "''");
+			where = where + "\nand a.name ilike '" + value + "'" ;
 		}
 		
 		if (searchDomain.getIsExtinct() != null && !searchDomain.getIsExtinct().isEmpty()) {
@@ -827,8 +829,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		// synonym, j:
 		if (searchDomain.getSynonyms() != null) {
 			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
+<<<<<<< HEAD
                                 value = searchDomain.getSynonyms().get(0).getSynonym().replaceAll("'", "\\\\'");
                                 where = where + "\nand ms.synonym ilike E'" + value + "'";
+=======
+				value = searchDomain.getSynonyms().get(0).getSynonym().replaceAll("'", "''");
+				where = where + "\nand ms.synonym ilike '" + value + "'";				
+>>>>>>> fl2b
 				from_synonym = true;
 			}
 			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {
@@ -1369,29 +1376,32 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		return results;
 	}
 
+	//
+	// allele by image
+	//
+	
 	@Transactional	
 	public List<SlimAlleleDomain> getAlleleByImagePane(SlimImageDomain searchDomain) {
 		// return list of alleles that are associated with image panes of given image
 	
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
-
-		String cmd = "\nselect distinct a._allele_key"
-				+ "\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, all_allele a" 
-				+ "\nwhere i._image_key = " + searchDomain.getImageKey()
-				+ "\nand i._image_key = ip._image_key" 
-				+ "\nand ip._imagepane_key = ipa._imagepane_key" 
-				+ "\nand ipa._mgitype_key = 11"
-				+ "\nand ipa._object_key = a._allele_key";
 		
+		String cmd = "\nselect distinct a._allele_key"
+			    + "\nfrom img_image i, img_imagepane ip, img_imagepane_assoc ipa, all_allele a" 
+			    + "\nwhere i._image_key = " + searchDomain.getImageKey()
+			    + "\nand i._image_key = ip._image_key" 
+			    + "\nand ip._imagepane_key = ipa._imagepane_key" 
+			    + "\nand ipa._mgitype_key = 11"
+			    + "\nand ipa._object_key = a._allele_key";
 		log.info(cmd);
-
+		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAlleleDomain domain = new SlimAlleleDomain();
 				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));
 				alleleDAO.clear();
-				results.add(domain);				
+				results.add(domain);
 			}
 			sqlExecutor.cleanup();
 		}
@@ -1401,91 +1411,309 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		return results;	
 	}
-
-	@Transactional	
-	public List<SummaryAlleleDomain> getAlleleByMarker(String accid) {
-		// return list of allele domains by marker acc id
-
-		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
-		
-		String cmd = "\nselect * from ALL_SummaryByMarker_View where accid = '" + accid + "'";
-		
-		log.info(cmd);	
-		
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SummaryAlleleDomain domain = new SummaryAlleleDomain();
-				AlleleDomain adomain = new AlleleDomain();
-				adomain = translator.translate(alleleDAO.get(rs.getInt("_allele_key")));
-				alleleDAO.clear();
-				domain.setMarkerID(accid);
-				domain.setAlleleID(adomain.getAccID());			
-				domain.setAlleleKey(adomain.getAlleleKey());
-				domain.setSymbol(adomain.getSymbol());
-				domain.setName(adomain.getName());				
-				domain.setAlleleType(adomain.getAlleleType());
-				domain.setAlleleTypeKey(adomain.getAlleleTypeKey());
-				domain.setAlleleStatus(adomain.getAlleleStatus());
-				domain.setAlleleStatusKey(adomain.getAlleleStatusKey());
-				domain.setTransmission(adomain.getTransmission());
-				domain.setTransmissionKey(adomain.getTransmissionKey());
-				domain.setDiseaseAnnots(rs.getString("diseaseAnnots"));
-				domain.setMpAnnots(rs.getString("mpAnnots"));				
-				domain.setSynonyms(adomain.getSynonyms());
-				domain.setSubtypeAnnots(adomain.getSubtypeAnnots());
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		
-
-		return results;
-	}
 	
-	@Transactional	
-	public List<SummaryAlleleDomain> getAlleleByRef(String jnumid) {
-		// return list of allele domains by reference jnumid
+	// ----------------------------------------------------------------------------------------
+	// -------- GET/DOWNLOAD ALLELES ----------------------------------------------------------
+	// ----------------------------------------------------------------------------------------
 
-		List<SummaryAlleleDomain> results = new ArrayList<SummaryAlleleDomain>();
+	private SearchResults<SummaryAlleleDomain> processSummarySQL(String cmdCount, String cmd, int offset, int limit) {
+		// return search results of allele domain based on SQL cmd
 		
-		String cmd = "\nselect * from ALL_SummaryByReference_View where jnumid = '" + jnumid + "'";
+		SearchResults<SummaryAlleleDomain> results = new SearchResults<SummaryAlleleDomain>();
+		List<SummaryAlleleDomain> summaryResults = new ArrayList<SummaryAlleleDomain>();
 		
-		log.info(cmd);	
-		
+		log.info(cmdCount);
 		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
+			ResultSet rs = sqlExecutor.executeProto(cmdCount);
 			while (rs.next()) {
-				SummaryAlleleDomain domain = new SummaryAlleleDomain();
-				AlleleDomain adomain = new AlleleDomain();
-				adomain = translator.translate(alleleDAO.get(rs.getInt("_allele_key")));
-				alleleDAO.clear();
-				domain.setJnumID(jnumid);
-				domain.setAlleleID(adomain.getAccID());
-				domain.setAlleleKey(adomain.getAlleleKey());
-				domain.setSymbol(adomain.getSymbol());
-				domain.setName(adomain.getName());
-				domain.setAlleleType(adomain.getAlleleType());
-				domain.setAlleleTypeKey(adomain.getAlleleTypeKey());
-				domain.setAlleleStatus(adomain.getAlleleStatus());
-				domain.setAlleleStatusKey(adomain.getAlleleStatusKey());
-				domain.setTransmission(adomain.getTransmission());
-				domain.setTransmissionKey(adomain.getTransmissionKey());
-				domain.setDiseaseAnnots(rs.getString("diseaseAnnots"));
-				domain.setMpAnnots(rs.getString("mpAnnots"));				
-				domain.setSynonyms(adomain.getSynonyms());
-				domain.setSubtypeAnnots(adomain.getSubtypeAnnots());
-				results.add(domain);
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				alleleDAO.clear();				
 			}
 			sqlExecutor.cleanup();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-		}		
-
+		}
+		
+		log.info(cmd);	
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SummaryAlleleDomain domain = new SummaryAlleleDomain();
+				domain.setAlleleID(rs.getString("alleleid"));
+				domain.setAlleleKey(rs.getString("_allele_key"));
+				domain.setSymbol(rs.getString("symbol"));
+				domain.setName(rs.getString("name"));
+				domain.setAlleleType(rs.getString("alleletype"));
+				domain.setAlleleStatus(rs.getString("status"));
+				domain.setTransmission(rs.getString("transmission"));
+				domain.setDiseases(rs.getString("diseases"));
+				domain.setPheno(rs.getString("pheno"));				
+				domain.setSynonyms(rs.getString("synonyms"));
+				domain.setAttrs(rs.getString("attrs"));
+				summaryResults.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		results.items = summaryResults;
 		return results;
 	}	
 	
+	/* 
+	 * I started with most of the following being a view (all except the joining with the
+	 * accid parameter). The performance was terrible, 18-20 seconds. By putting it all in one big query
+	 * execution time is cut to 4 sec. 
+	 */	
+	public String getAlleleBySQL (String queryType, String accid, int offset, int limit, boolean returnCount) {
+		// allelediseases = allele key + comman separated list of diseases
+		String cmd = "";
+
+		switch (queryType) {
+		
+		case "marker":
+			cmd +=  "with alleles as ("
+			+ "\nselect a._allele_key "
+			+ "\nfrom all_allele a, acc_accession aa "
+			+ "\nwhere a._marker_key = aa._object_key "
+			+ "\nand aa._mgitype_key = 2 "
+			+ "\nand aa._logicaldb_key = 1 "
+			+ "\nand aa.accid = '" + accid + "'),"
+			;
+			break;
+			
+		case "reference":
+			cmd += "with alleles as ("
+  			+ "\n  select ra._object_key as _allele_key"
+  			+ "\n  from MGI_Reference_Assoc ra, ACC_Accession aa"
+  			+ "\n  where ra._mgitype_key = 11"
+  			+ "\n  and ra._refs_key = aa._object_key"
+  			+ "\n  and aa._mgitype_key = 1"
+  			+ "\n  and aa._logicaldb_key = 1"
+  			+ "\n  and aa.accid = '" + accid + "'),"
+			;
+			break;
+			
+		default:
+			throw new RuntimeException("Unknown queryType: " + queryType);
+		}
+
+		// allelediseases = table of allele key + comma-separated list of diseases
+		cmd += "\nallelediseases as ( "
+		+ "\n  -- includes NOT models also "
+		+ "\n  select a._allele_key, array_to_string(array_agg(DISTINCT vt.term), ','::text) AS diseases "
+		+ "\n  from all_allele a, voc_annot va, voc_term vt, gxd_allelegenotype ga "
+		+ "\n  where va._annottype_key = 1020 "
+		+ "\n  and va._object_key = ga._genotype_key "
+		+ "\n  and ga._allele_key = a._allele_key "
+		+ "\n  and va._term_key = vt._term_key "
+		+ "\n  and a._allele_key in (select * from alleles) "
+		+ "\n  group by a._allele_key "
+		+ "\n), "
+
+		// allelepheno = table of allele key + 'has data'
+		+ "\nallelepheno as ( "
+		+ "\n  select distinct a._allele_key, 'has data' as pheno "
+		+ "\n  from all_allele a, voc_annot va, voc_term vt, gxd_allelegenotype ga "
+		+ "\n  where va._annottype_key = 1002 "
+		+ "\n  and va._object_key = ga._genotype_key "
+		+ "\n  and ga._allele_key = a._allele_key "
+		+ "\n  and va._term_key = vt._term_key "
+		+ "\n  and va._qualifier_key != 2181424 " 
+		+ "\n  and va._term_key != 293594 "  // don't count annotations to "no phenotypic analysis"
+		+ "\n  and a._allele_key in (select * from alleles) "
+		+ "\n), "
+
+		// allelenormal = table of allele key + 'no abnormal phenotype observed' 
+		+ "\nallelenormal as ( "
+		+ "\n  select a._allele_key, 'no abnormal phenotype observed' as pheno "
+		+ "\n  from all_allele a "
+		+ "\n  where exists ( "
+		+ "\n     select 1  "
+		+ "\n     from voc_annot va, gxd_allelegenotype ga  "
+		+ "\n     where va._annottype_key = 1002  "
+		+ "\n  	  and va._object_key = ga._genotype_key "
+		+ "\n     and ga._allele_key = a._allele_key "
+		+ "\n     and va._qualifier_key = 2181424) "
+		+ "\n  and not exists ( "
+		+ "\n     select 1  "
+		+ "\n     from voc_annot va, gxd_allelegenotype ga  "
+		+ "\n     where va._annottype_key = 1002  "
+		+ "\n     and va._object_key = ga._genotype_key "
+		+ "\n     and ga._allele_key = a._allele_key "
+		+ "\n     and va._term_key != 293594 "  // don't count annotations to "no phenotypic analysis"
+		+ "\n     and va._qualifier_key = 2181423) "
+		+ "\n  and a._allele_key in (select * from alleles) "
+		+ "\n), "
+
+		// allelesynonyms = table of allele key + comma-separated list of synonyms
+		+ "\nallelesynonyms as ( "
+		+ "\n  select a._allele_key, array_to_string(array_agg(DISTINCT s.synonym), ','::text) AS synonyms "
+		+ "\n  from all_allele a, mgi_synonym s  "
+		+ "\n  where a._allele_key = s._object_key "
+		+ "\n  and s._synonymtype_key = 1016 "
+		+ "\n  and a._allele_key in (select * from alleles) "
+		+ "\n  group by a._allele_key "
+		+ "\n), "
+
+		// alleleattrs = allele key + comman-separated list of allele attributes (aka subtypes)
+		+ "\nalleleattrs as ( "
+		+ "\n  select a._allele_key, array_to_string(array_agg(DISTINCT vt.term), ','::text) AS attrs "
+		+ "\n  from all_allele a, voc_annot va, voc_term vt "
+		+ "\n  where va._annottype_key = 1014 "
+		+ "\n  and va._object_key = a._allele_key "
+		+ "\n  and va._term_key = vt._term_key "
+		+ "\n  and a._allele_key in (select * from alleles) "
+		+ "\n  group by a._allele_key "
+		+ "\n) "
+
+		// Each allele summary row combines data from all_allele and the above tables.
+		+ "\nselect  "
+		+ "\n  a._allele_key, "
+		+ "\n  a._marker_key, "
+		+ "\n  aa.accid as alleleid,  "
+		+ "\n  a.symbol,  "
+		+ "\n  a.name,  "
+		+ "\n  atype.term as alleletype,  "
+		+ "\n  atrs.attrs,  "
+		+ "\n  astatus.term as status,  "
+		+ "\n  mode.term as mode,  "
+		+ "\n  trans.term as transmission, "
+		+ "\n  s.synonyms,  "
+		+ "\n  ad.diseases,  "
+		+ "\n  case  "
+		+ "\n    when p.pheno is null then n.pheno "
+		+ "\n    else p.pheno "
+		+ "\n  end as pheno "
+		+ "\nfrom all_allele a "
+		+ "\n      left outer join allelediseases ad on a._allele_key = ad._allele_key "
+		+ "\n      left outer join allelesynonyms s  on a._allele_key = s._allele_key "
+		+ "\n      left outer join alleleattrs atrs  on a._allele_key = atrs._allele_key "
+		+ "\n      left outer join allelepheno p     on a._allele_key = p._allele_key "
+		+ "\n      left outer join allelenormal n    on a._allele_key = n._allele_key, "
+		+ "\n  voc_term atype, "
+		+ "\n  voc_term astatus, "
+		+ "\n  voc_term mode, "
+		+ "\n  voc_term trans, "
+		+ "\n  acc_accession aa "
+		+ "\nwhere a._allele_type_key = atype._term_key "
+		+ "\nand a._allele_status_key = astatus._term_key "
+		+ "\nand a._transmission_key = trans._term_key "
+		+ "\nand a._mode_key = mode._term_key "
+		+ "\nand a._allele_key = aa._object_key "
+		+ "\nand aa._mgitype_key = 11 "
+		+ "\nand aa._logicaldb_key = 1 "
+		+ "\nand aa.preferred = 1 "
+		+ "\nand a._allele_key in (select * from alleles) "
+		;
+
+		// Finally, the sorting
+		//cmd += "\norder by trans.term desc, astatus.term, a.symbol" ;
+
+		return cmd;
+	}
+	
+	public static class AlleleFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+                    		{"Symbol", "symbol"},
+                    		{"MGI ID","alleleid"},
+                    		{"Name", "name"},
+                    		{"Synonyms", "synonyms"},
+                    		{"Transmission", "transmission"},
+                    		{"Allele Status", "status"},
+                    		{"Generation Type", "alleletype"},
+                    		{"Attributes", "attrs"},
+                    		{"MP Annotations", "pheno"},
+                    		{"Disease Annotations", "diseases"}
+			};
+			return formatTsvHelper(obj, cols);
+		}
+	}
+
+	//
+	// allele by marker
+	// getAlleleByMarker() -> getAlleleByMarkerSQL(), processSummarySQL()
+	// downloadAlleleByMarker() -> getAlleleBySQL()
+	//
+	
+	@Transactional	
+	public SearchResults<SummaryAlleleDomain> getAlleleByMarker(String accid, int offset, int limit) {
+		// return list of allele domains by marker acc id
+		String cmdCount = getAlleleByMarkerSQL(accid, offset, limit, true);
+		String cmd = getAlleleByMarkerSQL(accid, offset, limit, false);
+		return processSummarySQL(cmdCount, cmd, offset, limit);
+	}
+	
+	public String getAlleleByMarkerSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting allele by marker id
+		
+		String cmd;
+
+		if (returnCount) {
+			cmd =  "\nselect count(a._allele_key) as total_count "
+					+ "\nfrom all_allele a, acc_accession aa "
+					+ "\nwhere a._marker_key = aa._object_key "
+					+ "\nand aa._mgitype_key = 2 "
+					+ "\nand aa._logicaldb_key = 1 "
+					+ "\nand aa.accid = '" + accid + "'";
+			return cmd;
+		}
+		
+		cmd = getAlleleBySQL("marker", accid, offset, limit, returnCount);
+		cmd = addPaginationSQL(cmd, "trans.term desc, astatus.term, a.symbol", offset, limit);
+
+		return cmd;
+	}
+	
+	public Response downloadAlleleByMarker (String accid) {
+		String cmd = getAlleleByMarkerSQL(accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getAlleleByMarker", accid), new AlleleFormatter());
+	}	
+	
+	//
+	// allele by reference
+	// getAlleleByRef() -> getAlleleByRefSQL(), processSummarySQL()
+	// downloadAlleleByRef() -> getAlleleBySQL()
+	//	
+
+	@Transactional	
+	public SearchResults<SummaryAlleleDomain> getAlleleByRef(String accid, int offset, int limit) {
+		// return list of allele domains by reference jnumid
+		String cmdCount = getAlleleByRefSQL(accid, offset, limit, true);
+		String cmd = getAlleleByRefSQL(accid, offset, limit, false);		
+		return processSummarySQL(cmdCount, cmd, offset, limit);
+	}
+
+	public String getAlleleByRefSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting allele by reference acc id
+		
+		String cmd;
+
+		if (returnCount) {
+			cmd = "\nselect count(ra._object_key) as total_count"
+					+ "\nfrom MGI_Reference_Assoc ra, ACC_Accession aa"
+					+ "\nwhere ra._mgitype_key = 11"
+					+ "\nand ra._refs_key = aa._object_key"
+					+ "\nand aa._mgitype_key = 1"
+					+ "\nand aa._logicaldb_key = 1"
+					+ "\nand aa.accid = '" + accid + "'";
+			return cmd;
+		}
+		
+		cmd = getAlleleBySQL("reference", accid, offset, limit, returnCount);
+		cmd = addPaginationSQL(cmd, "trans.term desc, astatus.term, a.symbol", offset, limit);
+
+		return cmd;
+	}
+	
+	public Response downloadAlleleByRef (String accid) {
+		String cmd = getAlleleByRefSQL(accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getAlleleByRef", accid), new AlleleFormatter());
+	}	
 }	

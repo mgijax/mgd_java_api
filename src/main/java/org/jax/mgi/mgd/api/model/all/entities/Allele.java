@@ -218,4 +218,9 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_category_key` in (1004)")
 	private List<RelationshipFear> expressesComponents;	
 	
+	// Fear relationships
+	@OneToMany()
+	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_category_key` in (1006)")
+	private List<RelationshipFear> driverComponents;		
 }

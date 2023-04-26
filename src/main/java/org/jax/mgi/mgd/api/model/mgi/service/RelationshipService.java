@@ -126,11 +126,12 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 		// see MGI_Relationship_FEAR_View:
 		// 			1003 | mutation_involves
 		// 			1004 | expresses_component
+		//			1006 | driver_component
 		
 		RelationshipFearTranslator translator = new RelationshipFearTranslator();
 		List<RelationshipFearDomain> results = new ArrayList<RelationshipFearDomain>();
 		
-		String cmd = "select _relationship_key from mgi_relationship_fear_view "
+		String cmd = "select distinct _relationship_key from mgi_relationship_fear_view "
 				+ "\nwhere _object_key_1 = " + key;
 		log.info(cmd);
 

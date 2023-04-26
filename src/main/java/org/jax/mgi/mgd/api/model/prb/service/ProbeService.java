@@ -8,6 +8,7 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.AccessionDAO;
@@ -471,7 +472,8 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		}
 		
 		if (searchDomain.getName() != null && !searchDomain.getName().isEmpty()) {
-			where = where + "\nand p.name ilike '" + searchDomain.getName() + "'" ;
+			value = searchDomain.getName().replaceAll("'", "''");
+			where = where + "\nand p.name ilike '" + value + "'" ;
 		}
 
 		if (searchDomain.getRegionCovered() != null && !searchDomain.getRegionCovered().isEmpty()) {
@@ -873,46 +875,178 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		return results;
 	}
 	
-	@Transactional	
-	public List<SummaryProbeDomain> getProbeByMarker(String accid) {
-		// return list of probe domains by marker acc id
+	// --------------------------------------------------
+	// get probes by marker
 
-		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+	public String getProbeBySQL(String queryType, String accid, int offset, int limit, boolean returnCount) {
+		String probesQ = "";
+		if (queryType.equals("marker")) {
+			probesQ = ""
+			+ "\nselect distinct p._probe_key, p.name"
+			+ "\n  from prb_probe p, prb_marker pm, acc_accession ma "
+			+ "\n  where p._probe_key = pm._probe_key "
+			+ "\n  and pm._marker_key = ma._object_key "
+			+ "\n  and ma._mgitype_key = 2 "
+			+ "\n  and ma._logicaldb_key = 1 "
+			+ "\n  and ma.accid = '" + accid + "' "
+			;
+		} else if (queryType.equals("reference")) {
+			probesQ = ""
+			+ "\nselect distinct p._probe_key, p.name"
+			+ "\n  from prb_probe p, prb_reference pr, acc_accession ra "
+			+ "\n  where p._probe_key = pr._probe_key "
+			+ "\n  and pr._refs_key = ra._object_key "
+			+ "\n  and ra._mgitype_key = 1 "
+			+ "\n  and ra._logicaldb_key = 1 "
+			+ "\n  and ra.accid = '" + accid + "' "
+			;
+		} else if (queryType.equals("search")) {
+			probesQ = accid;
+		} else {
+		    throw new RuntimeException("Unknown query type: " + queryType);
+		}
+
+		if (returnCount) {
+		    return "\nwith probes as (" + probesQ + ")\nselect count(*) as total_count from probes";
+		} else {
+		    probesQ = addPaginationSQL(probesQ, "name", offset, limit);
+		}
+
+		String cmd = "\nwith probes as materialized (" 
+		+ probesQ
+		+ "\n)," 
+		+ "\nprobeMarkers as materialized ( "
+		+ "\n  select p._probe_key, "
+		+ "\n     array_to_string(array_agg(mm.symbol), '|'::text) AS markers, "
+		+ "\n     array_to_string(array_agg(ma.accid), '|'::text) AS markerids "
+		+ "\n  from probes p "
+		+ "\n    left outer join prb_marker pm "
+		+ "\n        on p._probe_key = pm._probe_key"
+		+ "\n    left outer join mrk_marker mm"
+		+ "\n        on pm._marker_key = mm._marker_key"
+		+ "\n    left outer join acc_accession ma"
+		+ "\n        on mm._marker_key = ma._object_key"
+		+ "\n        and ma._mgitype_key = 2"
+		+ "\n        and ma._logicaldb_key = 1"
+		+ "\n        and ma.preferred = 1"
+		+ "\n  group by p._probe_key "
+		+ "\n), "
+		+ "\nprobeAliases as materialized ( "
+		+ "\n  select p._probe_key, "
+		+ "\n    array_to_string(array_agg(DISTINCT pa.alias), '|'::text) AS aliases "
+		+ "\n  from probes p "
+		+ "\n    left outer join prb_reference pr "
+		+ "\n        on p._probe_key = pr._probe_key"
+		+ "\n    left outer join prb_alias pa "
+		+ "\n        on pr._reference_key = pa._reference_key"
+		+ "\n  group by p._probe_key "
+		+ "\n), "
+		+ "\nprobeJnums as materialized ( "
+		+ "\n  select p._probe_key, "
+		+ "\n    array_to_string(array_agg(DISTINCT ra.accid), '|'::text) AS jnums "
+		+ "\n  from probes p"
+		+ "\n    left outer join prb_reference pr"
+		+ "\n        on p._probe_key = pr._probe_key"
+		+ "\n    left outer join acc_accession ra"
+		+ "\n        on pr._refs_key = ra._object_key"
+		+ "\n        and ra._mgitype_key = 1"
+		+ "\n        and ra._logicaldb_key = 1"
+		+ "\n        and ra.preferred = 1"
+		+ "\n        and ra.prefixPart = 'J:'"
+		+ "\n  group by p._probe_key "
+		+ "\n), "
+		+ "\nprobeParent as materialized ("
+		+ "\n  select p._probe_key, pp.name, pa.accid"
+		+ "\n  from probes p"
+		+ "\n    join prb_probe p2 on p._probe_key = p2._probe_key"
+		+ "\n    left outer join prb_probe pp on pp._probe_key = p2.derivedFrom"
+		+ "\n    left outer join acc_accession pa on pa._object_key = pp._probe_key"
+		+ "\n    and pa._mgitype_key = 3"
+		+ "\n    and pa._logicaldb_key = 1"
+		+ "\n    and pa.preferred = 1"
+		+ "\n)"
+		+ "\nselect  "
+		+ "\n  p._probe_key,  "
+		+ "\n  pa.accid,  "
+		+ "\n  pt.term as segmentType,  "
+		+ "\n  p.name, "
+		+ "\n  p.primer1sequence, "
+		+ "\n  p.primer2sequence, "
+		+ "\n  p.regioncovered, "
+		+ "\n  pj.jnums, "
+		+ "\n  pm.markers, "
+		+ "\n  pm.markerids, "
+		+ "\n  pal.aliases, "
+		+ "\n  o.commonname as organism, "
+		+ "\n  pp.name as parent, "
+		+ "\n  pp.accid as parentid "
+		+ "\nfrom  "
+		+ "\n  prb_probe p "
+		+ "\n    join probeMarkers pm on p._probe_key = pm._probe_key "
+		+ "\n    join probeAliases pal on p._probe_key = pal._probe_key "
+		+ "\n    join probeJnums pj on p._probe_key = pj._probe_key  "
+		+ "\n    join probeParent pp on p._probe_key = pp._probe_key,  "
+		+ "\n  voc_term pt,  "
+		+ "\n  prb_source ps, "
+		+ "\n  mgi_organism o, "
+		+ "\n  acc_accession pa "
+		+ "\nwhere p._source_key = ps._source_key "
+		+ "\nand ps._organism_key = o._organism_key "
+		+ "\nand p._segmenttype_key = pt._term_key "
+		+ "\nand p._probe_key = pa._object_key "
+		+ "\nand pa._mgitype_key = 3 "
+		+ "\nand pa._logicaldb_key = 1 "
+		+ "\nand pa.preferred = 1 "
+		+ "\norder by p.name "
+		;
+
+		return cmd;
+	}
+
+	public SearchResults<SummaryProbeDomain> getProbeByMarker(String accid, int offset, int limit) {
+		// return list of probe domains by marker acc id
+		SearchResults<SummaryProbeDomain> results = new SearchResults<SummaryProbeDomain>();
 		
-		String cmd = "\nselect distinct r._probe_key" +
-				"\nfrom PRB_Marker r, ACC_Accession a" +
-				"\nwhere a.accid = '" + accid + "'" +
-				"\nand a._mgitype_key = 2" +
-				"\nand a._logicaldb_key = 1" +
-				"\nand a._object_key = r._marker_key";
-		
-		results = processSummaryProbeDomain(cmd);		
+		String cmd = getProbeBySQL("marker", accid, offset, limit, true);
+		results.total_count = processSummaryProbeCount(cmd);
+
+		cmd = getProbeBySQL("marker", accid, offset, limit, false);
+		results.items = processSummaryProbeDomain(cmd);		
 		return results;
 	}
+
+	public Response downloadProbeByMarker (String accid) {
+		String cmd = getProbeBySQL("marker", accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getProbeByMarker", null), new ProbeFormatter());
+	}
 	
-	@Transactional	
-	public List<SummaryProbeDomain> getProbeByRef(String jnumid) {
+	// --------------------------------------------------
+	// get probes by reference
+
+	public SearchResults<SummaryProbeDomain> getProbeByRef(String accid, int offset, int limit) {
 		// return list of probe domains by reference jnumid
 		
-		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
+		SearchResults<SummaryProbeDomain> results = new SearchResults<SummaryProbeDomain>();
 
-		String cmd = "\nselect distinct r._probe_key from PRB_Reference r, BIB_Citation_Cache bc where bc._refs_key = r._refs_key and bc.jnumid = '" + jnumid + "'";
-		results = processSummaryProbeDomain(cmd);		
+		String cmd = getProbeBySQL("reference", accid, offset, limit, true);
+		results.total_count = processSummaryProbeCount(cmd);
+
+		cmd = getProbeBySQL("reference", accid, offset, limit, false);
+		results.items = processSummaryProbeDomain(cmd);		
 		return results;
 	}
 	
-	@Transactional	
-	public List<SummaryProbeDomain> getProbeBySearch(ProbeDomain searchDomain) {
-		// return list of probe domains by search
-		// currently supported search:  name, segementTypeKey 
-		
-		List<SummaryProbeDomain> results = new ArrayList<SummaryProbeDomain>();
-		
-		String name = searchDomain.getName();
-		String segmentTypeKey = searchDomain.getSegmentTypeKey();
-		
-		String cmd = "\nselect distinct p._probe_key from PRB_Probe p where p._probe_key is not null";
-		
+	public Response downloadProbeByRef (String accid) {
+		String cmd = getProbeBySQL("reference", accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getProbeByRef", null), new ProbeFormatter());
+	}
+	
+	// --------------------------------------------------
+	// get probes by search
+
+	public String getProbeBySearchSQL(String name, String segmentTypeKey, int offset, int limit, boolean returnCount) {
+
+		String cmd = "select distinct p._probe_key, p.name from prb_probe p where 1=1 ";
 		if (segmentTypeKey != null && !segmentTypeKey.isEmpty()) {
 			cmd = cmd + "\nand p._segmenttype_key = " + segmentTypeKey;
 		}
@@ -920,7 +1054,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		if (name != null && !name.isEmpty()) {
 			cmd = cmd + "\nand p.name ilike '" + name + "'";
 			cmd = cmd + "\nunion" +
-					"\nselect distinct p._probe_key from PRB_Probe p, PRB_Alias a, PRB_Reference r" +
+					"\nselect distinct p._probe_key, p.name from PRB_Probe p, PRB_Alias a, PRB_Reference r" +
 					"\nwhere a.alias ilike '" + name + "'" +
 					"\nand a._reference_key = r._reference_key" +
 					"\nand r._probe_key = p._probe_key";
@@ -929,11 +1063,48 @@ public class ProbeService extends BaseService<ProbeDomain> {
 			}
 		}
 		
-		results = processSummaryProbeDomain(cmd);		
+		return getProbeBySQL("search", cmd, offset, limit, returnCount);
+	}
+
+	public SearchResults<SummaryProbeDomain> getProbeBySearch(String name, String segmentTypeKey, int offset, int limit) {
+		// return list of probe domains by search
+		// currently supported search:  name, segementTypeKey 
+		
+		SearchResults<SummaryProbeDomain> results = new SearchResults<SummaryProbeDomain>();
+		
+		String cmd = getProbeBySearchSQL(name, segmentTypeKey, offset, limit, true);
+		results.total_count = processSummaryProbeCount(cmd);
+
+		cmd = getProbeBySearchSQL(name, segmentTypeKey, offset, limit, false);
+		results.items = processSummaryProbeDomain(cmd);		
+
 		return results;
 	}	
+
+	public Response downloadProbeBySearch (String name, String segmentTypeKey) {
+		String cmd = getProbeBySearchSQL(name, segmentTypeKey, -1, -1, false);
+		return download(cmd, getTsvFileName("getProbeBySearch", null), new ProbeFormatter());
+	}
 	
-	@Transactional
+	
+	// --------------------------------------------------
+
+	public Long processSummaryProbeCount(String cmd) {
+		Long total_count = null;
+		log.info(cmd);
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				total_count = rs.getLong("total_count");
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		return total_count;
+	}
+
 	public List<SummaryProbeDomain> processSummaryProbeDomain(String cmd) {
 		// return list of probe domains by "cmd" string
 		
@@ -945,52 +1116,21 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
-				ProbeDomain pdomain = new ProbeDomain();
-				pdomain = translator.translate(probeDAO.get(rs.getInt("_probe_key")));
 				SummaryProbeDomain domain = new SummaryProbeDomain();
-				domain.setProbeKey(pdomain.getProbeKey());
-				domain.setName(pdomain.getName());
-				domain.setProbeID(pdomain.getAccID());
-				domain.setSegmentType(pdomain.getSegmentType());
-				domain.setPrimer1Sequence(pdomain.getPrimer1sequence());
-				domain.setPrimer2Sequence(pdomain.getPrimer2sequence());
-				domain.setOrganism(pdomain.getProbeSource().getOrganism());
-				
-				if (pdomain.getMarkers() != null) {
-					List<String> markerIDs = new ArrayList<String>();
-					List<String> markerSymbols = new ArrayList<String>();
-					for (int i = 0; i < pdomain.getMarkers().size(); i++) {
-						markerIDs.add(pdomain.getMarkers().get(i).getMarkerAccId());
-						if (pdomain.getMarkers().get(i).getRelationship().equals("P")) {
-							markerSymbols.add(pdomain.getMarkers().get(i).getMarkerSymbol() + " (PUTATIVE)");
-						}
-						else {
-							markerSymbols.add(pdomain.getMarkers().get(i).getMarkerSymbol());
-						}
-					}
-					domain.setMarkerID(String.join("|", markerIDs));
-					domain.setMarkerSymbol(String.join("|", markerSymbols));				
-				}
-				
-				if (pdomain.getReferences() != null) {
-					List<String> aliases = new ArrayList<String>();
-					List<String> jnumids = new ArrayList<String>();
-					for (int i = 0; i < pdomain.getReferences().size(); i++) {
-						if (pdomain.getReferences().get(i).getAliases() != null) {
-							for (int j = 0; j < pdomain.getReferences().get(i).getAliases().size(); j++) {
-								aliases.add(pdomain.getReferences().get(i).getAliases().get(j).getAlias());
-							}
-						}
-						jnumids.add(pdomain.getReferences().get(i).getJnumid());
-					}
-					domain.setAliases(String.join(",", aliases));
-					domain.setJnumIDs(String.join("|", jnumids));
-				}
-
-				if (pdomain.getDerivedFromAccID() != null) {
-					domain.setParentID(pdomain.getDerivedFromAccID());
-					domain.setParentName(pdomain.getDerivedFromName());					
-				}
+				domain.setProbeKey(rs.getString("_probe_key"));
+				domain.setName(rs.getString("name"));
+				domain.setProbeID(rs.getString("accid"));
+				domain.setSegmentType(rs.getString("segmentType"));
+				domain.setPrimer1Sequence(rs.getString("primer1sequence"));
+				domain.setPrimer2Sequence(rs.getString("primer2sequence"));
+				domain.setRegionCovered(rs.getString("regionCovered"));				
+				domain.setOrganism(rs.getString("organism"));
+				domain.setMarkerID(rs.getString("markerids"));
+				domain.setMarkerSymbol(rs.getString("markers"));
+				domain.setAliases(rs.getString("aliases"));
+				domain.setJnumIDs(rs.getString("jnums"));
+				domain.setParentID(rs.getString("parentid"));
+				domain.setParentName(rs.getString("parent"));
 	
 				results.add(domain);
 				probeDAO.clear();				
@@ -1030,4 +1170,26 @@ public class ProbeService extends BaseService<ProbeDomain> {
 
 		return results;
 	}	
+
+	public static class ProbeFormatter implements TsvFormatter {
+		public String format (ResultSet obj) {
+			String[][] cols = {
+				{"Probe ID",   "accid"},
+				{"Name",       "name"},
+				{"Type",       "segmentType"},
+				{"Markers",    "markers"},
+				{"Marker IDs", "markerids"},
+				{"Region Covered", "regionCovered"},
+				{"Primer Sequence 1", "primer1sequence"},
+				{"Primer Sequence 2", "primer2sequence"},
+				{"Aliases",    "aliases"},
+				{"Organism",   "organism"},
+				{"Parent ID",  "parentid"},
+				{"Parent Name","parent"},
+				{"J#s",        "jnums"}
+
+			};
+			return formatTsvHelper(obj, cols);
+		}
+	}
 }

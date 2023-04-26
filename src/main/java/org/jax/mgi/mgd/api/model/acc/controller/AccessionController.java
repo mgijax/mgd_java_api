@@ -6,7 +6,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -146,6 +148,22 @@ public class AccessionController extends BaseController<AccessionDomain> {
 
 		try {
 			results = accessionService.validateGOIsoform(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@GET
+	@ApiOperation(value = "Get list of quick searrch results by accid(s).")
+	@Path("/getQSResultByAccid")
+	public List<SlimAccessionDomain> getQSResultByAccid(@QueryParam("ids") String ids) {
+
+		List<SlimAccessionDomain> results = new ArrayList<SlimAccessionDomain>();
+
+		try {
+			results = accessionService.getQSResultByAccid(ids);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

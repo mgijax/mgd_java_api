@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.mgi.translator;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISet;
+import org.jboss.logging.Logger;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,8 @@ import lombok.Setter;
 public class MGISetTranslator extends BaseEntityDomainTranslator<MGISet, MGISetDomain> {
 
 	private MGISetMemberTranslator setTranslator = new MGISetMemberTranslator();
-	
+	protected Logger log = Logger.getLogger(getClass());
+
 	@Override
 	protected MGISetDomain entityToDomain(MGISet entity) {
 		MGISetDomain domain = new MGISetDomain();

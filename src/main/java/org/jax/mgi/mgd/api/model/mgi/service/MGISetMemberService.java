@@ -1,6 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -83,7 +82,8 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				
 		String cmd = "";
 		Query query;
-                String value; // for escaping of the set label
+        String labelValue; // for escaping of the set label
+        int stageValue = 0;
 
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
@@ -92,20 +92,28 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {
 	
-				// if synonym is null/empty, then skip
-				// pwi has sent a "c" that is empty/not being used
+				// empty label is allowed; don't skip
 				//if (domain.get(i).getLabel() == null || domain.get(i).getLabel().isEmpty()) {
 				//	continue;
 				//}
 				
 				log.info("processSetMember create");
-                                value = domain.get(i).getLabel().replace("'",  "''");				
+
+				// only 1 emapa member is ever used
+				if (domain.get(i).getEmapaStage() != null) {
+					stageValue = Integer.valueOf(domain.get(i).getEmapaStage().getStage());
+				}
+				
+				labelValue = domain.get(i).getLabel().replace("'",  "''");
+				
 				cmd = "select count(*) from MGI_addSetMember ("
 						+ domain.get(i).getSetKey()
 						+ "," + domain.get(i).getObjectKey()
 						+ "," + user.get_user_key() 
-						+ ", '" + value + "'"
+						+ ", '" + labelValue + "'"
+						+ "," + stageValue
 						+")";
+				log.info(cmd);
 				query = setMemberDAO.createNativeQuery(cmd);
 				query.getResultList();
 				modified = true;
@@ -118,21 +126,16 @@ public class MGISetMemberService extends BaseService<MGISetMemberDomain> {
 				log.info("processSetMember delete successful");
 			}
 			else if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
-				log.info("processSetMember update");
-				MGISetMember entity = setMemberDAO.get(Integer.valueOf(domain.get(i).getSetMemberKey()));
-				if(domain.get(i).getLabel() == null || domain.get(i).getLabel().isEmpty()) {
-					entity.setLabel(null);
-				}
-				else  {
-					entity.setLabel(domain.get(i).getLabel());
-				}
-				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setModification_date(new Date());
-				entity.setModifiedBy(user);
-				setMemberDAO.update(entity);
-				
+				log.info("processSetMember update/sequenceNum");
+				cmd = "select count(*) from MGI_updateSetMember ("
+						+ domain.get(i).getSetMemberKey()
+						+ "," + domain.get(i).getSequenceNum()
+						+")";
+				log.info(cmd);
+				query = setMemberDAO.createNativeQuery(cmd);
+				query.getResultList();
+				modified = true;
 				log.info("processSetMember/changes processed: " + domain.get(i).getSetMemberKey());
-			
 			}
 			else {
 				log.info("processSetMember/no changes processed: " + domain.get(i).getSetMemberKey());

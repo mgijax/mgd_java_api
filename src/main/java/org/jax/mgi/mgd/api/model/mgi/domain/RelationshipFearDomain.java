@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.domain;
 
-import java.util.List;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
@@ -23,6 +21,8 @@ public class RelationshipFearDomain extends BaseDomain {
 	private String markerKey;
 	private String markerSymbol;
 	private String markerAccID;
+	private String organismKey;
+	private String organism;
 	private String relationshipTermKey;
 	private String relationshipTerm;
 	private String qualifierKey;
@@ -40,5 +40,4 @@ public class RelationshipFearDomain extends BaseDomain {
 	private String creation_date;
 	private String modification_date;  
 	private NoteDomain note;
-	List<RelationshipPropertyDomain> properties;
 }

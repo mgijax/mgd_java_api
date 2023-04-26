@@ -611,7 +611,8 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				from_synonym = true;
 			}			
 			if (searchDomain.getSynonyms().get(0).getSynonym() != null && !searchDomain.getSynonyms().get(0).getSynonym().isEmpty()) {
-				where = where + "\nand syn.synonym ilike '" + searchDomain.getSynonyms().get(0).getSynonym() + "'";
+				value = searchDomain.getSynonyms().get(0).getSynonym().replaceAll("'", "\\\\'");
+				where = where + "\nand syn.synonym ilike E'" + value + "'";						
 				from_synonym = true;
 			}
 			if (searchDomain.getSynonyms().get(0).getRefsKey() != null && !searchDomain.getSynonyms().get(0).getRefsKey().isEmpty()) {

@@ -1,12 +1,8 @@
 package org.jax.mgi.mgd.api.model.mgi.translator;
 
-import java.util.Comparator;
-
-import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFear;
 import org.jax.mgi.mgd.api.util.Constants;
 
@@ -25,6 +21,8 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 		domain.setMarkerKey(String.valueOf(entity.get_object_key_2()));
 		domain.setMarkerSymbol(entity.getMarkerSymbol());
 		domain.setMarkerAccID(entity.getMarkerAccID());
+		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
+		domain.setOrganism(entity.getOrganism());
 		domain.setRelationshipTermKey(String.valueOf(entity.get_relationshipTerm_key()));
 		domain.setRelationshipTerm(entity.getRelationshipTerm());
 		domain.setQualifierKey(String.valueOf(entity.get_qualifier_key()));
@@ -58,14 +56,6 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 			noteDomain.setObjectKey("");			
 			noteDomain.setNoteChunk("");
 			domain.setNote(noteDomain);
-		}
-		
-		// properties
-		if (entity.getProperties() != null) {
-			RelationshipPropertyTranslator propertyTranslator = new RelationshipPropertyTranslator();
-			Iterable<RelationshipPropertyDomain> i = propertyTranslator.translateEntities(entity.getProperties());
-			domain.setProperties(IteratorUtils.toList(i.iterator()));
-			domain.getProperties().sort(Comparator.comparingInt(RelationshipPropertyDomain::getSequenceNum));
 		}
 		
 		return domain;

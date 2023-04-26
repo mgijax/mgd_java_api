@@ -1,0 +1,46 @@
+
+1. login to server bhmgipwi01lt as mgiadmin
+2. setenv MGICONFIG /usr/local/mgi/test/mgiconfig;source ${MGICONFIG}/master.config.csh
+3. env | grep JAVA : to verify that JAVA_API_URL is correct
+        http://bhmgipwi01lt.jax.org:7099/api
+
+4. stop the API/PWI that may be running
+ cd /usr/local/mgi/test/mgd_java_api
+ stopApi.sh
+ cd /usr/local/mgi/test/pwi/admin
+ stopserver.sh
+
+5. remove the existing sym links
+ cd /usr/local/mgi/test
+ rm mgd_java_api pwi
+
+6. manually install mgd_java_api (do not use mgiconfig)
+
+ cd /usr/local/mgi/test
+ git clone git@github.com:MGIJax/mgd_java_api
+ cd mgd_java_api
+ if using a branch: git checkout yourBranch
+ cp Configuration.default Configuration
+ change:  MGICONFIG=/usr/local/mgi/test/mgiconfig
+ change:  LOG_DIR=/data/mgd_java_api-test/logs
+ Install
+ use Swagger to verify install was correct: http://bhmgipwi01lt.jax.org:7099
+ tail -f /data/mgd_java_api-test/logs/java_api.log
+
+7. manually install pwi (do not use mgiconfig)
+
+ cd /usr/local/mgi/test
+ git clone git@github.com:MGIJax/pwi
+ cd pwi
+ if using a branch: git checkout yourBranch
+ cp Configuration.default Configuration
+ change:  MGICONFIG=/usr/local/mgi/test/mgiconfig
+ change:  LOG_DIR=/data/pwi-test/logs/
+ change:  SERVER_PORT=5001
+ Install
+ cd admin
+ startserver.sh
+ cat nohup.out to verify
+
+8. run pwi and login:  http://bhmgipwi01lt:5001/pwi/
+

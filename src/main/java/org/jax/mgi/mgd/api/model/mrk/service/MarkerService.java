@@ -292,11 +292,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			// process feature types
 			// use qualifier 'Generic Annotation Qualifier', value = null
 			if (domain.getFeatureTypes() != null && !domain.getFeatureTypes().isEmpty()) {
-				if (annotationService.processMarkerFeatureType(domain.getMarkerKey(), 
-						domain.getFeatureTypes(), 
-						domain.getFeatureTypes().get(0).getAnnotTypeKey(),
-						Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user) == true) {
-					modified = true;			
+				if (domain.getFeatureTypes().get(0).getTermKey() != null && !domain.getFeatureTypes().get(0).getTermKey().isEmpty()) {
+					if (annotationService.processMarkerFeatureType(domain.getMarkerKey(), 
+							domain.getFeatureTypes(), 
+							domain.getFeatureTypes().get(0).getAnnotTypeKey(),
+							Constants.VOC_GENERIC_ANNOTATION_QUALIFIER, user) == true) {
+						modified = true;			
+					}
 				}
 			}
 		}

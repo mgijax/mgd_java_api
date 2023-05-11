@@ -1233,8 +1233,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
 
-	    String cmd = "select count(*) from GXD_addEMAPASet('" + domain.getCreatedBy() + "'," 
-	    			+ domain.getAssayKey() + ")";
+	    String cmd = "select count(*) from GXD_addEMAPASet('" + domain.getCreatedBy() + "'," + domain.getAssayKey() + ")";
 	    Query query;
 		
 	    log.info(cmd);
@@ -1250,8 +1249,23 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
 
-	    String cmd = "select count(*) from GXD_addCellTypeSet('" + domain.getCreatedBy() + "'," 
-	    			+ domain.getAssayKey() + ")";
+	    String cmd = "select count(*) from GXD_addCellTypeSet('" + domain.getCreatedBy() + "'," + domain.getAssayKey() + ")";
+	    Query query;
+		
+	    log.info(cmd);
+	    query = assayDAO.createNativeQuery(cmd);
+	    query.getResultList();
+		
+		return results;
+	}
+	
+	@Transactional
+	public List<SlimAssayDomain> addToGenotypeClipboard(SlimAssayDomain domain) {
+		// select * from GXD_addGenotypeSet (user, assayKey)
+		
+		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();		
+
+	    String cmd = "select count(*) from GXD_addGenotypeSet('" + domain.getCreatedBy() + "'," + domain.getAssayKey() + ")";
 	    Query query;
 		
 	    log.info(cmd);

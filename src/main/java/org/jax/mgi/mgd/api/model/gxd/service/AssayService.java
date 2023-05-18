@@ -1386,26 +1386,34 @@ public class AssayService extends BaseService<AssayDomain> {
 	public String getAssayBySQL (String queryType, String accid) {
 		
 		String cmd ;
-		String select = "\nselect distinct e._assay_key, ea.accid as assayid, ma.accid as markerid, m.symbol as markersymbol, at.assaytype, at.sequenceNum, r.jnumid, r.short_citation " ;
-		String from = "\nfrom gxd_expression e, acc_accession ea, mrk_marker m,  acc_accession ma, gxd_assaytype at, bib_citation_cache r " ;
-		String where = "\nwhere e._assay_key = ea._object_key " +
+		String with = "";
+		String select = "\nselect distinct a._assay_key, ea.accid as assayid, ma.accid as markerid, m.symbol as markersymbol, at.assaytype, at.sequenceNum, r.jnumid, r.short_citation " ;
+		String from = "\nfrom gxd_assay a, acc_accession ea, mrk_marker m,  acc_accession ma, gxd_assaytype at, bib_citation_cache r " ;
+		String where = "\nwhere a._assay_key = ea._object_key " +
 			"\nand ea._mgitype_key = 8 " +
 			"\nand ea._logicaldb_key = 1 " +
 			"\nand ea.preferred = 1 " +
-			"\nand e._marker_key = m._marker_key " +
+			"\nand a._marker_key = m._marker_key " +
 			"\nand m._marker_key = ma._object_key " +
 			"\nand ma._mgitype_key = 2 " +
 			"\nand ma._logicaldb_key = 1 " +
 			"\nand ma.preferred = 1 " +
-			"\nand e._assaytype_key = at._assaytype_key " +
-			"\nand e._refs_key = r._refs_key " +
+			"\nand a._assaytype_key = at._assaytype_key " +
+			"\nand a._refs_key = r._refs_key " +
 			"";
 		
 		switch (queryType) {
 		case "allele":
-			from += ", gxd_genotype g, gxd_allelegenotype ag, acc_accession aa ";
+			with = "with genoTemp as ( " +
+				"\nselect distinct s._genotype_key, s._assay_key from gxd_specimen s " +
+				"\nunion " +
+				"\nselect distinct l._genotype_key, l._assay_key from gxd_gellane l " +
+				"\n)"  +
+				"" ;
+			from += ", genoTemp gt, gxd_genotype g, gxd_allelegenotype ag, acc_accession aa ";
 
-			where += "\n and e._genotype_key = g._genotype_key " +
+			where += "\n and a._assay_key = gt._assay_key " + 
+				"\n and gt._genotype_key = g._genotype_key " +
 				"\n and g._genotype_key = ag._genotype_key " +
 				"\n and ag._allele_key = aa._object_key " +
 				"\n and aa._mgitype_key = 11 " +
@@ -1414,10 +1422,9 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\n";
 			break;
 		case "antibody":
-			from += ", gxd_assay a, gxd_antibodyprep ap, acc_accession aa ";
+			from += ", gxd_antibodyprep ap, acc_accession aa ";
 
-			where += "\n and e._assay_key = a._assay_key " + 
-			       "\n    and a._antibodyprep_key = ap._antibodyprep_key " +
+			where += "\n    and a._antibodyprep_key = ap._antibodyprep_key " +
 			       "\n    and ap._antibody_key = aa._object_key " +
 			       "\n    and aa._mgitype_key = 6 " +
 			       "\n    and aa._logicaldb_key = 1 " +
@@ -1425,10 +1432,9 @@ public class AssayService extends BaseService<AssayDomain> {
 			       "\n";
 			break;
 		case "probe":
-			from += ", gxd_assay a, gxd_probeprep pp, acc_accession pa ";
+			from += ", gxd_probeprep pp, acc_accession pa ";
 
-			where += "\n and e._assay_key = a._assay_key " + 
-			       "\n    and a._probeprep_key = pp._probeprep_key " +
+			where += "\n    and a._probeprep_key = pp._probeprep_key " +
 			       "\n    and pp._probe_key = pa._object_key " +
 			       "\n    and pa._mgitype_key = 3 " +
 			       "\n    and pa._logicaldb_key = 1 " +
@@ -1447,7 +1453,7 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		String orderby = "\norder by m.symbol, at.sequenceNum, r.short_citation, ea.accid ";
 
-		cmd = select + from + where + orderby;
+		cmd = with + select + from + where + orderby;
 		return cmd;
 	}
 

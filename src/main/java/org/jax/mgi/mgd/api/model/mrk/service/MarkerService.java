@@ -1389,6 +1389,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				}		
 				
 				// 9:Other Genome Feature; the only valid terms are:
+				//				   6238178 | other genome feature
 				//				   7648966 | retrotransposon
 				//				   7648967 | telomere
 				//				   7648968 | minisatellite
@@ -1415,7 +1416,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 				
 				else if (!markerTypeKey.equals("9")
-						&& (termKey.equals("15406205")
+						&& (termKey.equals("6238178")
+							|| termKey.equals("15406205")
 							|| termKey.equals("9272146")
 							|| termKey.equals("7648968")
 							|| termKey.equals("11928467")
@@ -1443,6 +1445,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				}
 				// 9:Other Genome Feature
 				else if (markerTypeKey.equals("9")
+						 && !termKey.equals("6238178")
 						 && !termKey.equals("15406205")
 						 && !termKey.equals("9272146")
 						 && !termKey.equals("7648968")

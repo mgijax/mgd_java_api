@@ -2285,7 +2285,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			value = value.replaceAll(" ", ",");
 			value = value.trim().toLowerCase().replaceAll(",", "','");
 			cmd = cmd + ", acc_accession a";
-			where = where + "\nand r._refs_key = a._object_key and a._mgitype_key = 1 and a._logicaldb_key = 1";			
+			where = where + "\nand r._refs_key = a._object_key and a._mgitype_key = 1 and a._logicaldb_key in (1,29)";			
 			where = where + "\nand lower(a.accid) in ('" + value + "')";
 		}
 		

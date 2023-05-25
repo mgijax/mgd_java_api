@@ -111,6 +111,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		entity.setPriority(termDAO.get(Integer.valueOf(domain.getPriorityKey())));
 		entity.setConditionalMutants(termDAO.get(Integer.valueOf(domain.getConditionalMutantsKey())));			
 		
+		log.info("processGXDIndex/comments: " + domain.getComments());
 		if (domain.getComments() == null || domain.getComments().isEmpty()) {
 			entity.setComments(null);
 		}
@@ -125,6 +126,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		}
 		
 		// process gxd_indexstages
+		log.info("processGXDIndex/stage: " + domain.getIndexStages());
 		if (domain.getIndexStages() != null && !domain.getIndexStages().isEmpty()) {
 			if (stageService.process(entity.get_index_key(), domain.getIndexStages(), user)) {
 				modified = true;
@@ -132,6 +134,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 		}
 		
 		// always true
+		log.info("processGXDIndex/ready to process");
 		if (modified == true) {
 			entity.setModification_date(new Date());
 			entity.setModifiedBy(user);

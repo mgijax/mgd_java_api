@@ -1809,7 +1809,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SlimAssayDLDomain domain = new SlimAssayDLDomain();
-				domain.setSpecimenKey(rs.getString("_sequence_key"));
+				domain.setSpecimenKey(rs.getString("_specimen_key"));
 				domain.setSpecimenLabel(rs.getString("specimenlabel"));
 				domain.setAccID(rs.getString("accid"));
 				domain.setSymbol(rs.getString("symbol"));

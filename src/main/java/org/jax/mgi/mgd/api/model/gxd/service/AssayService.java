@@ -1799,10 +1799,12 @@ public class AssayService extends BaseService<AssayDomain> {
 			"\nand gs2._result_key = gi2._result_key" +
 			"\nand a1._refs_key = a2._refs_key" +
 			"\nand gi1._imagepane_key = gi2._imagepane_key" +
-			"\nand m1._marker_key != m2._marker_key" +
+			"\nand a1._marker_key != a2._marker_key" +
 			"\nand a1._assay_key = " + assayKey +
 			"\norder by s1.sequenceNum";
 		
+		log.info(cmd);	
+
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {

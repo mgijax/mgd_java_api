@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDLDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
@@ -1718,5 +1719,108 @@ public class AssayService extends BaseService<AssayDomain> {
 		return summaryResults;
 	}
 	
+	@Transactional
+	public List<SlimAssayDLDomain> getAssayDLByKey(String assayKey) {
+		// return assay info for an Assay that for which another Assay exists for:
+		//
+		// 1. Assay Type in (1,6)
+		// 2. same Reference (J:)
+		// 3. same Image Pane
+		// 4. different Marker
+		//
+
+		List<SlimAssayDLDomain> results = new ArrayList<SlimAssayDLDomain>();
+		
+//		WITH assays AS (
+//				select s1.sequenceNum, s1._specimen_key, s1.specimenlabel
+//				from gxd_assay a1,
+//				gxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1,
+//				gxd_assay a2, acc_accession ea2, mrk_marker m2,
+//				gxd_specimen s2, gxd_insituresult gs2, gxd_insituresultimage gi2
+//				where a1._assaytype_key in (1,6)
+//				and a1._assay_key = s1._assay_key
+//				and s1._specimen_key = gs1._specimen_key
+//				and gs1._result_key = gi1._result_key
+//				and a2._assay_key = ea2._object_key
+//				and ea2._mgitype_key = 8
+//				and ea2._logicaldb_key = 1
+//				and ea2.preferred = 1
+//				and a2._marker_key = m2._marker_key
+//				and a2._assaytype_key in (1,6)
+//				and a2._assay_key = s2._assay_key
+//				and s2._specimen_key = gs2._specimen_key
+//				and gs2._result_key = gi2._result_key
+//				and a1._refs_key = a2._refs_key
+//				and gi1._imagepane_key = gi2._imagepane_key
+//				and a1._marker_key != m2._marker_key
+//				and a1._assay_key = 79233
+//				group by s1.sequenceNum, s1._specimen_key, s1.specimenlabel having count(*) = 1
+//				)
+//				select a.*, ea2.accid, m2.symbol
+//				from assays a, gxd_assay a1,
+//				gxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1,
+//				gxd_assay a2, acc_accession ea2, mrk_marker m2,
+//				gxd_specimen s2, gxd_insituresult gs2, gxd_insituresultimage gi2
+//				where a1._assaytype_key in (1,6)
+//				and a1._assay_key = s1._assay_key
+//				and s1._specimen_key = gs1._specimen_key
+//				and gs1._result_key = gi1._result_key
+//				and a2._assay_key = ea2._object_key
+//				and ea2._mgitype_key = 8
+//				and ea2._logicaldb_key = 1
+//				and ea2.preferred = 1
+//				and a2._marker_key = m2._marker_key
+//				and a2._assaytype_key in (1,6)
+//				and a2._assay_key = s2._assay_key
+//				and s2._specimen_key = gs2._specimen_key
+//				and gs2._result_key = gi2._result_key
+//				and a1._refs_key = a2._refs_key
+//				and gi1._imagepane_key = gi2._imagepane_key
+//				and a1._marker_key != m2._marker_key
+//				and a._specimen_key = gs1._specimen_key
+		
+		String cmd = "\nselect s1.sequenceNum, s1._specimen_key, s1.specimenlabel, ea2.accid, m2.symbol" +
+			"\nfrom gxd_assay a1," +
+			"\ngxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1," +
+			"\ngxd_assay a2, acc_accession ea2, mrk_marker m2," +
+			"\ngxd_specimen s2, gxd_insituresult gs2, gxd_insituresultimage gi2" +
+			"\nwhere a1._assaytype_key in (1,6)" +
+			"\nand a1._assay_key = s1._assay_key" +
+			"\nand s1._specimen_key = gs1._specimen_key" +
+			"\nand gs1._result_key = gi1._result_key" +
+			"\nand a2._assay_key = ea2._object_key" +
+			"\nand ea2._mgitype_key = 8" +
+			"\nand ea2._logicaldb_key = 1" +
+			"\nand ea2.preferred = 1" +
+			"\nand a2._marker_key = m2._marker_key" +
+			"\nand a2._assaytype_key in (1,6)" +
+			"\nand a2._assay_key = s2._assay_key" +
+			"\nand s2._specimen_key = gs2._specimen_key" +
+			"\nand gs2._result_key = gi2._result_key" +
+			"\nand a1._refs_key = a2._refs_key" +
+			"\nand gi1._imagepane_key = gi2._imagepane_key" +
+			"\nand m1._marker_key != m2._marker_key" +
+			"\nand a1._assay_key = " + assayKey +
+			"\norder by s1.sequenceNum";
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAssayDLDomain domain = new SlimAssayDLDomain();
+				domain.setSpecimenKey(rs.getString("_sequence_key"));
+				domain.setSpecimenLabel(rs.getString("specimenlabel"));
+				domain.setAccID(rs.getString("accid"));
+				domain.setSymbol(rs.getString("symbol"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }
 

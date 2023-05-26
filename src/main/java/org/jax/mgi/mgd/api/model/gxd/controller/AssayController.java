@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDLDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
@@ -494,4 +495,19 @@ public class AssayController extends BaseController<AssayDomain> {
              return assayService.downloadResultByStructure(accid);
 	}
 	
+	@POST
+	@ApiOperation(value = "Get Assay Double Label (DL) by assay key")
+	@Path("/getAssayDLByKey")	
+	public List<SlimAssayDLDomain> getAssayDLByKey(String assayKey) {
+		
+		List<SlimAssayDLDomain> results = new ArrayList<SlimAssayDLDomain>();
+
+		try {
+			results = assayService.getAssayDLByKey(assayKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}	
 }

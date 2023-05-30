@@ -13,7 +13,9 @@ public class SlimAssayDLDomain extends BaseDomain {
 	
 	private String specimenKey;
 	private String specimenLabel;
+	private String assayKey;
 	private String accID;
+	private String markerKey;
 	private String symbol;
 
 }

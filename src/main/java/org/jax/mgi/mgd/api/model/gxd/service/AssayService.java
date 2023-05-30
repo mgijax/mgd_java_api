@@ -1811,7 +1811,9 @@ public class AssayService extends BaseService<AssayDomain> {
 				SlimAssayDLDomain domain = new SlimAssayDLDomain();
 				domain.setSpecimenKey(rs.getString("_specimen_key"));
 				domain.setSpecimenLabel(rs.getString("specimenlabel"));
+				domain.setAssayKey(rs.getString("_assay_key"));
 				domain.setAccID(rs.getString("accid"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				results.add(domain);
 			}

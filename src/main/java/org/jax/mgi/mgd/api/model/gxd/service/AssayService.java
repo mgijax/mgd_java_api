@@ -1721,7 +1721,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	
 	@Transactional
 	public List<SlimAssayDLDomain> getAssayDLByKey(String assayKey) {
-		// return assay info for an Assay that for which another Assay exists for:
+		// return assay info for an Assay for which another Assay exists with this criteria:
 		//
 		// 1. Assay Type in (1,6)
 		// 2. same Reference (J:)
@@ -1779,7 +1779,10 @@ public class AssayService extends BaseService<AssayDomain> {
 //				and a1._marker_key != a2._marker_key
 //				and a._specimen_key = gs1._specimen_key
 		
-		String cmd = "\nselect s1.sequenceNum, s1._specimen_key, s1.specimenlabel, a1._assay_key, ea2.accid, a1._marker_key, m2.symbol" +
+		// based on search assayKey & specimen, what template is this?
+		// setting toolTemplate as needed
+		
+		String cmd = "\nselect s1.sequenceNum, s1._specimen_key, s1.specimenlabel, a1._assay_key, a1._assaytype_key, ea2.accid, a1._marker_key, m2.symbol" +
 			"\nfrom gxd_assay a1," +
 			"\ngxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1," +
 			"\ngxd_assay a2, acc_accession ea2, mrk_marker m2," +
@@ -1812,9 +1815,11 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenKey(rs.getString("_specimen_key"));
 				domain.setSpecimenLabel(rs.getString("specimenlabel"));
 				domain.setAssayKey(rs.getString("_assay_key"));
+				domain.setAssayTypeKey(rs.getString("_assaytype_key"));				
 				domain.setAccID(rs.getString("accid"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setToolTemplate("A");
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

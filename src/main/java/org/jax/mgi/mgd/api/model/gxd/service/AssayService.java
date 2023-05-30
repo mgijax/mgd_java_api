@@ -1787,7 +1787,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			"\ngxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1," +
 			"\ngxd_assay a2, acc_accession ea2, mrk_marker m2," +
 			"\ngxd_specimen s2, gxd_insituresult gs2, gxd_insituresultimage gi2" +
-			"\nwhere a1._assaytype_key in (1,6)" +
+			"\nwhere a1._assaytype_key in (1,6,9)" +
 			"\nand a1._assay_key = s1._assay_key" +
 			"\nand s1._specimen_key = gs1._specimen_key" +
 			"\nand gs1._result_key = gi1._result_key" +

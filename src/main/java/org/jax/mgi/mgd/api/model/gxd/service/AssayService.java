@@ -1723,10 +1723,9 @@ public class AssayService extends BaseService<AssayDomain> {
 	public List<SlimAssayDLDomain> getAssayDLByKey(String assayKey) {
 		// return assay info for an Assay for which another Assay exists with this criteria:
 		//
-		// 1. Assay Type in (1,6)
+		// 1. Assay Type in (1,6,9)
 		// 2. same Reference (J:)
 		// 3. same Image Pane
-		// 4. different Marker
 		//
 
 		List<SlimAssayDLDomain> results = new ArrayList<SlimAssayDLDomain>();
@@ -1779,10 +1778,10 @@ public class AssayService extends BaseService<AssayDomain> {
 //				and a1._marker_key != a2._marker_key
 //				and a._specimen_key = gs1._specimen_key
 		
-		// based on search assayKey & specimen, what template is this?
-		// setting toolTemplate as needed
-		
-		String cmd = "\nselect s1.sequenceNum, s1._specimen_key, s1.specimenlabel, a1._assay_key, a1._assaytype_key, ea2.accid, a1._marker_key, m2.symbol" +
+		// template A/B
+		// 4. different Marker
+		String cmd = "\nselect s1.sequenceNum, s1._specimen_key, s1.specimenlabel, a1._assay_key, a1._assaytype_key, " +
+			"\nea2._object_key, ea2.accid, a1._marker_key, m2.symbol" +
 			"\nfrom gxd_assay a1," +
 			"\ngxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1," +
 			"\ngxd_assay a2, acc_accession ea2, mrk_marker m2," +
@@ -1802,6 +1801,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			"\nand gs2._result_key = gi2._result_key" +
 			"\nand a1._refs_key = a2._refs_key" +
 			"\nand gi1._imagepane_key = gi2._imagepane_key" +
+			"\nand a1._assay_key != ea2._object_key" +		
 			"\nand a1._marker_key != a2._marker_key" +
 			"\nand a1._assay_key = " + assayKey +
 			"\norder by s1.sequenceNum";
@@ -1828,6 +1828,9 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}
 		
+		// template C
+		// 4. same Marker
+
 		return results;
 	}
 		

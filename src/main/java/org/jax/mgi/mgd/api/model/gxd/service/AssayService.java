@@ -1814,7 +1814,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setAssayKey(rs.getString("_assay_key"));
 				domain.setAccID(rs.getString("accid"));
 				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setSymbol(rs.getString("symbol"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

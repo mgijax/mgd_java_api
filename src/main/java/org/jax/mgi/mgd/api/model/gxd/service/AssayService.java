@@ -1853,7 +1853,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				"\nand a1._refs_key = a2._refs_key" +
 				"\nand gi1._imagepane_key = gi2._imagepane_key" +
 				"\nand a1._assay_key != ea2._object_key" +		
-				"\nand a1._marker_key == a2._marker_key" +
+				"\nand a1._marker_key = a2._marker_key" +
 				"\nand a1._assay_key = " + assayKey +
 				"\norder by s1.sequenceNum";
 			

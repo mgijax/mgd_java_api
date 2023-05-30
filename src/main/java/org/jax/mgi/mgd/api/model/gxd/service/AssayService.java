@@ -1776,10 +1776,10 @@ public class AssayService extends BaseService<AssayDomain> {
 //				and gs2._result_key = gi2._result_key
 //				and a1._refs_key = a2._refs_key
 //				and gi1._imagepane_key = gi2._imagepane_key
-//				and a1._marker_key != m2._marker_key
+//				and a1._marker_key != a2._marker_key
 //				and a._specimen_key = gs1._specimen_key
 		
-		String cmd = "\nselect s1.sequenceNum, s1._specimen_key, s1.specimenlabel, ea2.accid, m2.symbol" +
+		String cmd = "\nselect s1.sequenceNum, s1._specimen_key, s1.specimenlabel, a1._assay_key, ea2.accid, a1._marker_key, m2.symbol" +
 			"\nfrom gxd_assay a1," +
 			"\ngxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1," +
 			"\ngxd_assay a2, acc_accession ea2, mrk_marker m2," +

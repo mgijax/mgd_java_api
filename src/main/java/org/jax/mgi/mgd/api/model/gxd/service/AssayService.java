@@ -1785,6 +1785,33 @@ public class AssayService extends BaseService<AssayDomain> {
 			e.printStackTrace();
 		}
 		
+		// template D
+		//	-- >= 1 symbol per specimen
+		//	-- different assay
+		//	-- different symbol
+		cmd = "\nselect * from GXD_Assay_TemplateD_View where _assay_key = " + assayKey;	
+		log.info(cmd);	
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimAssayDLDomain domain = new SlimAssayDLDomain();
+				domain.setSpecimenKey(rs.getString("_specimen_key"));
+				domain.setSpecimenLabel(rs.getString("specimenlabel"));
+				domain.setAssayKey(rs.getString("_assay_key"));
+				domain.setAssayTypeKey(rs.getString("_assaytype_key"));				
+				domain.setAccID(rs.getString("accid"));
+				domain.setMarkerKey(rs.getString("_marker_key"));
+				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setToolTemplate("D");
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return results;
 	}
 		

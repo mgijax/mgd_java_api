@@ -1745,10 +1745,9 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenKey(rs.getString("_specimen_key"));
 				domain.setSpecimenLabel(rs.getString("specimenlabel"));
 				domain.setAssayKey(rs.getString("_assay_key"));
-				domain.setAssayTypeKey(rs.getString("_assaytype_key"));				
-				domain.setAccID(rs.getString("accid"));
-				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setAssayTypeKey(rs.getString("_assaytype_key"));	
+				domain.setAssays(rs.getString("assays"));
+				domain.setMarkers(rs.getString("markers"));
 				domain.setToolTemplate("A");
 				results.add(domain);
 			}
@@ -1773,9 +1772,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenLabel(rs.getString("specimenlabel"));
 				domain.setAssayKey(rs.getString("_assay_key"));
 				domain.setAssayTypeKey(rs.getString("_assaytype_key"));				
-				domain.setAccID(rs.getString("accid"));
-				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setAssays(rs.getString("assays"));
+				domain.setMarkers(rs.getString("markers"));
 				domain.setToolTemplate("C");
 				results.add(domain);
 			}
@@ -1800,9 +1798,8 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenLabel(rs.getString("specimenlabel"));
 				domain.setAssayKey(rs.getString("_assay_key"));
 				domain.setAssayTypeKey(rs.getString("_assaytype_key"));				
-				domain.setAccID(rs.getString("accid"));
-				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setMarkerSymbol(rs.getString("symbol"));
+				domain.setAssays(rs.getString("assays"));
+				domain.setMarkers(rs.getString("markers"));
 				domain.setToolTemplate("D");
 				results.add(domain);
 			}

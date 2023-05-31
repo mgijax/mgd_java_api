@@ -1735,7 +1735,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		//-- one symbol per specimen
 		//-- different assay
 		//-- different symbol
-		cmd = "\nselect * from GXD_Assay_TemplateA where _assay_key = " + assayKey;
+		cmd = "\nselect * from GXD_Assay_TemplateA_View where _assay_key = " + assayKey;
 		log.info(cmd);	
 
 		try {
@@ -1762,7 +1762,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		//	-- >= 1 symbol per specimen
 		//	-- different assay
 		//	-- same symbol
-		cmd = "\nselect * from GXD_Assay_TemplateC where _assay_key = " + assayKey;	
+		cmd = "\nselect * from GXD_Assay_TemplateC_View where _assay_key = " + assayKey;	
 		log.info(cmd);	
 
 		try {

@@ -1731,82 +1731,11 @@ public class AssayService extends BaseService<AssayDomain> {
 		List<SlimAssayDLDomain> results = new ArrayList<SlimAssayDLDomain>();
 		String cmd = "";
 		
-//		WITH assays AS (
-//				select s1.sequenceNum, s1._specimen_key, s1.specimenlabel
-//				from gxd_assay a1,
-//				gxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1,
-//				gxd_assay a2, acc_accession ea2, mrk_marker m2,
-//				gxd_specimen s2, gxd_insituresult gs2, gxd_insituresultimage gi2
-//				where a1._assaytype_key in (1,6)
-//				and a1._assay_key = s1._assay_key
-//				and s1._specimen_key = gs1._specimen_key
-//				and gs1._result_key = gi1._result_key
-//				and a2._assay_key = ea2._object_key
-//				and ea2._mgitype_key = 8
-//				and ea2._logicaldb_key = 1
-//				and ea2.preferred = 1
-//				and a2._marker_key = m2._marker_key
-//				and a2._assaytype_key in (1,6)
-//				and a2._assay_key = s2._assay_key
-//				and s2._specimen_key = gs2._specimen_key
-//				and gs2._result_key = gi2._result_key
-//				and a1._refs_key = a2._refs_key
-//				and gi1._imagepane_key = gi2._imagepane_key
-//				and a1._marker_key != m2._marker_key
-//				and a1._assay_key = 79233
-//				group by s1.sequenceNum, s1._specimen_key, s1.specimenlabel having count(*) = 1
-//				)
-//				select a.*, ea2.accid, m2.symbol
-//				from assays a, gxd_assay a1,
-//				gxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1,
-//				gxd_assay a2, acc_accession ea2, mrk_marker m2,
-//				gxd_specimen s2, gxd_insituresult gs2, gxd_insituresultimage gi2
-//				where a1._assaytype_key in (1,6)
-//				and a1._assay_key = s1._assay_key
-//				and s1._specimen_key = gs1._specimen_key
-//				and gs1._result_key = gi1._result_key
-//				and a2._assay_key = ea2._object_key
-//				and ea2._mgitype_key = 8
-//				and ea2._logicaldb_key = 1
-//				and ea2.preferred = 1
-//				and a2._marker_key = m2._marker_key
-//				and a2._assaytype_key in (1,6)
-//				and a2._assay_key = s2._assay_key
-//				and s2._specimen_key = gs2._specimen_key
-//				and gs2._result_key = gi2._result_key
-//				and a1._refs_key = a2._refs_key
-//				and gi1._imagepane_key = gi2._imagepane_key
-//				and a1._marker_key != a2._marker_key
-//				and a._specimen_key = gs1._specimen_key
-		
 		// template A/B
-		// 4. different Marker
-		cmd = "\nselect s1.sequenceNum, s1._specimen_key, s1.specimenlabel, a1._assay_key, a1._assaytype_key, " +
-			"\nea2._object_key, ea2.accid, a1._marker_key, m2.symbol" +
-			"\nfrom gxd_assay a1," +
-			"\ngxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1," +
-			"\ngxd_assay a2, acc_accession ea2, mrk_marker m2," +
-			"\ngxd_specimen s2, gxd_insituresult gs2, gxd_insituresultimage gi2" +
-			"\nwhere a1._assaytype_key in (1,6,9)" +
-			"\nand a1._assay_key = s1._assay_key" +
-			"\nand s1._specimen_key = gs1._specimen_key" +
-			"\nand gs1._result_key = gi1._result_key" +
-			"\nand a2._assay_key = ea2._object_key" +
-			"\nand ea2._mgitype_key = 8" +
-			"\nand ea2._logicaldb_key = 1" +
-			"\nand ea2.preferred = 1" +
-			"\nand a2._marker_key = m2._marker_key" +
-			"\nand a2._assaytype_key in (1,6)" +
-			"\nand a2._assay_key = s2._assay_key" +
-			"\nand s2._specimen_key = gs2._specimen_key" +
-			"\nand gs2._result_key = gi2._result_key" +
-			"\nand a1._refs_key = a2._refs_key" +
-			"\nand gi1._imagepane_key = gi2._imagepane_key" +
-			"\nand a1._assay_key != ea2._object_key" +		
-			"\nand a1._marker_key != a2._marker_key" +
-			"\nand a1._assay_key = " + assayKey +
-			"\norder by s1.sequenceNum";
-		
+		//-- one symbol per specimen
+		//-- different assay
+		//-- different symbol
+		cmd = "\nselect * from GXD_Assay_TemplateA where _assay_key = " + assayKey;
 		log.info(cmd);	
 
 		try {
@@ -1830,33 +1759,10 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 		
 		// template C
-		// 4. same Marker
-		cmd = "\nselect s1.sequenceNum, s1._specimen_key, s1.specimenlabel, a1._assay_key, a1._assaytype_key, " +
-				"\nea2._object_key, ea2.accid, a1._marker_key, m2.symbol" +
-				"\nfrom gxd_assay a1," +
-				"\ngxd_specimen s1, gxd_insituresult gs1, gxd_insituresultimage gi1," +
-				"\ngxd_assay a2, acc_accession ea2, mrk_marker m2," +
-				"\ngxd_specimen s2, gxd_insituresult gs2, gxd_insituresultimage gi2" +
-				"\nwhere a1._assaytype_key in (1,6,9)" +
-				"\nand a1._assay_key = s1._assay_key" +
-				"\nand s1._specimen_key = gs1._specimen_key" +
-				"\nand gs1._result_key = gi1._result_key" +
-				"\nand a2._assay_key = ea2._object_key" +
-				"\nand ea2._mgitype_key = 8" +
-				"\nand ea2._logicaldb_key = 1" +
-				"\nand ea2.preferred = 1" +
-				"\nand a2._marker_key = m2._marker_key" +
-				"\nand a2._assaytype_key in (1,6)" +
-				"\nand a2._assay_key = s2._assay_key" +
-				"\nand s2._specimen_key = gs2._specimen_key" +
-				"\nand gs2._result_key = gi2._result_key" +
-				"\nand a1._refs_key = a2._refs_key" +
-				"\nand gi1._imagepane_key = gi2._imagepane_key" +
-				"\nand a1._assay_key != ea2._object_key" +		
-				"\nand a1._marker_key = a2._marker_key" +
-				"\nand a1._assay_key = " + assayKey +
-				"\norder by s1.sequenceNum";
-			
+		//	-- >= 1 symbol per specimen
+		//	-- different assay
+		//	-- same symbol
+		cmd = "\nselect * from GXD_Assay_TemplateC where _assay_key = " + assayKey;	
 		log.info(cmd);	
 
 		try {
@@ -1878,7 +1784,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-			
+		
 		return results;
 	}
 		

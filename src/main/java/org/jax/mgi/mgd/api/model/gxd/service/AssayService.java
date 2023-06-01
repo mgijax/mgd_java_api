@@ -1729,13 +1729,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		//
 
 		List<SlimAssayDLDomain> results = new ArrayList<SlimAssayDLDomain>();
-		String cmd = "";
 		
-		// template A/B
-		//-- one symbol per specimen
-		//-- different assay
-		//-- different symbol
-		cmd = "\nselect * from GXD_Assay_TemplateA_View where _assay_key = " + assayKey;
+		String cmd = "\nselect * from GXD_Assay_DLTemplate_View where _assay_key = " + assayKey;
 		log.info(cmd);	
 
 		try {
@@ -1746,61 +1741,9 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenLabel(rs.getString("specimenlabel"));
 				domain.setAssayKey(rs.getString("_assay_key"));
 				domain.setAssayTypeKey(rs.getString("_assaytype_key"));	
-				domain.setAssays(rs.getString("assays"));
+				domain.setAssayTypes(rs.getString("assayTypes"));				
+				domain.setAssayIDs(rs.getString("assayIDs"));
 				domain.setMarkers(rs.getString("markers"));
-				domain.setToolTemplate("A");
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		// template C
-		//	-- >= 1 symbol per specimen
-		//	-- different assay
-		//	-- same symbol
-		cmd = "\nselect * from GXD_Assay_TemplateC_View where _assay_key = " + assayKey;	
-		log.info(cmd);	
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimAssayDLDomain domain = new SlimAssayDLDomain();
-				domain.setSpecimenKey(rs.getString("_specimen_key"));
-				domain.setSpecimenLabel(rs.getString("specimenlabel"));
-				domain.setAssayKey(rs.getString("_assay_key"));
-				domain.setAssayTypeKey(rs.getString("_assaytype_key"));				
-				domain.setAssays(rs.getString("assays"));
-				domain.setMarkers(rs.getString("markers"));
-				domain.setToolTemplate("C");
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		// template D
-		//	-- >= 1 symbol per specimen
-		//	-- different assay
-		//	-- different symbol
-		cmd = "\nselect * from GXD_Assay_TemplateD_View where _assay_key = " + assayKey;	
-		log.info(cmd);	
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {
-				SlimAssayDLDomain domain = new SlimAssayDLDomain();
-				domain.setSpecimenKey(rs.getString("_specimen_key"));
-				domain.setSpecimenLabel(rs.getString("specimenlabel"));
-				domain.setAssayKey(rs.getString("_assay_key"));
-				domain.setAssayTypeKey(rs.getString("_assaytype_key"));				
-				domain.setAssays(rs.getString("assays"));
-				domain.setMarkers(rs.getString("markers"));
-				domain.setToolTemplate("D");
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

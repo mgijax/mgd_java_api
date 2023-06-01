@@ -1730,6 +1730,7 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		List<SlimAssayDLDomain> results = new ArrayList<SlimAssayDLDomain>();
 		
+		String value = "";
 		String cmd = "\nselect * from GXD_Assay_DLTemplate_View where _assay_key = " + assayKey;
 		log.info(cmd);	
 
@@ -1740,8 +1741,18 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenKey(rs.getString("_specimen_key"));
 				domain.setSpecimenLabel(rs.getString("specimenlabel"));
 				domain.setAssayKey(rs.getString("_assay_key"));
-				domain.setAssayTypeKey(rs.getString("_assaytype_key"));	
-				domain.setAssayTypes(rs.getString("assayTypes"));				
+				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
+
+				value = rs.getString("assayTypes");
+				domain.setAssayTypes(rs.getString("assayTypes"));		
+
+				value = value.replaceAll("1", "mRNA");
+				value = value.replaceAll("6", "protein");
+				value = value.replaceAll("9", "reporter");
+				value = value.replaceAll("10", "reporter");
+				value = value.replaceAll("11", "reporter");
+				domain.setAssayExtraWords(value);		
+				
 				domain.setAssayIDs(rs.getString("assayIDs"));
 				domain.setMarkers(rs.getString("markers"));
 				results.add(domain);

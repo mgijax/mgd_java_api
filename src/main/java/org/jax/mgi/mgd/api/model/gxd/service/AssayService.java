@@ -1746,11 +1746,11 @@ public class AssayService extends BaseService<AssayDomain> {
 				value = rs.getString("assayTypes");
 				domain.setAssayTypes(rs.getString("assayTypes"));		
 
-				value = value.replaceAll("1", "mRNA");
-				value = value.replaceAll("6", "protein");
-				value = value.replaceAll("9", "reporter");
-				value = value.replaceAll("10", "reporter");
-				value = value.replaceAll("11", "reporter");
+				value = value.replaceAll("1", " mRNA");
+				value = value.replaceAll("6", " protein");
+				value = value.replaceAll("9", " reporter");
+				value = value.replaceAll("10", " reporter");
+				value = value.replaceAll("11", " reporter");
 				domain.setAssayExtraWords(value);		
 				
 				domain.setAssayIDs(rs.getString("assayIDs"));

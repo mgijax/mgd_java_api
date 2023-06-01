@@ -1741,11 +1741,18 @@ public class AssayService extends BaseService<AssayDomain> {
 				domain.setSpecimenKey(rs.getString("_specimen_key"));
 				domain.setSpecimenLabel(rs.getString("specimenlabel"));
 				domain.setAssayKey(rs.getString("_assay_key"));
-				domain.setAssayTypeKey(rs.getString("_assaytype_key"));
-
+				
+				value = rs.getString("_assaytype_key");
+				domain.setAssayTypeKey1(value);
+				value = value.replaceAll("1", " mRNA");
+				value = value.replaceAll("6", " protein");
+				value = value.replaceAll("9", " reporter");
+				value = value.replaceAll("10", " reporter");
+				value = value.replaceAll("11", " reporter");
+				domain.setAssayExtraWords1(value);
+				
 				value = rs.getString("assayTypes");
 				domain.setAssayTypes(rs.getString("assayTypes"));		
-
 				value = value.replaceAll("1", " mRNA");
 				value = value.replaceAll("6", " protein");
 				value = value.replaceAll("9", " reporter");

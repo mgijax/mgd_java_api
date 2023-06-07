@@ -1747,9 +1747,11 @@ public class AssayService extends BaseService<AssayDomain> {
 			
 			while (rs.next()) {
 				
-				if (!prevKey.equals(rs.getInt("sequenceNum"))) {
+				if (prevKey != rs.getInt("sequenceNum")) {
 					
-					if (!prevKey.equals(0)) {
+					log.info("prevKey != " + rs.getInt("sequenceNum"));
+					
+					if (prevKey > 0) {
 						domain.setAssayTypes(String.join("|", assayTypes));
 						domain.setAssayExtraWords(String.join("|",  assayExtraWords));
 						domain.setAssayIDs(String.join("|", assayIDs));
@@ -1773,8 +1775,11 @@ public class AssayService extends BaseService<AssayDomain> {
 					value = value.replaceAll("10", " reporter");
 					value = value.replaceAll("11", " reporter");
 					domain.setAssayExtraWords1(value);
-					prevKey = rs.getInt("_assay_key");
+					prevKey = rs.getInt("sequenceNum");
 				}
+				
+				log.info(prevKey);
+				log.info(rs.getString("symbol"));
 				
 				// add at2, accid, symbol
 				value = rs.getString("at2");

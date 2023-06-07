@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDLDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SummaryResultDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Assay;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayTranslator;
@@ -1736,33 +1738,63 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
+			Integer prevAssayKey = 0;
+			List<String> assayTypes = new ArrayList<String>();
+			List<String> assayExtraWords = new ArrayList<String>();
+			List<String> assayIDs = new ArrayList<String>();
+			List<String> markers = new ArrayList<String>();
+			SlimAssayDLDomain domain = new SlimAssayDLDomain();
+			
 			while (rs.next()) {
-				SlimAssayDLDomain domain = new SlimAssayDLDomain();
-				domain.setSpecimenKey(rs.getString("_specimen_key"));
-				domain.setSpecimenLabel(rs.getString("specimenlabel"));
-				domain.setAssayKey(rs.getString("_assay_key"));
 				
-				value = rs.getString("_assaytype_key");
-				domain.setAssayTypeKey1(value);
+				if (!prevAssayKey.equals(rs.getInt("_assay_key"))) {
+					
+					if (!prevAssayKey.equals(0)) {
+						domain.setAssayTypes(String.join("|", assayTypes));
+						domain.setAssayExtraWords(String.join("|",  assayExtraWords));
+						domain.setAssayIDs(String.join("|", assayIDs));
+						domain.setMarkers(String.join("|", markers));
+						results.add(domain);
+						assayTypes.clear();
+						assayExtraWords.clear();
+						assayIDs.clear();
+						markers.clear();
+					}
+					
+					domain = new SlimAssayDLDomain();
+					domain.setSpecimenKey(rs.getString("_specimen_key"));
+					domain.setSpecimenLabel(rs.getString("specimenlabel"));
+					domain.setAssayKey(rs.getString("_assay_key"));
+					value = rs.getString("at1");
+					domain.setAssayTypeKey1(value);
+					value = value.replaceAll("1", " mRNA");
+					value = value.replaceAll("6", " protein");
+					value = value.replaceAll("9", " reporter");
+					value = value.replaceAll("10", " reporter");
+					value = value.replaceAll("11", " reporter");
+					domain.setAssayExtraWords1(value);
+					prevAssayKey = rs.getInt("_assay_key");
+				}
+				
+				// add at2, accid, symbol
+				value = rs.getString("at2");
+				assayTypes.add(value);
 				value = value.replaceAll("1", " mRNA");
 				value = value.replaceAll("6", " protein");
 				value = value.replaceAll("9", " reporter");
 				value = value.replaceAll("10", " reporter");
 				value = value.replaceAll("11", " reporter");
-				domain.setAssayExtraWords1(value);
+				assayExtraWords.add(value);
+				assayIDs.add(rs.getString("accid"));
+				markers.add(rs.getString("symbol"));
 				
-				value = rs.getString("assayTypes");
-				domain.setAssayTypes(rs.getString("assayTypes"));		
-				value = value.replaceAll("1", " mRNA");
-				value = value.replaceAll("6", " protein");
-				value = value.replaceAll("9", " reporter");
-				value = value.replaceAll("10", " reporter");
-				value = value.replaceAll("11", " reporter");
-				domain.setAssayExtraWords(value);		
-				
-				domain.setAssayIDs(rs.getString("assayIDs"));
-				domain.setMarkers(rs.getString("markers"));
-				results.add(domain);
+				if (rs.isLast()) {
+					domain.setAssayTypes(String.join("|", assayTypes));
+					domain.setAssayExtraWords(String.join("|",  assayExtraWords));
+					domain.setAssayIDs(String.join("|", assayIDs));
+					domain.setMarkers(String.join("|", markers));
+					results.add(domain);
+				}
 			}
 			sqlExecutor.cleanup();
 		}

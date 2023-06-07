@@ -16,6 +16,8 @@ public class SlimAssayDLDomain extends BaseDomain {
 	private String assayKey;
 	private String assayTypeKey1;
 	private String assayExtraWords1;
+	
+	// strings for the other genes/not the gene1 markers
 	private String assayTypes;
 	private String assayExtraWords;
 	private String assayIDs;

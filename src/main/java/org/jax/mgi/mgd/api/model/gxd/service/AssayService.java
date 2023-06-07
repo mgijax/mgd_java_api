@@ -1738,7 +1738,7 @@ public class AssayService extends BaseService<AssayDomain> {
 
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
-			Integer prevAssayKey = 0;
+			Integer prevKey = 0;
 			List<String> assayTypes = new ArrayList<String>();
 			List<String> assayExtraWords = new ArrayList<String>();
 			List<String> assayIDs = new ArrayList<String>();
@@ -1747,9 +1747,9 @@ public class AssayService extends BaseService<AssayDomain> {
 			
 			while (rs.next()) {
 				
-				if (!prevAssayKey.equals(rs.getInt("_assay_key"))) {
+				if (!prevKey.equals(rs.getInt("sequenceNum"))) {
 					
-					if (!prevAssayKey.equals(0)) {
+					if (!prevKey.equals(0)) {
 						domain.setAssayTypes(String.join("|", assayTypes));
 						domain.setAssayExtraWords(String.join("|",  assayExtraWords));
 						domain.setAssayIDs(String.join("|", assayIDs));
@@ -1773,7 +1773,7 @@ public class AssayService extends BaseService<AssayDomain> {
 					value = value.replaceAll("10", " reporter");
 					value = value.replaceAll("11", " reporter");
 					domain.setAssayExtraWords1(value);
-					prevAssayKey = rs.getInt("_assay_key");
+					prevKey = rs.getInt("_assay_key");
 				}
 				
 				// add at2, accid, symbol

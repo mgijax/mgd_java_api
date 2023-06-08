@@ -1748,9 +1748,7 @@ public class AssayService extends BaseService<AssayDomain> {
 			while (rs.next()) {
 				
 				if (prevKey != rs.getInt("sequenceNum")) {
-					
-					log.info("prevKey != " + rs.getInt("sequenceNum"));
-					
+										
 					if (prevKey > 0) {
 						domain.setAssayTypes(String.join("|", assayTypes));
 						domain.setAssayExtraWords(String.join("|",  assayExtraWords));
@@ -1777,9 +1775,6 @@ public class AssayService extends BaseService<AssayDomain> {
 					domain.setAssayExtraWords1(value);
 					prevKey = rs.getInt("sequenceNum");
 				}
-				
-				log.info(prevKey);
-				log.info(rs.getString("symbol"));
 				
 				// add at2, accid, symbol
 				value = rs.getString("at2");

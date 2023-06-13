@@ -471,12 +471,11 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		String accids = "'" + String.join("','", ids.split(",")) + "'";
 		cmd = "select aa.*, t.name as typename, d.name as ldbname "
 			+ "\nfrom acc_accession a, acc_mgitype t, acc_logicaldb d, acc_accession aa"
-			+ "\nwhere a.accid in (" + accids + ")"
+			+ "\nwhere lower(a.accid) in (" + accids.toLowerCase() + ")"
 			+ "\nand a._logicaldb_key in (1,15,31,34,169,170,173,191)"
 			+ "\nand a._mgitype_key in (1,2,3,4,6,8,9,11,12,13)"
 			+ "\nand a._mgitype_key = t._mgitype_key"
 			+ "\nand a._logicaldb_key = d._logicaldb_key"
-
 			+ "\nand aa._object_key = a._object_key"
 			+ "\nand aa._mgitype_key = a._mgitype_key"
 			+ "\nand aa.preferred = 1"

@@ -30,6 +30,7 @@ public class SpecimenTranslator extends BaseEntityDomainTranslator<Specimen, Spe
 		domain.setFixationKey(String.valueOf(entity.getFixationMethod().get_term_key()));
 		domain.setFixationMethod(entity.getFixationMethod().getTerm());
 		domain.setSequenceNum(entity.getSequenceNum());
+		domain.setSpcheckbox(false);
 		domain.setSpecimenLabel(entity.getSpecimenLabel());
 		domain.setSex(entity.getSex());
 		domain.setAgeMin(String.valueOf(entity.getAgeMin()));

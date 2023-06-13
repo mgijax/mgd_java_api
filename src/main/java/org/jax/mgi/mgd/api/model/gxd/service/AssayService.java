@@ -25,6 +25,7 @@ import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GelLaneDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
+import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDLDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimCellTypeDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimEmapaDomain;
@@ -1718,5 +1719,89 @@ public class AssayService extends BaseService<AssayDomain> {
 		return summaryResults;
 	}
 	
+	@Transactional
+	public List<SlimAssayDLDomain> getAssayDLByKey(String assayKey) {
+		// return assay info for an Assay for which another Assay exists with this criteria:
+		//
+		// 1. Assay Type in (1,6,9)
+		// 2. same Reference (J:)
+		// 3. same Image Pane
+		//
+
+		List<SlimAssayDLDomain> results = new ArrayList<SlimAssayDLDomain>();
+		
+		String value = "";
+		String cmd = "\nselect * from GXD_Assay_DLTemplate_View where _assay_key = " + assayKey;
+		log.info(cmd);	
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			Integer prevKey = 0;
+			List<String> assayTypes = new ArrayList<String>();
+			List<String> assayExtraWords = new ArrayList<String>();
+			List<String> assayIDs = new ArrayList<String>();
+			List<String> markers = new ArrayList<String>();
+			SlimAssayDLDomain domain = new SlimAssayDLDomain();
+			
+			while (rs.next()) {
+				
+				if (prevKey != rs.getInt("sequenceNum")) {
+										
+					if (prevKey > 0) {
+						domain.setAssayTypes(String.join("|", assayTypes));
+						domain.setAssayExtraWords(String.join("|",  assayExtraWords));
+						domain.setAssayIDs(String.join("|", assayIDs));
+						domain.setMarkers(String.join("|", markers));
+						results.add(domain);
+						assayTypes.clear();
+						assayExtraWords.clear();
+						assayIDs.clear();
+						markers.clear();
+					}
+					
+					domain = new SlimAssayDLDomain();
+					domain.setSpecimenKey(rs.getString("_specimen_key"));
+					domain.setSpecimenLabel(rs.getString("specimenlabel"));
+					domain.setAssayKey(rs.getString("_assay_key"));
+					value = rs.getString("at1");
+					domain.setAssayTypeKey1(value);
+					value = value.replaceAll("1", " mRNA");
+					value = value.replaceAll("6", " protein");
+					value = value.replaceAll("9", " reporter");
+					value = value.replaceAll("10", " reporter");
+					value = value.replaceAll("11", " reporter");
+					domain.setAssayExtraWords1(value);
+					prevKey = rs.getInt("sequenceNum");
+				}
+				
+				// add at2, accid, symbol
+				value = rs.getString("at2");
+				assayTypes.add(value);
+				value = value.replaceAll("1", " mRNA");
+				value = value.replaceAll("6", " protein");
+				value = value.replaceAll("9", " reporter");
+				value = value.replaceAll("10", " reporter");
+				value = value.replaceAll("11", " reporter");
+				assayExtraWords.add(value);
+				assayIDs.add(rs.getString("accid"));
+				markers.add(rs.getString("symbol"));
+				
+				if (rs.isLast()) {
+					domain.setAssayTypes(String.join("|", assayTypes));
+					domain.setAssayExtraWords(String.join("|",  assayExtraWords));
+					domain.setAssayIDs(String.join("|", assayIDs));
+					domain.setMarkers(String.join("|", markers));
+					results.add(domain);
+				}
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
 }
 

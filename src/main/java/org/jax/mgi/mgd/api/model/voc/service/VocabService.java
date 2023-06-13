@@ -250,6 +250,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			// 161 = GXD Assay Age
 			// 174 = Allele Inducible
 			// 180 = GXD Antibody Type
+			// 187 = GXD color
 			if (searchDomain.getVocabKey().equals("39")
 					|| searchDomain.getVocabKey().equals("42")
 					|| searchDomain.getVocabKey().equals("37") 
@@ -260,7 +261,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("150")	
 					|| searchDomain.getVocabKey().equals("161")	
 					|| searchDomain.getVocabKey().equals("174")	
-					|| searchDomain.getVocabKey().equals("180")											
+					|| searchDomain.getVocabKey().equals("180")		
+					|| searchDomain.getVocabKey().equals("187")																
 					) {
 				orderBy = "order by t.sequenceNum";
 			}

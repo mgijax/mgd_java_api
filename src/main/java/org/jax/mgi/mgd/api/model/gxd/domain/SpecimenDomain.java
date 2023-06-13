@@ -23,6 +23,7 @@ public class SpecimenDomain extends BaseDomain {
 	private String genotypeAllelePairs;
 	private String genotypeIsConditional;
 	private Integer sequenceNum;
+	private Boolean spcheckbox;
 	private String specimenLabel;
 	private String sex;
 	private String agePrefix;

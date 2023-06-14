@@ -1691,7 +1691,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		String cmd;
 
 		if (returnCount) {
-			cmd = "\nselect count(ra._object_key) as total_count"
+			cmd = "\nselect count(distinct ra._object_key) as total_count"
 					+ "\nfrom MGI_Reference_Assoc ra, ACC_Accession aa"
 					+ "\nwhere ra._mgitype_key = 11"
 					+ "\nand ra._refs_key = aa._object_key"

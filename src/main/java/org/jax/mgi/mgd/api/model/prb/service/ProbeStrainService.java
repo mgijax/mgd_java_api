@@ -430,7 +430,8 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		}
 
 		if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
-			where = where + "\nand p.strain ilike '" + searchDomain.getStrain() + "'";
+                        value = searchDomain.getStrain().replace("'", "''");
+			where = where + "\nand p.strain ilike '" + value + "'";
 		}
 		
 		if (searchDomain.getSpeciesKey() != null && !searchDomain.getSpeciesKey().isEmpty()) {

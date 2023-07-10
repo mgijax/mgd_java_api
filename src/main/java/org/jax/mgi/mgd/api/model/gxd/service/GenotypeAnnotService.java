@@ -548,7 +548,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 //		}
 		
 		if (domain.getGenotypeDisplay() != null && !domain.getGenotypeDisplay().isEmpty()) {
-			where = where + "\nand v.description ilike '" + domain.getGenotypeDisplay() + "'";		
+			where = where + "\nand v.description ilike '" + domain.getGenotypeDisplay().replace("'",  "''") + "'";		
 			executeQuery = true;
 		}
 		

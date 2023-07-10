@@ -787,7 +787,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			
 				// strain of origin (aka all_allele._strain_key) is not currently in all_allele_cellline_view
 //				if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getStrain().isEmpty()) {
-//					where = where + "\nand c.strainoforigin ilile '" + searchDomain.getStrain() + "'";
+//					where = where + "\nand c.strainoforigin ilile '" + searchDomain.getStrain().replace("'", "''") + "'";
 //					from_cellLine = true;
 //				}
 				
@@ -820,7 +820,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 					where = where + "\nand c.celllinestrain_key = " + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrainKey();
 				}
 				else if (searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() != null && !searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain().isEmpty()) {
-					where = where + "\nand c.celllinestrain ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain() + "'";
+					where = where + "\nand c.celllinestrain ilike '" + searchDomain.getMutantCellLineAssocs().get(0).getMutantCellLine().getDerivation().getParentCellLine().getStrain().replace("'", "''") + "'";
 					from_cellLine = true;
 				}				
 			}			

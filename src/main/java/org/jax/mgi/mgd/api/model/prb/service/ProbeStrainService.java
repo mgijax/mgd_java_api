@@ -562,7 +562,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				from_genotype = true;
 			}
 
-			value = searchDomain.getGenotypes().get(0).getGenotypeDisplay();
+			value = searchDomain.getGenotypes().get(0).getGenotypeDisplay().replace("'", "''");
 			if (value != null && !value.isEmpty() && value.contains("%")) {
 				value = "'" + value + "'";
 				where = where + "\nand g.description ilike " + value;
@@ -758,7 +758,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		Boolean from_accession = false;
 		
 		if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
-			where = where + "\nand s.strain ilike '" + searchDomain.getStrain() + "'" ;
+			where = where + "\nand s.strain ilike '" + searchDomain.getStrain().replace("'", "''") + "'" ;
 		}
 		
 		if (searchDomain.getAccID() != null && !searchDomain.getAccID().isEmpty()) {	

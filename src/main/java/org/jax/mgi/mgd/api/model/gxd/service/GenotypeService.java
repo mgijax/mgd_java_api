@@ -364,7 +364,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				where = where + "\nand g._genotype_key = " + searchDomain.getGenotypeKey();
 			}
 			if (searchDomain.getStrain() != null && !searchDomain.getStrain().isEmpty()) {
-				where = where + "\nand ps.strain ilike '" + searchDomain.getStrain() + "'";
+				where = where + "\nand ps.strain ilike '" + searchDomain.getStrain().replace("'", "''") + "'";
 			}
 			if (searchDomain.getIsConditional() != null && !searchDomain.getIsConditional().isEmpty()) {
 				where = where + "\nand g.isConditional = " + searchDomain.getIsConditional();

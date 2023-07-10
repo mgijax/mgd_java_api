@@ -387,7 +387,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 //		}
 		
 		if (searchDomain.getAlleleDisplay() != null && !searchDomain.getAlleleDisplay().isEmpty()) {
-			where = where + "\nand v.description ilike '" + searchDomain.getAlleleDisplay() + "'";
+			where = where + "\nand v.description ilike '" + searchDomain.getAlleleDisplay().replace("'",  "''") + "'";
 			executeQuery = true;
 		}
 		

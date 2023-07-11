@@ -14,14 +14,11 @@ import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
-import org.jboss.logging.Logger;
 
 public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperiment, HTDomain> {
 	
 	@Override
 	protected HTDomain entityToDomain(HTExperiment entity) {
-
-		Logger log = Logger.getLogger(getClass());
 			
 		HTDomain domain = new HTDomain();
 		

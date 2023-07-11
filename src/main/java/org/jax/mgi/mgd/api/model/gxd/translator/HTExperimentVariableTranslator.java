@@ -1,18 +1,13 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-
 import org.jax.mgi.mgd.api.model.gxd.domain.HTExperimentVariableDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
-
-import org.jboss.logging.Logger;
 
 public class HTExperimentVariableTranslator extends BaseEntityDomainTranslator<HTExperimentVariable, HTExperimentVariableDomain> {
 	
 	@Override
 	protected HTExperimentVariableDomain entityToDomain(HTExperimentVariable entity) {
-
-		Logger log = Logger.getLogger(getClass());
 
 		HTExperimentVariableDomain domain = new HTExperimentVariableDomain();
 

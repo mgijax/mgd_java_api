@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.domain;
 
-import java.util.List;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;

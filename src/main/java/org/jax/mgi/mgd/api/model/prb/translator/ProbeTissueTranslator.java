@@ -1,9 +1,7 @@
 package org.jax.mgi.mgd.api.model.prb.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
-import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeTissueDomain;
-import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeTissue;
 
 public class ProbeTissueTranslator extends BaseEntityDomainTranslator<ProbeTissue, ProbeTissueDomain> {

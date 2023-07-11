@@ -1,26 +1,22 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIPropertyDAO;
 import org.jax.mgi.mgd.api.model.mgi.dao.PropertyTypeDAO;
-import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
-import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIPropertyDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIPropertyTranslator;
+import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -39,7 +35,6 @@ public class MGIPropertyService extends BaseService<MGIPropertyDomain> {
 	private MGITypeDAO mgiTypeDAO;
 
 	private MGIPropertyTranslator translator = new MGIPropertyTranslator();				
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<MGIPropertyDomain> create(MGIPropertyDomain object, User user) {
@@ -92,9 +87,7 @@ public class MGIPropertyService extends BaseService<MGIPropertyDomain> {
 			log.info("processMGIProperty/nothing to process");
 			return modified;
 		}
-				
-		String cmd = "";
-		
+						
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
 		for (int i = 0; i < domain.size(); i++) {

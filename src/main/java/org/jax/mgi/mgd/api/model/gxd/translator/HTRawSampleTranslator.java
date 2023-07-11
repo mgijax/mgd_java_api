@@ -1,23 +1,18 @@
 package org.jax.mgi.mgd.api.model.gxd.translator;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTRawSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTRawSampleVariableDomain;
-import org.jax.mgi.mgd.api.model.voc.entities.Term;
-import org.jax.mgi.mgd.api.model.mgi.entities.MGIKeyValue;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTRawSample;
-
-import org.jboss.logging.Logger;
+import org.jax.mgi.mgd.api.model.mgi.entities.MGIKeyValue;
 
 public class HTRawSampleTranslator extends BaseEntityDomainTranslator<HTRawSample, HTRawSampleDomain> {
 	
 	@Override
 	protected HTRawSampleDomain entityToDomain(HTRawSample entity) {
-
-		Logger log = Logger.getLogger(getClass());
 		
 		HTRawSampleDomain sampleDomain = new HTRawSampleDomain();
 

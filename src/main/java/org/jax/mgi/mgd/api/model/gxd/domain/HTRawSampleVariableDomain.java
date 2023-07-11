@@ -2,8 +2,6 @@ package org.jax.mgi.mgd.api.model.gxd.domain;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 

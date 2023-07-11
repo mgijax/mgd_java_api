@@ -1,9 +1,8 @@
 package org.jax.mgi.mgd.api.model.gxd.domain;
 
-import org.jax.mgi.mgd.api.model.BaseDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTRawSampleVariableDomain;
-
 import java.util.List;
+
+import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;
 import lombok.Setter;

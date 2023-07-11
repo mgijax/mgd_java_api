@@ -1,7 +1,5 @@
 package org.jax.mgi.mgd.api.model.prb.domain;
 
-import java.util.Date;
-
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
 import lombok.Getter;

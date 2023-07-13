@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -198,12 +197,12 @@ public class Marker extends BaseEntity {
 	@OrderBy(clause="marker1")
 	private List<RelationshipMarkerQTLInteraction> qtlInteractionToGene;
 	
-	@OneToMany()
-	@JoinTable(name = "mrk_alias",	
-		joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key", insertable=false, updatable=false),
-		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	)
-	private List<Marker> aliases;
+//	@OneToMany()
+//	@JoinTable(name = "mrk_alias",	
+//		joinColumns = @JoinColumn(name="_alias_key", referencedColumnName="_marker_key", insertable=false, updatable=false),
+//		inverseJoinColumns = @JoinColumn(name = "_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
+//	)
+//	private List<Marker> aliases;
 
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)

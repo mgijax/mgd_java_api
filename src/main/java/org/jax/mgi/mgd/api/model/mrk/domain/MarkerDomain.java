@@ -69,7 +69,6 @@ public class MarkerDomain extends BaseDomain {
 	private List<SlimMarkerDomain> tssToGene;
 	private List<SlimMarkerDomain> qtlCandidateToGene;
 	private List<SlimMarkerDomain> qtlInteractionToGene;
-	//private List<SlimMarkerDomain> aliases;
 	 
 	// exists in domain, but not populated by marker translator
 	// instead will be populated by call to specific domain service	

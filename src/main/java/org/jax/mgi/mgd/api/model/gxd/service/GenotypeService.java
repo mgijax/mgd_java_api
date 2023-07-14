@@ -328,7 +328,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		String whereAllelePair = ""; 
 
 		String orderBy = "order by strain, _genotype_key, symbol NULLS FIRST";			
-		//String limit = Constants.SEARCH_RETURN_LIMIT5000;
 		String value;
 		String includeNotExists = "";
 		

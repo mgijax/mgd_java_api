@@ -530,9 +530,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		String select = "select distinct v._object_key, v.subtype, v.short_description";
 		String from = "from gxd_genotype_summary_view v";		
 		String where = "where v._mgitype_key = " + mgiTypeKey;
-		String orderBy = "order by v._object_key, v.subtype, v.short_description";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
-		
+		String orderBy = "order by v._object_key, v.subtype, v.short_description";		
 		String value;
 
 		Boolean from_annot = false;

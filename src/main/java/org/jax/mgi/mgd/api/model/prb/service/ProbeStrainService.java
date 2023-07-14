@@ -407,7 +407,6 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 		String from = "from prb_strain p";
 		String where = "where p._strain_key is not null";
 		String orderBy = "order by p.strain";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_accession = false;
 		Boolean from_otheraccids = false;

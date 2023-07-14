@@ -83,7 +83,6 @@ public class DagNodeService extends BaseService<DagNodeDomain> {
 //		String from = "from ";
 //		String where = "where ";
 //		String 	orderBy = "order by c";			
-//		String limit = Constants.SEARCH_RETURN_LIMIT;
 //		
 //		// make this easy to copy/paste for troubleshooting
 //		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;

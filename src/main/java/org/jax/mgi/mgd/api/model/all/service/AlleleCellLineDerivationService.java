@@ -213,7 +213,6 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		String from = "from all_cellline_derivation_view a";
 		String where = "where a._derivation_key is not null";
 		String orderBy = "order by a.name";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_generalNote = false;
 		

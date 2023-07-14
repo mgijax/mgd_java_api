@@ -192,7 +192,6 @@ public class ExptsService extends BaseService<ExptsDomain> {
 		String from = "from mld_expt_view e";
 		String where = "where e.exptType in " + exptTypes;
 		String orderBy = "order by e.jnum";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		Boolean from_accession = false;
 		Boolean from_rnote = false;
 		Boolean from_enote = false;

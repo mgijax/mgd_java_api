@@ -438,7 +438,6 @@ public class ProbeService extends BaseService<ProbeDomain> {
 		String from = "from prb_probe p";
 		String where = "where p._probe_key is not null";
 		String orderBy = "order by p.name";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_accession = false;
 		Boolean from_raccession = false;

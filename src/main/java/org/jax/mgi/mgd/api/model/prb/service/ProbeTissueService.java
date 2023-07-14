@@ -121,8 +121,6 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 		String from = "from prb_Tissue a";
 		String where = "where a._Tissue_key is not null";
 		String orderBy = "order by a.tissue";
-		//String limit = Constants.SEARCH_RETURN_LIMIT;
-		//String value;
 			
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", null, null, searchDomain.getCreation_date(), searchDomain.getModification_date());

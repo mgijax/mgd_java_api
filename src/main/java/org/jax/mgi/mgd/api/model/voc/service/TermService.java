@@ -802,6 +802,11 @@ public class TermService extends BaseService<TermDomain> {
 
 		List<TermAncestorDomain> results = new ArrayList<TermAncestorDomain>();
 		
+		// if keys is empty, return results
+		if (keys.isEmpty()) {
+			return results;
+		}
+		
 		String cmd = "\nselect t._term_key as termKey, ancestor._term_key as ancestorKey" +
 				"\nfrom VOC_Term t, VOC_VocabDAG vd, DAG_Node d, DAG_Closure dc, DAG_Node dh, VOC_Term ancestor" +
 				"\nwhere t._Term_key in (" + keys + ")" +

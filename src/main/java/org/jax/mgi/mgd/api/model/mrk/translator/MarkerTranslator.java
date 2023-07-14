@@ -40,7 +40,6 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 	private MGISynonymTranslator synonymTranslator = new MGISynonymTranslator();
 	private MarkerFeatureTypeTranslator featureTypeTranslator = new MarkerFeatureTypeTranslator();
 	private MarkerMCVDirectTranslator featureTypeDirectTranslator = new MarkerMCVDirectTranslator();
-//	private SlimMarkerTranslator slimMarkerTranslator = new SlimMarkerTranslator();
 	private RelationshipMarkerTSSTranslator markerTSSTranslator = new RelationshipMarkerTSSTranslator();
 	private RelationshipMarkerQTLCandidateTranslator markerQTLCandidateTranslator = new RelationshipMarkerQTLCandidateTranslator();
 	private RelationshipMarkerQTLInteractionTranslator markerQTLInteractionTranslator = new RelationshipMarkerQTLInteractionTranslator();
@@ -244,14 +243,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
     		}
     		domain.setQtlInteractionToGene(markerqtli);
 			domain.getQtlInteractionToGene().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-		}		
-		
-		// one-to-many marker aliases
-//		if (entity.getAliases() != null && !entity.getAliases().isEmpty()) {
-//			Iterable<SlimMarkerDomain> i = slimMarkerTranslator.translateEntities(entity.getAliases());
-//			domain.setAliases(IteratorUtils.toList(i.iterator()));
-//			domain.getAliases().sort(Comparator.comparing(SlimMarkerDomain::getSymbol, String.CASE_INSENSITIVE_ORDER));
-//		}
+		}
 
 		// accession ids editable for mouse
 		if (entity.getOrganism().get_organism_key() == 1 && entity.getEditAccessionIdsMouse() != null && !entity.getEditAccessionIdsMouse().isEmpty()) {

@@ -413,7 +413,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		Boolean from_noneditAccession = false;
 		Boolean from_featureTypes = false;		
 		Boolean from_tss1 = false;
-//		Boolean from_alias = false;
 
 		// if parameter exists, then add to where-clause
 		if (searchDomain.getOrganismKey() == null) {
@@ -726,11 +725,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 						"or tss1.marker2 ilike '" + searchDomain.getTssToGene().get(0).getSymbol() + "')";
 			from_tss1 = true;
 		}
-
-//		if (searchDomain.getAliases() != null) {
-//			where = where + "\nand alias.symbol ilike '" + searchDomain.getAliases().get(0).getSymbol() + "'";
-//			from_alias = true;
-//		}
 		
 		// use views to match the teleuse implementation
 
@@ -789,10 +783,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			from = from + ", mgi_relationship_markertss_view tss1";
 			where = where + "\nand (m._marker_key = tss1._object_key_1 or m._marker_key = tss1._object_key_2)";
 		}
-//		if (from_alias == true) {
-//			from = from + ", mrk_alias_View alias";
-//			where = where + "\nand m._marker_key = alias._alias_key";
-//		}
 		
 		// make this easy to copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
@@ -804,34 +794,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				SlimMarkerDomain domain = new SlimMarkerDomain();
 				domain.setMarkerKey(rs.getString("_marker_key"));
 				domain.setSymbol(rs.getString("symbol"));
-				results.add(domain);
-			}
-			sqlExecutor.cleanup();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return results;
-	}	
-
-	@Transactional	
-	public List<SlimMarkerDomain> getAlias(Integer key) {
-		// use SlimMarkerDomain to return list of marker/alias associations
-		
-		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
-
-		String cmd = "\nselect * from mrk_alias_view"
-				+ "\nwhere _alias_key = " + key
-				+ "\norder by symbol";	
-		log.info(cmd);
-
-		try {
-			ResultSet rs = sqlExecutor.executeProto(cmd);
-			while (rs.next()) {				
-				SlimMarkerDomain domain = new SlimMarkerDomain();				
-				domain.setMarkerKey(rs.getString("_marker_key"));
-				domain.setSymbol(rs.getString("symbol"));				
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

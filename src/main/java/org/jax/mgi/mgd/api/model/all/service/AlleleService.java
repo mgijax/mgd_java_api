@@ -1295,6 +1295,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			}
 		}
 		
+		// if there are no alleles, then simply return empty results
+		if (alleleList.size() == 0) {
+			return results;
+		}
+		
 		// finds alleles where attribute = 'recombinase' (11025588)		
 		String cmd = "\nselect a._Allele_key" + 
 				"\nfrom ALL_Allele a, VOC_Annot va" + 

@@ -296,7 +296,9 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		                denormAnnotDomain.setEvidenceTermKey(evidenceDomain.getEvidenceTermKey());
 		                denormAnnotDomain.setEvidenceTerm(evidenceDomain.getEvidenceTerm());
 		                denormAnnotDomain.setEvidenceAbbreviation(evidenceDomain.getEvidenceAbbreviation());
-		                denormAnnotDomain.setInferredFrom(evidenceDomain.getInferredFrom());		               
+		                denormAnnotDomain.setInferredFrom(evidenceDomain.getInferredFrom());	
+		                denormAnnotDomain.setHasRGD(evidenceDomain.getHasRGD());
+		                denormAnnotDomain.setHasUniProt(evidenceDomain.getHasUniProt());
 		                denormAnnotDomain.setRefsKey(evidenceDomain.getRefsKey());
 		                denormAnnotDomain.setJnumid(evidenceDomain.getJnumid());
 		                denormAnnotDomain.setJnum(Integer.valueOf(evidenceDomain.getJnum()));

@@ -32,6 +32,20 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		domain.setEvidenceAbbreviation(entity.getEvidenceTerm().getAbbreviation());
 		domain.setInferredFrom(entity.getInferredFrom());
 		
+		if (entity.getInferredFrom().startsWith("RGD")) {
+			domain.setHasRGD("1");
+		}
+		else {
+			domain.setHasRGD("0");
+		}
+		
+		if (entity.getInferredFrom().startsWith("UniProtKB")) {
+			domain.setHasUniProt("1");
+		}
+		else {
+			domain.setHasUniProt("0");
+		}
+		
 		// reference can be null
 		if (entity.getReference() != null) {
 			domain.setRefsKey(String.valueOf(entity.getReference().get_refs_key()));

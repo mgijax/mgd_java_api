@@ -584,6 +584,12 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 				from_evidence = true;			
 			}
 			
+			value = annotDomain.getInferredFrom();
+			if (value!= null && !value.isEmpty()) {
+				where = where + "\nand e.inferredFrom ilike '" + value + "'";
+				from_evidence = true;					
+			}
+			
 			if (annotDomain.getProperties() != null) {
 
 				value = String.valueOf(annotDomain.getProperties().get(0).getStanza());

@@ -31,19 +31,16 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		domain.setEvidenceTerm(entity.getEvidenceTerm().getTerm());
 		domain.setEvidenceAbbreviation(entity.getEvidenceTerm().getAbbreviation());
 		domain.setInferredFrom(entity.getInferredFrom());
+		domain.setHasRGD("0");
+		domain.setHasUniProt("0");
 		
-		if (entity.getInferredFrom().startsWith("RGD")) {
-			domain.setHasRGD("1");
-		}
-		else {
-			domain.setHasRGD("0");
-		}
-		
-		if (entity.getInferredFrom().startsWith("UniProtKB")) {
-			domain.setHasUniProt("1");
-		}
-		else {
-			domain.setHasUniProt("0");
+		if (!entity.getInferredFrom().isEmpty()) {
+			if (entity.getInferredFrom().startsWith("RGD")) {
+				domain.setHasRGD("1");
+			}
+			if (entity.getInferredFrom().startsWith("UniProtKB")) {
+				domain.setHasUniProt("1");
+			}
 		}
 		
 		// reference can be null

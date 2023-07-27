@@ -34,7 +34,7 @@ public class EvidenceTranslator extends BaseEntityDomainTranslator<Evidence, Evi
 		domain.setHasRGD("0");
 		domain.setHasUniProt("0");
 		
-		if (entity.getInferredFrom()!= null && !entity.getInferredFrom().isEmpty()) {
+		if (entity.getInferredFrom() != null || !entity.getInferredFrom().isEmpty()) {
 			if (entity.getInferredFrom().startsWith("RGD")) {
 				domain.setHasRGD("1");
 			}

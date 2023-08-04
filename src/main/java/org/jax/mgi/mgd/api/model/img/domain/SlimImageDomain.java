@@ -14,4 +14,8 @@ public class SlimImageDomain extends BaseDomain {
 	
 	private String imageKey;
 	private String imageDisplay;
+        //
+        private String figureLabel;
+        private String imageType;
+        private int numPanes;
 }

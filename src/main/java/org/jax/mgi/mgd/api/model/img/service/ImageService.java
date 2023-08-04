@@ -489,8 +489,8 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		// make this easy to copy/paste for troubleshooting
 		// for smart alphnumeric sort, must use WITH if using "select distinct"
-		cmd = "\nWITH i AS (" + select + "\n" + from + "\n" + where + 
-					"\n)\nselect * from i\n" + orderBy + "\n" + limit;
+		cmd = "\nWITH pcounts as (select _image_key, count(*) as n from img_imagepane group by _image_key), i AS (" + select + "\n" + from + "\n" + where + 
+					"\n)\nselect i.*, p.n as numPanes from i join pcounts p on i._image_key = p._image_key \n" + orderBy + "\n" + limit;
 		log.info(cmd);
 
 		try {
@@ -499,6 +499,9 @@ public class ImageService extends BaseService<ImageDomain> {
 				SlimImageDomain domain = new SlimImageDomain();
 				domain.setImageKey(rs.getString("_image_key"));
 				domain.setImageDisplay(rs.getString("imageDisplay"));
+				domain.setImageType(rs.getString("imageType"));
+				domain.setFigureLabel(rs.getString("figureLabel"));
+                                domain.setNumPanes(rs.getInt("numPanes"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

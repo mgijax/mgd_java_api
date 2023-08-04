@@ -240,6 +240,34 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 					entity.setPaneLabel(domain.get(i).getPaneLabel());
 				}
 
+				if (domain.get(i).getX() == null || domain.get(i).getX().isEmpty()) {
+					entity.setX(null);
+				}	
+				else {
+					entity.setX(Integer.valueOf(domain.get(i).getX()));
+				}
+
+				if (domain.get(i).getY() == null || domain.get(i).getY().isEmpty()) {
+					entity.setY(null);
+				}	
+				else {
+					entity.setY(Integer.valueOf(domain.get(i).getY()));
+				}
+
+				if (domain.get(i).getWidth() == null || domain.get(i).getWidth().isEmpty()) {
+					entity.setWidth(null);
+				}	
+				else {
+					entity.setWidth(Integer.valueOf(domain.get(i).getWidth()));
+				}
+
+				if (domain.get(i).getHeight() == null || domain.get(i).getHeight().isEmpty()) {
+					entity.setHeight(null);
+				}	
+				else {
+					entity.setHeight(Integer.valueOf(domain.get(i).getHeight()));
+				}
+
 				entity.setModification_date(new Date());
 				imagePaneDAO.update(entity);
 				modified = true;

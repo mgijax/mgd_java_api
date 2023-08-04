@@ -20,6 +20,9 @@ public class SlimImageTranslator extends BaseEntityDomainTranslator<Image, SlimI
 					entity.getImageType().getTerm() + ";" +
 					entity.getFigureLabel());
 		
+                domain.setFigureLabel(entity.getFigureLabel());
+                domain.setImageType(entity.getImageType().getTerm());
+                //domain.setNumPanes(entity.getImagePanes().size());
 		return domain;
 	}
 

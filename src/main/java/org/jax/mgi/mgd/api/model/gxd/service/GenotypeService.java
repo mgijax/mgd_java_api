@@ -987,11 +987,13 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 		
 		cmd = "\nwith genotypes as (" +
-				"\nselect distinct s._object_key" + 
-				"\nfrom MGI_SetMember s, MGI_User u" + 
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom MGI_SetMember ss, MGI_User u, GXD_Genotype gg, PRB_Strain s" + 
 				"\nwhere u.login = '" + userid + "'" +
-				"\nand u._user_key = s._CreatedBy_key" +					
-				"\nand s._set_key = 1055" + 	
+				"\nand u._user_key = ss._CreatedBy_key" +					
+				"\nand ss._set_key = 1055" + 
+				"\nand ss._object_key = gg._genotype_key" +
+				"\nand gg._strain_key = s._strain_key" +
 				"\n)" +
 				"\nselect a.accid as genotypeid, gg.isConditional, gg.strain, n.note as alleleDetailNote," +
 				"\ncase when exists (select 1 from GXD_Specimen g where gg._Genotype_key = g._Genotype_key)" +

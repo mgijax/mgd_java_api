@@ -1008,11 +1008,10 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nACC_Accession a" + 
 				"\nwhere gg._Genotype_key = a._Object_key" + 
 				"\nand a._MGIType_key = 12" + 
-				"\nand a._Logicaldb_key = 1" +
-				"\norder by gg.label";
+				"\nand a._Logicaldb_key = 1";
 
 
-		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
+		cmd = addPaginationSQL(cmd, "gg.label", offset, limit);
 
 		return cmd;
 	}

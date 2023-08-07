@@ -1046,7 +1046,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryGenotypeDomain domain = new SummaryGenotypeDomain();
-				domain.setJnumid(userid);
+				domain.setCreatedBy(userid);
 				domain.setGenotypeid(rs.getString("genotypeid"));
 				domain.setGenotypeBackground(rs.getString("strain"));
 				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;

@@ -987,7 +987,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		}
 		
 		cmd = "\nwith genotypes as (" +
-				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nselect distinct gg._genotype_key, gg.isConditional, ss.label, s.strain" +
 				"\nfrom MGI_SetMember ss, MGI_User u, GXD_Genotype gg, PRB_Strain s" + 
 				"\nwhere u.login = '" + userid + "'" +
 				"\nand u._user_key = ss._CreatedBy_key" +					
@@ -1008,7 +1008,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nACC_Accession a" + 
 				"\nwhere gg._Genotype_key = a._Object_key" + 
 				"\nand a._MGIType_key = 12" + 
-				"\nand a._Logicaldb_key = 1";
+				"\nand a._Logicaldb_key = 1" +
+				"\norder by gg.label";
+
 
 		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
 

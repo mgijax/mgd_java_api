@@ -203,7 +203,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	@ApiOperation(value = "Get list of genotype domains by clipboard userid")
 	@Path("/getGenotypeByClipboard")
 	public SearchResults<SummaryGenotypeDomain> getGenotypeByClipboard(
-		@QueryParam("userid") String userid,
+		@QueryParam("accid") String userid,
 		@QueryParam("offset") int offset,
 		@QueryParam("limit") int limit
 		) {
@@ -223,7 +223,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	@ApiOperation(value = "Download TSV file.")
 	@Path("/downloadGenotypeByClipboard")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response downloadGenotypeByClipboard(@QueryParam("userid") String userid) {
+	public Response downloadGenotypeByClipboard(@QueryParam("accid") String userid) {
 		return genotypeService.downloadGenotypeByClipboard(userid);
 	}
 	

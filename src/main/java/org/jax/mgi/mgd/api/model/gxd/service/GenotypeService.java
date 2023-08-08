@@ -977,96 +977,29 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		accid = accid + "'";
 
 		if (returnCount) {
-			cmd = "\nwith genotypes as (" + 
-					"\nselect distinct gg._genotype_key" + 
-					"\nfrom ACC_Accession aa, GXD_Genotype gg, GXD_Specimen gs" + 
+			cmd = "select count (aa._object_key) as total_count" + 
+					"\nfrom ACC_Accession aa" + 
 					"\nwhere aa.accid in (" + accid + ")" +
 					"\nand aa._mgitype_key = 12" +
-					"\nand aa._logicaldb_key = 1" +
-					"\nand aa._object_key = gg._genotype_key" + 
-					"\nand gg._genotype_key = gs._genotype_key" + 
-					"\nunion" + 
-					"\nselect distinct gg._genotype_key" + 
-					"\nfrom ACC_Accession aa, GXD_Genotype gg, GXD_GelLane gs" + 
-					"\nwhere aa.accid in (" + accid + ")" +
-					"\nand aa._mgitype_key = 12" +
-					"\nand aa._logicaldb_key = 1" +					
-					"\nand aa._object_key = gg._genotype_key" + 			
-					"\nand gg._Genotype_key = gs._Genotype_key" + 
-					"\nunion" +					
-					"\nselect distinct aa._object_key" + 
-					"\nfrom ACC_Accession aa, VOC_Annot va" + 
-					"\nwhere aa.accid in (" + accid + ")" +
-					"\nand aa._mgitype_key = 12" +
-					"\nand aa._logicaldb_key = 1" +				
-					"\nand aa._object_key = va._object_key" +
-					"\nand va._AnnotType_key = 1002" +
-					"\nunion" + 
-					"\nselect distinct aa._object_key" + 
-					"\nfrom ACC_Accession aa, VOC_Annot va" + 
-					"\nwhere aa.accid in (" + accid + ")" +
-					"\nand aa._mgitype_key = 12" +
-					"\nand aa._logicaldb_key = 1" +					
-					"\nand aa._object_key = va._object_key" +
-					"\nand va._AnnotType_key = 1020" +
-					"\n)" + 
-					"select count(_genotype_key) as total_count from genotypes";
+					"\nand aa._logicaldb_key = 1";			
 			return cmd;
 		}
 		
-		cmd = "\nwith genotypes as (" +
-				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
-				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, GXD_Specimen gs" +
-				"\nwhere aa.accid in (" + accid + ")" +
-				"\nand aa._mgitype_key = 12" +		
-				"\nand aa._logicaldb_key = 1" +				
-				"\nand aa._object_key = gg._Genotype_key" +
-				"\nand gg._Genotype_key = gs._Genotype_key" +
-				"\nand gg._Strain_key = s._Strain_key" +
-				"\nunion" +
-				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
-				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, GXD_GelLane gs" +
-				"\nwhere aa.accid in (" + accid + ")" +
-				"\nand aa._mgitype_key = 12" +
-				"\nand aa._logicaldb_key = 1" +				
-				"\nand aa._object_key = gg._Genotype_key" +
-				"\nand gg._Genotype_key = gs._Genotype_key" +
-				"\nand gg._Strain_key = s._Strain_key" +
-				"\nunion" +				
-				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
-				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, VOC_Annot va" +
-				"\nwhere aa.accid in (" + accid + ")" +
-				"\nand aa._mgitype_key = 12" +
-				"\nand aa._logicaldb_key = 1" +				
-				"\nand aa._object_key = va._object_key" +
-				"\nand va._annotType_key = 1002" +
-				"\nand va._object_key = gg._genotype_key" +
-				"\nand gg._strain_key = s._strain_key" +
-				"\nunion" +
-				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
-				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, VOC_Annot va" +
-				"\nwhere aa.accid in (" + accid + ")" +
-				"\nand aa._mgitype_key = 12" +
-				"\nand aa._logicaldb_key = 1" +				
-				"\nand aa._object_key = va._object_key" +
-				"\nand va._annotType_key = 1020" +
-				"\nand va._object_key = gg._genotype_key" +
-				"\nand gg._strain_key = s._strain_key" +
-				"\n)" +
-				"\nselect a.accid as genotypeid, gg.isConditional, gg.strain, n.note as alleleDetailNote," +
+		cmd = "\nselect a.accid as genotypeid, gg.isConditional, gg.strain, n.note as alleleDetailNote," +
 				"\ncase when exists (select 1 from GXD_Specimen g where gg._Genotype_key = g._Genotype_key)" +
 				"\n    or exists (select 1 from GXD_GelLane g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
 				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasMPAnnot," +
 				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasDOAnnot" +
-				"\nfrom genotypes gg" +
+				"\nfrom gxd_genotype gg" +
 				"\n       left outer join MGI_Note n on (" +
 				"\n               gg._Genotype_key = n._Object_key" +
 				"\n               and n._NoteType_key = 1016" +
 				"\n               and n._MGIType_key = 12)," +
 				"\nACC_Accession a" + 
-				"\nwhere gg._Genotype_key = a._Object_key" + 
+				"\nwhere a.accid in (" + accid + ")" +
 				"\nand a._MGIType_key = 12" + 
-				"\nand a._Logicaldb_key = 1";
+				"\nand a._Logicaldb_key = 1" +
+				"\nand a._Object_key = gg._Genotype_key";
 
 		cmd = addPaginationSQL(cmd, "strain, _genotype_key", offset, limit);
 

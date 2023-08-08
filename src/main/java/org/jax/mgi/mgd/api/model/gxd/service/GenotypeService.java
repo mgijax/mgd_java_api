@@ -1004,7 +1004,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand a._Object_key = gg._Genotype_key" +
 				"\nand gg._Strain_key = s._Strain_key";
 
-		cmd = addPaginationSQL(cmd, "strain, _genotype_key, symbol NULLS FIRST", offset, limit);
+		cmd = addPaginationSQL(cmd, "strain, gg._genotype_key, symbol NULLS FIRST", offset, limit);
 
 		return cmd;
 

@@ -200,6 +200,34 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 
 	@GET
+	@ApiOperation(value = "Get list of genotype domains by acc ids")
+	@Path("/getGenotypeByAccIDs")
+	public SearchResults<SummaryGenotypeDomain> getGenotypeByAccIDs(
+		@QueryParam("accid") String accid,
+		@QueryParam("offset") int offset,
+		@QueryParam("limit") int limit
+		) {
+
+		SearchResults<SummaryGenotypeDomain> results = new SearchResults<SummaryGenotypeDomain>();
+
+		try {
+			results = genotypeService.getGenotypeByAccIDs(accid, offset, limit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@GET
+	@ApiOperation(value = "Download TSV file.")
+	@Path("/downloadGenotypeByAccIDs")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response downloadGenotypeByAccIDs(@QueryParam("accid") String accid) {
+		return genotypeService.downloadGenotypeByAccIDs(accid);
+	}
+	
+	@GET
 	@ApiOperation(value = "Get list of genotype domains by clipboard userid")
 	@Path("/getGenotypeByClipboard")
 	public SearchResults<SummaryGenotypeDomain> getGenotypeByClipboard(

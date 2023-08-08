@@ -966,6 +966,167 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		return download(cmd, getTsvFileName("getGenotypeByRef", accid), new GenotypeFormatter());
 	}
 
+	public String getGenotypeByAccIDsSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting genotypes by acc ids
+		// genotype exists in GXD_Specimen, GXD_GelLane, MP Annot (1002), DO Annot (1020)
+		
+		String cmd;
+
+		if (returnCount) {
+			cmd = "\nwith genotypes as (" + 
+					"\nselect distinct gg._genotype_key" + 
+					"\nfrom ACC_Accession aa, GXD_Genotype gg, GXD_Specimen gs" + 
+					"\nwhere aa.accid in (" + accid + ")" +
+					"\nand aa._mgitype_key = 12" +
+					"\nand aa._logicaldb_key = 1" +
+					"\nand aa._object_key = gg._genotype_key" + 
+					"\nand gg._genotype_key = gs._genotype_key" + 
+					"\nunion" + 
+					"\nselect distinct gg._genotype_key" + 
+					"\nfrom ACC_Accession aa, GXD_Genotype gg, GXD_GelLane gs" + 
+					"\nwhere aa.accid in (" + accid + ")" +
+					"\nand aa._mgitype_key = 12" +
+					"\nand aa._logicaldb_key = 1" +					
+					"\nand aa._object_key = gg._genotype_key" + 			
+					"\nand gg._Genotype_key = gs._Genotype_key" + 
+					"\nunion" +					
+					"\nselect distinct aa._object_key" + 
+					"\nfrom ACC_Accession aa, VOC_Annot va" + 
+					"\nwhere aa.accid in (" + accid + ")" +
+					"\nand aa._mgitype_key = 12" +
+					"\nand aa._logicaldb_key = 1" +				
+					"\nand aa._object_key = va._object_key" +
+					"\nand va._AnnotType_key = 1002" +
+					"\nunion" + 
+					"\nselect distinct aa._object_key" + 
+					"\nfrom ACC_Accession aa, VOC_Annot va" + 
+					"\nwhere aa.accid in (" + accid + ")" +
+					"\nand aa._mgitype_key = 12" +
+					"\nand aa._logicaldb_key = 1" +					
+					"\nand aa._object_key = va._object_key" +
+					"\nand va._AnnotType_key = 1020" +
+					"\n)" + 
+					"select count(_genotype_key) as total_count from genotypes";
+			return cmd;
+		}
+		
+		cmd = "\nwith genotypes as (" +
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, GXD_Specimen gs" +
+				"\nwhere aa.accid in (" + accid + ")" +
+				"\nand aa._mgitype_key = 12" +		
+				"\nand aa._logicaldb_key = 1" +				
+				"\nand aa._object_key = gg._Genotype_key" +
+				"\nand gg._Genotype_key = gs._Genotype_key" +
+				"\nand gg._Strain_key = s._Strain_key" +
+				"\nunion" +
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, GXD_GelLane gs" +
+				"\nwhere aa.accid in (" + accid + ")" +
+				"\nand aa._mgitype_key = 12" +
+				"\nand aa._logicaldb_key = 1" +				
+				"\nand aa._object_key = gg._Genotype_key" +
+				"\nand gg._Genotype_key = gs._Genotype_key" +
+				"\nand gg._Strain_key = s._Strain_key" +
+				"\nunion" +				
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, VOC_Evidence e, VOC_Annot a" +
+				"\nwhere aa.accid in (" + accid + ")" +
+				"\nand aa._mgitype_key = 12" +
+				"\nand aa._logicaldb_key = 1" +				
+				"\nand aa._object_key = va._object_key" +
+				"\nand va._annotType_key = 1002" +
+				"\nand va._object_key = gg._genotype_key" +
+				"\nand gg._strain_key = s._strain_key" +
+				"\nunion" +
+				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, VOC_Evidence e, VOC_Annot a" +
+				"\nwhere aa.accid in (" + accid + ")" +
+				"\nand aa._mgitype_key = 12" +
+				"\nand aa._logicaldb_key = 1" +				
+				"\nand aa._object_key = va._object_key" +
+				"\nand va._annotType_key = 1020" +
+				"\nand va._object_key = gg._genotype_key" +
+				"\nand gg._strain_key = s._strain_key" +
+				"\n)" +
+				"\nselect a.accid as genotypeid, gg.isConditional, gg.strain, n.note as alleleDetailNote," +
+				"\ncase when exists (select 1 from GXD_Specimen g where gg._Genotype_key = g._Genotype_key)" +
+				"\n    or exists (select 1 from GXD_GelLane g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
+				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasMPAnnot," +
+				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasDOAnnot" +
+				"\nfrom genotypes gg" +
+				"\n       left outer join MGI_Note n on (" +
+				"\n               gg._Genotype_key = n._Object_key" +
+				"\n               and n._NoteType_key = 1016" +
+				"\n               and n._MGIType_key = 12)," +
+				"\nACC_Accession a" + 
+				"\nwhere gg._Genotype_key = a._Object_key" + 
+				"\nand a._MGIType_key = 12" + 
+				"\nand a._Logicaldb_key = 1";
+
+		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
+
+		return cmd;
+
+	}
+	
+	@Transactional	
+	public SearchResults<SummaryGenotypeDomain> getGenotypeByAccIDs(String accid, int offset, int limit) {
+		// return list of genotype domains by reference acc ids
+
+		SearchResults<SummaryGenotypeDomain> results = new SearchResults<SummaryGenotypeDomain>();
+		List<SummaryGenotypeDomain> summaryResults = new ArrayList<SummaryGenotypeDomain>();
+		
+		String cmd = getGenotypeByAccIDsSQL(accid, offset, limit, true);
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				genotypeDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = getGenotypeByAccIDsSQL(accid, offset, limit, false);
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SummaryGenotypeDomain domain = new SummaryGenotypeDomain();
+				domain.setAccids(accid);
+				domain.setGenotypeid(rs.getString("genotypeid"));
+				domain.setGenotypeBackground(rs.getString("strain"));
+				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;
+				domain.setIsConditional(rs.getBoolean("isConditional"));
+				domain.setHasAssay(rs.getBoolean("hasAssay"));
+				domain.setHasMPAnnot(rs.getBoolean("hasMPAnnot"));
+				domain.setHasDOAnnot(rs.getBoolean("hasDOAnnot"));
+				summaryResults.add(domain);
+				genotypeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		results.items = summaryResults;
+		return results;
+	}		
+
+	public Response downloadGenotypeByAccIDs (String accid) {
+		String cmd = getGenotypeByAccIDsSQL (accid, -1, -1, false);
+		return download(cmd, getTsvFileName("getGenotypeByAccIDs", accid), new GenotypeFormatter());
+	}
+	
 	public String getGenotypeByClipboardSQL (String userid, int offset, int limit, boolean returnCount) {
 		// SQL for selecting genotypes by clipboard/user
 		// genotype exists in GXD_Assay/GXD_Specimen, GXD_Assay/GXD_GelLane, MP Annot (1002), DO Annot (1020)

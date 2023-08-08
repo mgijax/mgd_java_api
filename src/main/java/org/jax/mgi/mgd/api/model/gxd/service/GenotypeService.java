@@ -1128,6 +1128,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 
 	public Response downloadGenotypeByAccIDs (String accid) {
 		String cmd = getGenotypeByAccIDsSQL (accid, -1, -1, false);
+		accid = accid.replaceAll("MGI",  "'MGI");
+		accid = accid.replaceAll(",", "',");
+		accid = accid + "'";		
 		return download(cmd, getTsvFileName("getGenotypeByAccIDs", accid), new GenotypeFormatter());
 	}
 	

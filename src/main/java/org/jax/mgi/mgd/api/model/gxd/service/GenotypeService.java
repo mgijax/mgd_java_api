@@ -971,6 +971,10 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		// genotype exists in GXD_Specimen, GXD_GelLane, MP Annot (1002), DO Annot (1020)
 		
 		String cmd;
+		
+		accid = accid.replaceAll("MGI",  "'MGI");
+		accid = accid.replaceAll(",", "',");
+		accid = accid + "'";
 
 		if (returnCount) {
 			cmd = "\nwith genotypes as (" + 

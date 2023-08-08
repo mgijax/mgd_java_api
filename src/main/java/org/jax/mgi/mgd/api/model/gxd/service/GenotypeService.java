@@ -1068,7 +1068,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand a._MGIType_key = 12" + 
 				"\nand a._Logicaldb_key = 1";
 
-		cmd = addPaginationSQL(cmd, "strain, _genotype_key, symbol NULLS FIRST", offset, limit);
+		cmd = addPaginationSQL(cmd, "strain, _genotype_key", offset, limit);
 
 		return cmd;
 

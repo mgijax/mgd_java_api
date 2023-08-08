@@ -1030,7 +1030,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand gg._Strain_key = s._Strain_key" +
 				"\nunion" +				
 				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
-				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, VOC_Evidence e, VOC_Annot a" +
+				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, VOC_Annot va" +
 				"\nwhere aa.accid in (" + accid + ")" +
 				"\nand aa._mgitype_key = 12" +
 				"\nand aa._logicaldb_key = 1" +				
@@ -1040,7 +1040,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand gg._strain_key = s._strain_key" +
 				"\nunion" +
 				"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
-				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, VOC_Evidence e, VOC_Annot a" +
+				"\nfrom ACC_Accession aa, GXD_Genotype gg, PRB_Strain s, VOC_Annot va" +
 				"\nwhere aa.accid in (" + accid + ")" +
 				"\nand aa._mgitype_key = 12" +
 				"\nand aa._logicaldb_key = 1" +				

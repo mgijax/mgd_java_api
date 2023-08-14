@@ -966,6 +966,217 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		return download(cmd, getTsvFileName("getGenotypeByRef", accid), new GenotypeFormatter());
 	}
 
+	public String getGenotypeByAccIDsSQL (String accid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting genotypes by acc ids
+		// genotype exists in GXD_Specimen, GXD_GelLane, MP Annot (1002), DO Annot (1020)
+		
+		String cmd;
+		
+		accid = accid.replaceAll("MGI",  "'MGI");
+		accid = accid.replaceAll(",", "',");
+		accid = accid + "'";
+
+		if (returnCount) {
+			cmd = "select count (aa._object_key) as total_count" + 
+					"\nfrom ACC_Accession aa" + 
+					"\nwhere aa.accid in (" + accid + ")" +
+					"\nand aa._mgitype_key = 12" +
+					"\nand aa._logicaldb_key = 1";			
+			return cmd;
+		}
+		
+		cmd = "\nselect a.accid as genotypeid, gg.isConditional, s.strain, a0.symbol, n.note as alleleDetailNote," +
+				"\ncase when exists (select 1 from GXD_Specimen g where gg._Genotype_key = g._Genotype_key)" +
+				"\n    or exists (select 1 from GXD_GelLane g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
+				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasMPAnnot," +
+				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasDOAnnot" +
+				"\nfrom gxd_genotype gg" +
+				"\n left outer join MGI_Note n on (" +
+				"\n    gg._Genotype_key = n._Object_key" +
+				"\n    and n._NoteType_key = 1016" +
+				"\n    and n._MGIType_key = 12)" +
+				"\n left outer join gxd_allelepair ap0 on (gg._genotype_key = ap0._genotype_key)" +
+				"\n left outer join all_allele a0 on (ap0._allele_key_1 = a0._allele_key)" +
+				"\n,ACC_Accession a, PRB_Strain s" + 
+				"\nwhere a.accid in (" + accid + ")" +
+				"\nand a._MGIType_key = 12" + 
+				"\nand a._Logicaldb_key = 1" +
+				"\nand a._Object_key = gg._Genotype_key" +
+				"\nand gg._Strain_key = s._Strain_key";
+
+		cmd = addPaginationSQL(cmd, "strain, gg._genotype_key, symbol NULLS FIRST", offset, limit);
+
+		return cmd;
+
+	}
+	
+	@Transactional	
+	public SearchResults<SummaryGenotypeDomain> getGenotypeByAccIDs(String accid, int offset, int limit) {
+		// return list of genotype domains by reference acc ids
+
+		SearchResults<SummaryGenotypeDomain> results = new SearchResults<SummaryGenotypeDomain>();
+		List<SummaryGenotypeDomain> summaryResults = new ArrayList<SummaryGenotypeDomain>();
+		
+		String cmd = getGenotypeByAccIDsSQL(accid, offset, limit, true);
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				genotypeDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = getGenotypeByAccIDsSQL(accid, offset, limit, false);
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SummaryGenotypeDomain domain = new SummaryGenotypeDomain();
+				domain.setAccids(accid);
+				domain.setGenotypeid(rs.getString("genotypeid"));
+				domain.setGenotypeBackground(rs.getString("strain"));
+				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;
+				domain.setIsConditional(rs.getBoolean("isConditional"));
+				domain.setHasAssay(rs.getBoolean("hasAssay"));
+				domain.setHasMPAnnot(rs.getBoolean("hasMPAnnot"));
+				domain.setHasDOAnnot(rs.getBoolean("hasDOAnnot"));
+				summaryResults.add(domain);
+				genotypeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		results.items = summaryResults;
+		return results;
+	}		
+
+	public Response downloadGenotypeByAccIDs (String accid) {
+		String cmd = getGenotypeByAccIDsSQL (accid, -1, -1, false);
+		accid = accid.replaceAll("MGI",  "'MGI");
+		accid = accid.replaceAll(",", "',");
+		accid = accid + "'";		
+		return download(cmd, getTsvFileName("getGenotypeByAccIDs", accid), new GenotypeFormatter());
+	}
+	
+	public String getGenotypeByClipboardSQL (String userid, int offset, int limit, boolean returnCount) {
+		// SQL for selecting genotypes by clipboard/user
+		// genotype exists in GXD_Assay/GXD_Specimen, GXD_Assay/GXD_GelLane, MP Annot (1002), DO Annot (1020)
+		
+		String cmd;
+
+		if (returnCount) {
+			cmd = "\nwith genotypes as (" + 
+					"\nselect distinct gg._genotype_key, gg.isConditional, s.strain" +
+					"\nfrom MGI_SetMember ss, MGI_User u, GXD_Genotype gg, PRB_Strain s" + 
+					"\nwhere u.login = '" + userid + "'" +
+					"\nand u._user_key = ss._CreatedBy_key" +					
+					"\nand ss._set_key = 1055" + 
+					"\nand ss._object_key = gg._genotype_key" +
+					"\nand gg._strain_key = s._strain_key" +
+					"\n)" + 
+					"select count(_genotype_key) as total_count from genotypes";
+			return cmd;
+		}
+		
+		cmd = "\nwith genotypes as (" +
+				"\nselect distinct gg._genotype_key, gg.isConditional, ss.label, s.strain" +
+				"\nfrom MGI_SetMember ss, MGI_User u, GXD_Genotype gg, PRB_Strain s" + 
+				"\nwhere u.login = '" + userid + "'" +
+				"\nand u._user_key = ss._CreatedBy_key" +					
+				"\nand ss._set_key = 1055" + 
+				"\nand ss._object_key = gg._genotype_key" +
+				"\nand gg._strain_key = s._strain_key" +
+				"\n)" +
+				"\nselect a.accid as genotypeid, gg.isConditional, gg.strain, n.note as alleleDetailNote," +
+				"\ncase when exists (select 1 from GXD_Specimen g where gg._Genotype_key = g._Genotype_key)" +
+				"\n    or exists (select 1 from GXD_GelLane g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
+				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasMPAnnot," +
+				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasDOAnnot" +
+				"\nfrom genotypes gg" +
+				"\n       left outer join MGI_Note n on (" +
+				"\n               gg._Genotype_key = n._Object_key" +
+				"\n               and n._NoteType_key = 1016" +
+				"\n               and n._MGIType_key = 12)," +
+				"\nACC_Accession a" + 
+				"\nwhere gg._Genotype_key = a._Object_key" + 
+				"\nand a._MGIType_key = 12" + 
+				"\nand a._Logicaldb_key = 1";
+
+
+		cmd = addPaginationSQL(cmd, "gg.label", offset, limit);
+
+		return cmd;
+	}
+	
+	@Transactional	
+	public SearchResults<SummaryGenotypeDomain> getGenotypeByClipboard(String userid, int offset, int limit) {
+		// return list of genotype domains by clipboard/user
+
+		SearchResults<SummaryGenotypeDomain> results = new SearchResults<SummaryGenotypeDomain>();
+		List<SummaryGenotypeDomain> summaryResults = new ArrayList<SummaryGenotypeDomain>();
+		
+		String cmd = getGenotypeByClipboardSQL(userid, offset, limit, true);
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				results.total_count = rs.getLong("total_count");
+				results.offset = offset;
+				results.limit = limit;
+				genotypeDAO.clear();				
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		cmd = getGenotypeByClipboardSQL(userid, offset, limit, false);
+		log.info(cmd);	
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SummaryGenotypeDomain domain = new SummaryGenotypeDomain();
+				domain.setCreatedBy(userid);
+				domain.setGenotypeid(rs.getString("genotypeid"));
+				domain.setGenotypeBackground(rs.getString("strain"));
+				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;
+				domain.setIsConditional(rs.getBoolean("isConditional"));
+				domain.setHasAssay(rs.getBoolean("hasAssay"));
+				domain.setHasMPAnnot(rs.getBoolean("hasMPAnnot"));
+				domain.setHasDOAnnot(rs.getBoolean("hasDOAnnot"));
+				summaryResults.add(domain);
+				genotypeDAO.clear();
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}		
+
+		results.items = summaryResults;
+		return results;
+	}		
+
+	public Response downloadGenotypeByClipboard (String userid) {
+		String cmd = getGenotypeByClipboardSQL (userid, -1, -1, false);
+		return download(cmd, getTsvFileName("getGenotypeByClipboard", userid), new GenotypeFormatter());
+	}
+	
 	public static class GenotypeFormatter implements TsvFormatter {
 		public String format (ResultSet obj) {
 			String[][] cols = {

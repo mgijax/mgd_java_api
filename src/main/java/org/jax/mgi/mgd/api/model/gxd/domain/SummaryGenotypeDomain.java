@@ -9,6 +9,8 @@ import lombok.Setter;
 public class SummaryGenotypeDomain extends BaseDomain {
 
 	private String jnumid;	
+	private String createdBy;
+	private String accids;
 	private String genotypeid;
 	private String genotypeBackground;
 	private String alleleDetailNote;

@@ -199,19 +199,15 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 		return genotypeService.downloadGenotypeByJnum(accid);
 	}
 
-	@GET
+	@POST
 	@ApiOperation(value = "Get list of genotype domains by acc ids")
 	@Path("/getGenotypeByAccIDs")
-	public SearchResults<SummaryGenotypeDomain> getGenotypeByAccIDs(
-		@QueryParam("accid") String accid,
-		@QueryParam("offset") int offset,
-		@QueryParam("limit") int limit
-		) {
+	public SearchResults<SummaryGenotypeDomain> getGenotypeByAccIDs(String accid) {
 
 		SearchResults<SummaryGenotypeDomain> results = new SearchResults<SummaryGenotypeDomain>();
 
 		try {
-			results = genotypeService.getGenotypeByAccIDs(accid, offset, limit);
+			results = genotypeService.getGenotypeByAccIDs(accid, 0, 250);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

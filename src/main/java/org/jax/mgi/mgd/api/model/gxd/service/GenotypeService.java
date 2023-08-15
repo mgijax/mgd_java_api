@@ -985,7 +985,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			return cmd;
 		}
 		
-		cmd = "\nselect a.accid as genotypeid, gg.isConditional, s.strain, n.note as alleleDetailNote," +
+		cmd = "\nselect distinct a.accid as genotypeid, gg._genotype_key, gg.isConditional, s.strain, n.note as alleleDetailNote," +
 				"\ncase when exists (select 1 from GXD_Specimen g where gg._Genotype_key = g._Genotype_key)" +
 				"\n    or exists (select 1 from GXD_GelLane g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
 				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasMPAnnot," +

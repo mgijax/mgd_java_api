@@ -199,7 +199,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 		return genotypeService.downloadGenotypeByJnum(accid);
 	}
 
-	@GET
+	@POST
 	@ApiOperation(value = "Get list of genotype domains by acc ids")
 	@Path("/getGenotypeByAccIDs")
 	public SearchResults<SummaryGenotypeDomain> getGenotypeByAccIDs(

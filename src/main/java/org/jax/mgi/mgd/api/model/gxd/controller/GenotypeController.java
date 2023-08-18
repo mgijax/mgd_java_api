@@ -207,7 +207,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 		SearchResults<SummaryGenotypeDomain> results = new SearchResults<SummaryGenotypeDomain>();
 
 		try {
-			results = genotypeService.getGenotypeByAccIDs(accid, 0, 250);
+			results = genotypeService.getGenotypeByAccIDs(accid, 0, 100000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

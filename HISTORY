@@ -4,11 +4,12 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-22-55
 TAG: mgd_java_api-6-0-22-54
 TAG: mgd_java_api-6-0-22-53
 TAG: mgd_java_api-6-0-22-52
 TAG: mgd_java_api-6-0-22-51
-DATE: 08/08/2023
+DATE: 08/08/2023, 08/18/2023
 STAFF: lec
 wts2-765/fl2-222/Remove mrk_alias table: backend components
 wts2-1249/fl2-475/GXD image module: change "copy" image from deselect to Add button

@@ -985,7 +985,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			return cmd;
 		}
 		
-		cmd = "\nselect a.accid as genotypeid, gg.isConditional, s.strain, a0.symbol, n.note as alleleDetailNote," +
+		cmd = "\nselect distinct a.accid as genotypeid, gg._genotype_key, gg.isConditional, s.strain, n.note as alleleDetailNote," +
 				"\ncase when exists (select 1 from GXD_Specimen g where gg._Genotype_key = g._Genotype_key)" +
 				"\n    or exists (select 1 from GXD_GelLane g where gg._Genotype_key = g._Genotype_key) then 1 else 0 end as hasAssay," +
 				"\ncase when exists (select 1 from VOC_Annot a where gg._Genotype_key = a._Object_key and a._AnnotType_key = 1002) then 1 else 0 end as hasMPAnnot," +
@@ -996,7 +996,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\n    and n._NoteType_key = 1016" +
 				"\n    and n._MGIType_key = 12)" +
 				"\n left outer join gxd_allelepair ap0 on (gg._genotype_key = ap0._genotype_key)" +
-				"\n left outer join all_allele a0 on (ap0._allele_key_1 = a0._allele_key)" +
 				"\n,ACC_Accession a, PRB_Strain s" + 
 				"\nwhere a.accid in (" + accid + ")" +
 				"\nand a._MGIType_key = 12" + 
@@ -1004,7 +1003,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 				"\nand a._Object_key = gg._Genotype_key" +
 				"\nand gg._Strain_key = s._Strain_key";
 
-		cmd = addPaginationSQL(cmd, "strain, gg._genotype_key, symbol NULLS FIRST", offset, limit);
+		cmd = addPaginationSQL(cmd, "strain, alleleDetailNote", offset, limit);
 
 		return cmd;
 
@@ -1041,7 +1040,9 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
 			while (rs.next()) {
 				SummaryGenotypeDomain domain = new SummaryGenotypeDomain();
-				domain.setAccids(accid);
+				if (accid.length() <= 500) {
+					domain.setAccids(accid);
+				}
 				domain.setGenotypeid(rs.getString("genotypeid"));
 				domain.setGenotypeBackground(rs.getString("strain"));
 				domain.setAlleleDetailNote(rs.getString("alleleDetailNote"));;

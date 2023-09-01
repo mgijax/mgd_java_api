@@ -115,7 +115,6 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 		entity.setCreator(termDAO.get(Integer.valueOf(domain.getCreatorKey())));
 		
 		// can never change parent cell line from the derivation
-		log.info("parentcellline:" + domain.getParentCellLine().getCellLineKey());
 		entity.setParentCellLine(cellLineDAO.get(Integer.valueOf(domain.getParentCellLine().getCellLineKey())));	
 
 		if (domain.getDescription() != null && !domain.getDescription().isEmpty()) {

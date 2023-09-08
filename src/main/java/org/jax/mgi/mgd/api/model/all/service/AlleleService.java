@@ -1516,6 +1516,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\n), "
 
 		// allelepheno = table of allele key + 'has data'
+		//+ "\n  and va._term_key != 293594 "  // don't count annotations to "no phenotypic analysis"
 		+ "\nallelepheno as ( "
 		+ "\n  select distinct a._allele_key, 'has data' as pheno "
 		+ "\n  from all_allele a, voc_annot va, voc_term vt, gxd_allelegenotype ga "
@@ -1524,11 +1525,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\n  and ga._allele_key = a._allele_key "
 		+ "\n  and va._term_key = vt._term_key "
 		+ "\n  and va._qualifier_key != 2181424 " 
-		+ "\n  and va._term_key != 293594 "  // don't count annotations to "no phenotypic analysis"
 		+ "\n  and a._allele_key in (select * from alleles) "
 		+ "\n), "
 
 		// allelenormal = table of allele key + 'no abnormal phenotype observed' 
+		//+ "\n     and va._term_key != 293594 "  // don't count annotations to "no phenotypic analysis"		
 		+ "\nallelenormal as ( "
 		+ "\n  select a._allele_key, 'no abnormal phenotype observed' as pheno "
 		+ "\n  from all_allele a "
@@ -1545,7 +1546,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\n     where va._annottype_key = 1002  "
 		+ "\n     and va._object_key = ga._genotype_key "
 		+ "\n     and ga._allele_key = a._allele_key "
-		+ "\n     and va._term_key != 293594 "  // don't count annotations to "no phenotypic analysis"
 		+ "\n     and va._qualifier_key = 2181423) "
 		+ "\n  and a._allele_key in (select * from alleles) "
 		+ "\n), "

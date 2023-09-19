@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIReferenceAssocDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceDOIDAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
@@ -250,6 +251,53 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 				// subclass-specific info from SQL query			
 				domain.setStrainSymbol(rs.getString("strain"));
 				domain.setStrainAccID(rs.getString("accID"));
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+		
+	@Transactional	
+	public List<MGIReferenceDOIDAssocDomain> getDOIDs(Integer key) {
+		// return list of reference/doid associations for given reference key
+		
+		List<MGIReferenceDOIDAssocDomain> results = new ArrayList<MGIReferenceDOIDAssocDomain>();
+
+		String cmd = "\nselect r.* from MGI_Reference_DOID_View r "
+				+ "\nwhere r._Refs_key = " + key
+				+"\norder by r.term, r.assocType";
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				
+				// use super-class translator
+				MGIReferenceAssocDomain superDomain = new MGIReferenceAssocDomain();
+				superDomain = translator.translate(referenceAssocDAO.get(rs.getInt("_assoc_key")));
+				referenceAssocDAO.clear();
+				
+				MGIReferenceDOIDAssocDomain domain = new MGIReferenceDOIDAssocDomain();
+			
+				domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);				
+				domain.setAssocKey(superDomain.getAssocKey());
+				domain.setObjectKey(superDomain.getObjectKey());
+				domain.setMgiTypeKey(superDomain.getMgiTypeKey());
+				domain.setRefAssocType(superDomain.getRefAssocType());
+				domain.setRefAssocTypeKey(superDomain.getRefAssocTypeKey());
+				domain.setRefsKey(superDomain.getRefsKey());
+				domain.setModification_date(superDomain.getModification_date());
+				domain.setModifiedBy(superDomain.getModifiedBy());
+				domain.setModifiedByKey(superDomain.getModifiedByKey());
+				
+				// subclass-specific info from SQL query			
+				domain.setDoidTerm(rs.getString("term"));
+				domain.setDoidAccID(rs.getString("accID"));
 				results.add(domain);
 			}
 			sqlExecutor.cleanup();

@@ -5,6 +5,7 @@ import java.util.List;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceDOIDAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 
@@ -86,5 +87,6 @@ public class ReferenceDomain extends BaseDomain {
 	private List<MGIReferenceAlleleAssocDomain> alleleAssocs;
 	private List<MGIReferenceStrainAssocDomain> strainAssocs;
 	private List<MGIReferenceMarkerAssocDomain> markerAssocs;	
+	private List<MGIReferenceDOIDAssocDomain> doidAssocs;
 
 }

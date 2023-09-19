@@ -56,7 +56,6 @@ public abstract class BaseService<D extends BaseDomain> {
 	}
 
 	protected static String addPaginationSQL(String cmd, String orderBy, int offset, int limit) {
-
 		if (orderBy != null) {
 			cmd = cmd + "\norder by " + orderBy;
 		}
@@ -65,75 +64,79 @@ public abstract class BaseService<D extends BaseDomain> {
 		}
 		if (limit > 0) {
 			cmd = cmd + "\nlimit " + limit;
-		}		
+		}
+		
 		return cmd;
 	}
 
-        /*
-         * Helper function available to subclasses implementing formatTsv.
-         *
-         * Formats an object as a row in a tab-delimited output.
-         * Caller passes the object and a list of columns. 
-         * Returns a string.
-         * To get a formatted header line containing the column labels,
-         * pass null as the object.
-         * Args:
-         *   obj - the object to format, or null
-         *   cols - a list of column specifiers. Each item is
-         *        a list of 2 strings, specifying the column
-         *        label and the correcponding object field.
-         *        Example: [["ID", "accID"], ["Gene symbol", "symbol"], ["Gene name", "name"]]
-         * Uses reflection to get the named field from the object. 
-         * If an exception occurs (e.g., NoSuchFieldException) for any field, the
-         * field's value is empty.
-         */
-        protected static String formatTsvHelper (ResultSet obj, String[][] cols) {
-            String separator = "\t";
-            String terminator = "\n";
-            StringBuffer b = new StringBuffer();
-            for (int i = 0; i < cols.length; i++) {
-                String colName = cols[i][0];
-                String fieldName = cols[i][1];
+	/*
+	 * Helper function available to subclasses implementing formatTsv.
+	 *
+	 * Formats an object as a row in a tab-delimited output.
+	 * Caller passes the object and a list of columns. 
+	 * Returns a string.
+	 * To get a formatted header line containing the column labels,
+	 * pass null as the object.
+	 * Args:
+	 *   obj - the object to format, or null
+	 *   cols - a list of column specifiers. Each item is
+	 *        a list of 2 strings, specifying the column
+	 *        label and the correcponding object field.
+	 *        Example: [["ID", "accID"], ["Gene symbol", "symbol"], ["Gene name", "name"]]
+	 * Uses reflection to get the named field from the object. 
+	 * If an exception occurs (e.g., NoSuchFieldException) for any field, the
+	 * field's value is empty.
+	 */
+	protected static String formatTsvHelper (ResultSet obj, String[][] cols) {
+		String separator = "\t";
+		String terminator = "\n";
+		StringBuffer b = new StringBuffer();
 
-                String val = "";
-                if (obj != null) {
-		    try {
-			val = obj.getString(fieldName);
-			if (val == null) val = "";
-		    }
-		    catch (Exception e) {
-		        val = "ERR";
-		    }
-                } else {
-                    val = colName;
-                }
-                if (i > 0) b.append(separator);
-                val = val.replaceAll("\t", " ").replaceAll("\n"," ");
-                b.append(val);
-            }
-            b.append(terminator);
-            return b.toString();
-        }
+		for (int i = 0; i < cols.length; i++) {
+			String colName = cols[i][0];
+			String fieldName = cols[i][1];
+			String val = "";
 
-        /* 
-         * Formats an query row as a TSV row for the indicated endpoint.
-         * OVERRIDE this function if you want to provide TSV downloads.
-         */
-        protected String formatTsv (ResultSet obj) {
-            return "Not implemented\n";
-        }
+			if (obj != null) {
+				try {
+					val = obj.getString(fieldName);
+					if (val == null) val = "";
+				}
+				catch (Exception e) {
+					val = "ERR";
+				}
+			} else {
+				val = colName;
+			}
+			
+			if (i > 0) b.append(separator);
+			val = val.replaceAll("\t", " ").replaceAll("\n"," ");
+			b.append(val);
+		}
+		b.append(terminator);
+		return b.toString();
+	}
 
-        /*
-         * Override this function if desired to generate a name for the downloaded file.
-         * Default file name is "<endpoint>.<arg>.tsv"
-         */
-        protected String getTsvFileName (String endpoint, String arg) {
-	    if (arg == null) {
-		return endpoint + ".tsv";
+    /* 
+     * Formats an query row as a TSV row for the indicated endpoint.
+     * OVERRIDE this function if you want to provide TSV downloads.
+     */
+    protected String formatTsv (ResultSet obj) {
+    	return "Not implemented\n";
+    }
+
+    /*
+     * Override this function if desired to generate a name for the downloaded file.
+     * Default file name is "<endpoint>.<arg>.tsv"
+     */
+    protected String getTsvFileName (String endpoint, String arg) {
+    	if (arg == null) {
+    		return endpoint + ".tsv";
 	    } else {
-		return endpoint + "." + arg + ".tsv";
+	    	return endpoint + "." + arg + ".tsv";
 	    }
-        }
+    }
+        
 	protected ObjectMapper mapper = new ObjectMapper();
 	
 	public abstract SearchResults<D> create(D object, User user) throws APIException;

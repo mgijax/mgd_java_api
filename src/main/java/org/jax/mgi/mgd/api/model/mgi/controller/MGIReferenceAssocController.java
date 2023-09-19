@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceDOIDAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -119,4 +120,20 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 		return results;
 	}
 
+	@GET
+	@ApiOperation(value = "Get DOID Associations by Reference key")
+	@Path("/doidByReference/{key}")
+	public List<MGIReferenceDOIDAssocDomain> getDOIDs(@PathParam("key") Integer key) {
+		
+		List<MGIReferenceDOIDAssocDomain> results = new ArrayList<MGIReferenceDOIDAssocDomain>();
+		
+		try {
+			results = referenceAssocService.getDOIDs(key);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
 }

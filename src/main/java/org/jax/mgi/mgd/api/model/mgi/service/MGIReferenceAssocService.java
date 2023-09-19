@@ -524,7 +524,7 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 			listOfSuperDomains.add(superDomain);
 		}
 		
-		return process(null, listOfSuperDomains, "2", user);
+		return process(null, listOfSuperDomains, "13", user);
 	}
 		
 }

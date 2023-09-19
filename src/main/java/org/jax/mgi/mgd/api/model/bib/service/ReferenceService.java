@@ -35,6 +35,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceWorkflowTag;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceTranslator;
 import org.jax.mgi.mgd.api.model.bib.translator.SlimReferenceTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceDOIDAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceMarkerAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceStrainAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -1454,8 +1455,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		anyChanges = applyAccessionIDChanges(entity, domain, user) || anyChanges;
 
 		anyChanges = applyAlleleAssocChanges(entity, domain.getAlleleAssocs(), user) || anyChanges;	// uses referenceAssocService	
-		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), user) || anyChanges;	// uses referenceAssocService	
 		anyChanges = applyMarkerAssocChanges(entity, domain.getMarkerAssocs(), user) || anyChanges;	// uses referenceAssocService
+		anyChanges = applyStrainAssocChanges(entity, domain.getStrainAssocs(), user) || anyChanges;	// uses referenceAssocService	
+		anyChanges = applyDOIDAssocChanges(entity, domain.getDoidAssocs(), user) || anyChanges;	// uses referenceAssocService
 
 		if (anyChanges) {
 			entity.setModifiedBy(user);
@@ -2139,20 +2141,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return anyChanges;
 	}
 
-	private boolean applyStrainAssocChanges(Reference entity, List<MGIReferenceStrainAssocDomain> domain, User user) {
-		// apply any changes from domain to entity for the strain association
-
-		boolean anyChanges = false;
-
-		if (domain != null) {
-			if (referenceAssocService.processStrainAssoc(domain, user)) {
-				anyChanges = true;
-			}
-		}
-		
-		return anyChanges;
-	}
-
 	private boolean applyMarkerAssocChanges(Reference entity, List<MGIReferenceMarkerAssocDomain> domain, User user) {
 		// apply any changes from domain to entity for the marker association
 
@@ -2167,6 +2155,34 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		return anyChanges;
 	}
 
+	private boolean applyStrainAssocChanges(Reference entity, List<MGIReferenceStrainAssocDomain> domain, User user) {
+		// apply any changes from domain to entity for the strain association
+
+		boolean anyChanges = false;
+
+		if (domain != null) {
+			if (referenceAssocService.processStrainAssoc(domain, user)) {
+				anyChanges = true;
+			}
+		}
+		
+		return anyChanges;
+	}
+	
+	private boolean applyDOIDAssocChanges(Reference entity, List<MGIReferenceDOIDAssocDomain> domain, User user) {
+		// apply any changes from domain to entity for the doid association
+
+		boolean anyChanges = false;
+
+		if (domain != null) {
+			if (referenceAssocService.processDOIDAssoc(domain, user)) {
+				anyChanges = true;
+			}
+		}
+		
+		return anyChanges;
+	}
+	
 	//
 	// other helpful private methods
 	//

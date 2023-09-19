@@ -473,8 +473,36 @@ public class MGIReferenceAssocService extends BaseService<MGIReferenceAssocDomai
 
 	@Transactional
 	public Boolean processMarkerAssoc(List<MGIReferenceMarkerAssocDomain> domain, User user) {
-		// process reference/strain associations (create, delete, update)
+		// process reference/marker associations (create, delete, update)
 		// from sub-class (Marker), build super-class and pass to "process()"
+		
+		if (domain == null || domain.isEmpty()) {
+			return false;
+		}
+	
+		List<MGIReferenceAssocDomain> listOfSuperDomains = new ArrayList<MGIReferenceAssocDomain>();
+
+		// iterate thru the list of rows in the subclass-domain
+		
+		for (int i = 0; i < domain.size(); i++) {		
+			MGIReferenceAssocDomain superDomain = new MGIReferenceAssocDomain();
+			superDomain.setProcessStatus(domain.get(i).getProcessStatus());				
+			superDomain.setAssocKey(domain.get(i).getAssocKey());
+			superDomain.setObjectKey(domain.get(i).getObjectKey());
+			superDomain.setMgiTypeKey(domain.get(i).getMgiTypeKey());
+			superDomain.setRefAssocType(domain.get(i).getRefAssocType());
+			superDomain.setRefAssocTypeKey(domain.get(i).getRefAssocTypeKey());
+			superDomain.setRefsKey(domain.get(i).getRefsKey());
+			listOfSuperDomains.add(superDomain);
+		}
+		
+		return process(null, listOfSuperDomains, "2", user);
+	}
+
+	@Transactional
+	public Boolean processDOIDAssoc(List<MGIReferenceDOIDAssocDomain> domain, User user) {
+		// process reference/doid associations (create, delete, update)
+		// from sub-class (DOID Term), build super-class and pass to "process()"
 		
 		if (domain == null || domain.isEmpty()) {
 			return false;

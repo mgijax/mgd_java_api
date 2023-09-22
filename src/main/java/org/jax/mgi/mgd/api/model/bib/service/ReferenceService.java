@@ -353,6 +353,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		Boolean from_alleleassoc = false;
 		Boolean from_markerassoc = false;
 		Boolean from_strainassoc = false;
+		Boolean from_doidassoc = false;
 		
 		// may be a different order
 		if (searchDomain.getOrderBy() != null && !searchDomain.getOrderBy().isEmpty()) {
@@ -603,6 +604,14 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand mrs._object_key = " + value;
 				from_strainassoc = true;
+			}
+		}
+		// process doid associations
+		if (searchDomain.getDoidAssocs() != null && searchDomain.getDoidAssocs().size() > 0) {
+			value = searchDomain.getDoidAssocs().get(0).getObjectKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand mrd._object_key = " + value;
+				from_doidassoc = true;
 			}
 		}
 		
@@ -909,6 +918,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		if (from_strainassoc == true) {
 			where = where + "\nand c._refs_key = mrs._refs_key and mrs._mgitype_key = 10";
 			from = from + ", mgi_reference_assoc mrs";
+		}
+		if (from_doidassoc == true) {
+			where = where + "\nand c._refs_key = mrd._refs_key and mrd._mgitype_key = 13";
+			from = from + ", mgi_reference_assoc mrd";
 		}
 		
 		// make this easy to copy/paste for troubleshooting

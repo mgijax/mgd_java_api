@@ -1434,6 +1434,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
                          && !termKey.equals("103059161")
                          && !termKey.equals("103059162")
                          && !termKey.equals("103059163")
+                         && !termKey.equals("113728573")                          
+                         && !termKey.equals("113728574")                          
 						 ) {
 					validation = false;
 				}					

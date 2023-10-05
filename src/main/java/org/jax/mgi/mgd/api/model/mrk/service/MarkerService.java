@@ -1375,7 +1375,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//                103059161 | intronic regulatory region
 				//                103059162 | splice enhancer
 				//                103059163 | insulator binding site
-
+				//				  113728573	| origin of replication
+				//				  113728574	| transcriptional cis regulatory region
 				
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("6238178")
@@ -1401,7 +1402,9 @@ public class MarkerService extends BaseService<MarkerDomain> {
                             || termKey.equals("103059160")
                             || termKey.equals("103059161")
                             || termKey.equals("103059162")                 												
-                            || termKey.equals("103059163")                          
+                            || termKey.equals("103059163")
+                            || termKey.equals("113728573")                          
+                            || termKey.equals("113728574")                                                      
 							)) {
 					validation = false;
 				}

@@ -107,7 +107,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		SearchResults<ReferenceDomain> results = new SearchResults<ReferenceDomain>();
 		Reference entity = new Reference();
 		
-		// default reference type = ?
+		// default reference type = Peer Reviewed Article
 		if (domain.getReferenceTypeKey() == null || domain.getReferenceTypeKey().isEmpty()) {
 			domain.setReferenceTypeKey("31576687");
 		}

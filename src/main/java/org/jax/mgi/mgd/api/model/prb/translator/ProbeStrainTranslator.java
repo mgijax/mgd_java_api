@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.prb.translator;
 
 import java.util.Comparator;
+import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
@@ -71,7 +72,14 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		// at most one strainOriginNote
 		if (entity.getStrainOriginNote() != null && !entity.getStrainOriginNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getStrainOriginNote());
+			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
+			String allNotes = null;
+			// merge all notes into the first note
+			for (int i = 0; i < noteDomain.size(); i++) {
+				allNotes += noteDomain.get(i).getNoteChunk();
+			}
 			domain.setStrainOriginNote(note.iterator().next());
+			domain.getStrainOriginNote().setNoteChunk(allNotes);
 		}
 
 		// at most one impcNote

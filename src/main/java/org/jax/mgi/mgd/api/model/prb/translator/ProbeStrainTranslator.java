@@ -76,7 +76,7 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 			String allNotes = "";
 			// merge all notes into the first note
 			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk();
+				allNotes += noteDomain.get(i).getNoteChunk() + " ";
 			}
 			domain.setStrainOriginNote(note.iterator().next());
 			domain.getStrainOriginNote().setNoteChunk(allNotes);

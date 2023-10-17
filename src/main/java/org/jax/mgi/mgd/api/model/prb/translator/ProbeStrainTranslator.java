@@ -85,19 +85,40 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		// at most one impcNote
 		if (entity.getImpcNote() != null && !entity.getImpcNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getImpcNote());
+			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
+			String allNotes = "";
+			// merge all notes into the first note
+			for (int i = 0; i < noteDomain.size(); i++) {
+				allNotes += noteDomain.get(i).getNoteChunk() + " ";
+			}			
 			domain.setImpcNote(note.iterator().next());
+			domain.getImpcNote().setNoteChunk(allNotes);
 		}
 
 		// at most one nomenclatureNote
 		if (entity.getNomenNote() != null && !entity.getNomenNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNomenNote());
+			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
+			String allNotes = "";
+			// merge all notes into the first note
+			for (int i = 0; i < noteDomain.size(); i++) {
+				allNotes += noteDomain.get(i).getNoteChunk() + " ";
+			}			
 			domain.setNomenNote(note.iterator().next());
+			domain.getNomenNote().setNoteChunk(allNotes);		
 		}
 
 		// at most one mclNote
 		if (entity.getMclNote() != null && !entity.getMclNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMclNote());
+			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
+			String allNotes = "";
+			// merge all notes into the first note
+			for (int i = 0; i < noteDomain.size(); i++) {
+				allNotes += noteDomain.get(i).getNoteChunk() + " ";
+			}			
 			domain.setMclNote(note.iterator().next());
+			domain.getMclNote().setNoteChunk(allNotes);		
 		}
 
 		// strain attributes

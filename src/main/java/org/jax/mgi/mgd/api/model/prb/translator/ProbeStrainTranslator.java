@@ -73,7 +73,7 @@ public class ProbeStrainTranslator extends BaseEntityDomainTranslator<ProbeStrai
 		if (entity.getStrainOriginNote() != null && !entity.getStrainOriginNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getStrainOriginNote());
 			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = null;
+			String allNotes = "";
 			// merge all notes into the first note
 			for (int i = 0; i < noteDomain.size(); i++) {
 				allNotes += noteDomain.get(i).getNoteChunk();

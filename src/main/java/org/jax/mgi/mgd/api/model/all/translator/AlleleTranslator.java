@@ -276,6 +276,20 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 			domain.getIkmcNote().setNoteChunk(allNotes);
 		}
 		
+		// at most one note
+		if (entity.getProjectidNote() != null && !entity.getProjectidNote().isEmpty()) {
+			NoteTranslator noteTranslator = new NoteTranslator();
+			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getProjectidNote());
+			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
+			String allNotes = "";
+			// merge all notes into the first note
+			for (int i = 0; i < noteDomain.size(); i++) {
+				allNotes += noteDomain.get(i).getNoteChunk() + " ";
+			}		
+			domain.setProjectidNote(note.iterator().next());
+			domain.getProjectidNote().setNoteChunk(allNotes);
+		}
+		
 		return domain;
 	}
 	

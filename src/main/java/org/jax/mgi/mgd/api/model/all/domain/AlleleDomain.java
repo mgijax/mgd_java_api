@@ -89,5 +89,6 @@ public class AlleleDomain extends BaseDomain {
 	private NoteDomain proidNote;
 	private NoteDomain creNote;
 	private NoteDomain ikmcNote;
+	private NoteDomain projectidNote;
 	
 }

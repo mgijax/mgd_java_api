@@ -200,6 +200,12 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1041")
 	private List<Note> ikmcNote;
 
+	//    1052 | Additional Project IDs
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1052")
+	private List<Note> projectidNote;
+	
 	// DO term annotations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)

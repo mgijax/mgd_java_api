@@ -339,6 +339,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setIsFullCoded(rs.getString("isfullcoded"));
 				domain.setJnumID(rs.getString("jnumid"));			
 				domain.setShortCitation(rs.getString("short_citation"));
+				domain.setSynonyms(rs.getString("synonyms"));
 				results.add(domain);
 				indexDAO.clear();			
 			}
@@ -374,13 +375,15 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 				domain.setMarkerType(rs.getString("markertype"));
 				domain.setIndexAssayKey(rs.getString("_indexassay_key"));
 				domain.setIndexAssay(rs.getString("indexassay"));
-				domain.setSequenceNum(rs.getString("sequenceNum"));				domain.setAge(rs.getString("age"));
+				domain.setSequenceNum(rs.getString("sequenceNum"));
+				domain.setAge(rs.getString("age"));
 				domain.setPriority(rs.getString("priority"));
 				domain.setConditional(rs.getString("conditional"));
 				domain.setNotes(rs.getString("comments"));				
 				domain.setIsFullCoded(rs.getString("isfullcoded"));
 				domain.setJnumID(rs.getString("jnumid"));			
 				domain.setShortCitation(rs.getString("short_citation"));
+				domain.setSynonyms(rs.getString("synonyms"));				
 				results.add(domain);
 				indexDAO.clear();
 			}

@@ -25,5 +25,6 @@ public class SummaryGXDIndexDomain extends BaseDomain {
 	private String isFullCoded;
 	private String jnumID;
 	private String shortCitation;
+	private String synonyms;
 
 }

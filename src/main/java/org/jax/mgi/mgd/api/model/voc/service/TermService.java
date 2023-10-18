@@ -225,7 +225,10 @@ public class TermService extends BaseService<TermDomain> {
 			where = where + "\nand t._term_key = " + searchDomain.getTermKey();
 		}
 		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
-			where += "\nand " + multiMatchClause("t.term" , "ilike", searchDomain.getTerm());
+			where += "\nand t.term ilike '" + searchDomain.getTerm() + "'";
+		}
+		if (searchDomain.getNote() != null && !searchDomain.getNote().isEmpty()) {
+			where += "\nand t.note ilike '" + searchDomain.getNote() + "'";
 		}
 		if (searchDomain.getStagesearch() != null && !searchDomain.getStagesearch().isEmpty()) {
 			String ssch = searchDomain.getStagesearch();
@@ -267,6 +270,9 @@ public class TermService extends BaseService<TermDomain> {
 					+ "\nand s._synonymtype_key = 1017"
 					+ "\nand t._term_key = s._object_key"
 					+ "\nand t._vocab_key = " + searchDomain.getVocabKey();
+                        if (searchDomain.getNote() != null && !searchDomain.getNote().isEmpty()) {
+                                synonymWhere += "\nand t.note ilike '" + searchDomain.getNote() + "'";
+                        }
 			synonymUnion = "\nunion\n";
 			synonymUnion = synonymUnion 
 					+ select + "\n"

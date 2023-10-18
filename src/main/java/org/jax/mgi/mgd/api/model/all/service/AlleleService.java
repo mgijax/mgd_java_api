@@ -238,7 +238,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getProidNote(), mgiTypeKey, user);
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getCreNote(), mgiTypeKey, user);
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getIkmcNote(), mgiTypeKey, user);
-		
+		noteService.process(String.valueOf(entity.get_allele_key()), domain.getProjectidNote(), mgiTypeKey, user);
+
 		// process allele reference
 		log.info("processAllele/referenes");
 		referenceAssocService.process(String.valueOf(entity.get_allele_key()), domain.getRefAssocs(), mgiTypeKey, user);
@@ -362,6 +363,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			modified = true;
 		}
 		if (noteService.process(domain.getAlleleKey(), domain.getIkmcNote(), mgiTypeKey, user)) {
+			modified = true;
+		}
+		if (noteService.process(domain.getAlleleKey(), domain.getProjectidNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
 		
@@ -617,6 +621,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_proidNote = false;
 		Boolean from_ikmcNote = false;
 		Boolean from_creNote = false;
+		Boolean from_projectidNote = false;
 		Boolean from_cellLine = false;
 		Boolean from_synonym = false;
 		Boolean from_subtype = false;
@@ -769,6 +774,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand note7.note ilike '" + value + "'" ;
 			from_creNote = true;
 		}
+		if (searchDomain.getProjectidNote() != null && !searchDomain.getProjectidNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getProjectidNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note8.note ilike '" + value + "'" ;
+			from_projectidNote = true;
+		}	
 		
 		// mutant cell lines
 		if (searchDomain.getMutantCellLineAssocs() != null) {			
@@ -931,12 +941,17 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			from = from + ", mgi_note_allele_view note6";
 			where = where + "\nand a._allele_key = note6._object_key";
 			where = where + "\nand note6._notetype_key = 1041";
-		}	
+		}			
 		if (from_creNote == true) {
 			from = from + ", mgi_note_allele_view note7";
 			where = where + "\nand a._allele_key = note7._object_key";
 			where = where + "\nand note7._notetype_key = 1040";
 		}	
+		if (from_projectidNote == true) {
+			from = from + ", mgi_note_allele_view note8";
+			where = where + "\nand a._allele_key = note8._object_key";
+			where = where + "\nand note8._notetype_key = 1052";
+		}		
 		if (from_cellLine == true) {
 			from = from + ", all_allele_cellline_view c";
 			where = where +"\nand a._allele_key = c._allele_key";

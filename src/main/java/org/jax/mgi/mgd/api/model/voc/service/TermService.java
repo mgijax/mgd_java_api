@@ -225,7 +225,7 @@ public class TermService extends BaseService<TermDomain> {
 			where = where + "\nand t._term_key = " + searchDomain.getTermKey();
 		}
 		if (searchDomain.getTerm() != null && !searchDomain.getTerm().isEmpty()) {
-			where += "\nand t.term ilike '" + searchDomain.getTerm() + "'";
+                        where += "\nand " + multiMatchClause("t.term" , "ilike", searchDomain.getTerm());
 		}
 		if (searchDomain.getNote() != null && !searchDomain.getNote().isEmpty()) {
 			where += "\nand t.note ilike '" + searchDomain.getNote() + "'";

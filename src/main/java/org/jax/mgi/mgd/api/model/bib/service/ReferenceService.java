@@ -236,7 +236,18 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			aresults.add(accessionDomain);
 			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);
 		}
-				
+			
+		// process gorefid accession ids
+		if (domain.getGorefid() != null && !domain.getGorefid().isEmpty()) {
+			AccessionDomain accessionDomain = new AccessionDomain();
+			List<AccessionDomain> aresults = new ArrayList<AccessionDomain>();
+			accessionDomain.setProcessStatus("c");
+			accessionDomain.setAccID(domain.getGorefid());
+			accessionDomain.setLogicaldbKey("185");
+			aresults.add(accessionDomain);
+			accessionService.process(String.valueOf(entity.get_refs_key()), aresults, "Reference", user);
+		}
+		
 		// reload bib_citation_cache
 		String cmd = "select count(*) from BIB_reloadCache (" + entity.get_refs_key() + ")";
 		log.info("cmd: " + cmd);

@@ -48,6 +48,7 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
  		}
  		
  		if (entity.getAlleleVariantSOIds() != null && !entity.getAlleleVariantSOIds().isEmpty()) {
+ 			log.info("allelevariantsoids: " + entity.getAlleleVariantSOIds().size());
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAlleleVariantSOIds());
  			domain.setAlleleVariantSOIds(IteratorUtils.toList(acc.iterator()));
  		}

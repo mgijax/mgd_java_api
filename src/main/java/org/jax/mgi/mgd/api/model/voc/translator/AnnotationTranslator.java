@@ -51,6 +51,9 @@ public class AnnotationTranslator extends BaseEntityDomainTranslator<Annotation,
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getAlleleVariantSOIds());
  			domain.setAlleleVariantSOIds(IteratorUtils.toList(acc.iterator()));
  		}
+ 		else {
+ 			domain.setAlleleVariantSOIds(null);
+ 		}
  		
  		if (entity.getMpIds() != null && !entity.getMpIds().isEmpty()) {
  			Iterable<SlimAccessionDomain> acc = accessionTranslator.translateEntities(entity.getMpIds());

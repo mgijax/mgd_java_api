@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleVariantService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
 import io.swagger.annotations.Api;
@@ -103,5 +104,20 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 		
 		return results;
 	}
+
+	@POST
+	@ApiOperation(value = "Get Jannovar HGVS string by chr")
+	@Path("/getHGVSByChr")
+	public List<String> getHGVSByChr(String chrInfo) {
+	
+		List<String> results = new ArrayList<String>();
+
+		try {
+			results = variantService.getHGVSByChr(chrInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+		return results;
+	}	
 }

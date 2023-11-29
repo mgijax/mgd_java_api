@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.all.service;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,10 +21,12 @@ import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleVariantTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
+import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
@@ -657,5 +660,35 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		
 		return results;
 	}
+	
+	@Transactional		
+	public List<String> getHGVSByChr(String chrInfo) throws IOException, InterruptedException {
+		// see lib/java/jannovar-cli-0.38.jar
 		
+		// these swarm variables are in 'app.properties'
+    	String utilitiesScript = System.getProperty("jannovarUtilities");
+        
+        // input:  chromosome info
+
+        // output: empty string; because we have to return something
+    	List<String> results = new ArrayList<String>();
+        
+		String runCmd = utilitiesScript;
+        runCmd = runCmd + " -c " + chrInfo;
+		
+		// run the runCmd
+		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
+		RunCommand runner = RunCommand.runCommand(runCmd);
+		
+		// check exit code from RunCommand
+		if (runner.getExitCode() == 0) {
+			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+		}
+		else {
+			log.info(Constants.LOG_FAIL_EIUTILITIES);
+		}			
+		
+		return results;
+	}
+	
 }

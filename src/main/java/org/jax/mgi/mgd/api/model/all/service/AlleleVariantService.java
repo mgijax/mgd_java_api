@@ -674,7 +674,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
     	List<String> results = new ArrayList<String>();
         
 		String runCmd = utilitiesScript;
-        runCmd = runCmd + "'" + chrInfo + "'";
+        runCmd = runCmd + " '" + chrInfo + "'";
         
 		// run the runCmd
 		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);

@@ -683,6 +683,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// check exit code from RunCommand
 		if (runner.getExitCode() == 0) {
 			log.info(Constants.LOG_SUCCESS_EIUTILITIES);
+			results.add(runner.getStdOut());
 		}
 		else {
 			log.info(Constants.LOG_FAIL_EIUTILITIES);

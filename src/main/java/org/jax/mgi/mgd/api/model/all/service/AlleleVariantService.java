@@ -666,7 +666,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// see lib/java/jannovar-cli-0.38.jar
 		
 		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("jannovarUtilities");
+    	String utilitiesScript = System.getProperty("swarm.ds.jannovarUtilities");
         
         // input:  chromosome info
 

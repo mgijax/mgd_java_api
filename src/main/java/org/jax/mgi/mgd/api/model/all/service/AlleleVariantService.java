@@ -662,7 +662,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	}
 	
 	@Transactional		
-	public List<String> getHGVSByChr(String chrInfo) throws IOException, InterruptedException {
+	public List<String> getHGVS(String searchHGVS) throws IOException, InterruptedException {
 		// see lib/java/jannovar-cli-0.38.jar
 		
 		// these swarm variables are in 'app.properties'
@@ -674,7 +674,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
     	List<String> results = new ArrayList<String>();
         
 		String runCmd = utilitiesScript;
-        runCmd = runCmd + " '" + chrInfo + "'";
+        runCmd = runCmd + " '" + searchHGVS + "'";
         
 		// run the runCmd
 		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
@@ -685,7 +685,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 			//log.info(Constants.LOG_SUCCESS_EIUTILITIES);
 			String[] tokens = runner.getStdOut().split("\t");
 			results.add(tokens[5]);
-			log.info("getStdOut: " + results.get(0).toString());
+			log.info("getHGVSByChr: " + results.get(0).toString());
 		}
 		else {
 			log.info(Constants.LOG_FAIL_EIUTILITIES + runner.getExitCode());

@@ -106,14 +106,14 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	}
 
 	@POST
-	@ApiOperation(value = "Get HGVS string by chr")
-	@Path("/getHGVSByChr")
-	public List<String> getHGVSByChr(String chrInfo) {
+	@ApiOperation(value = "Get HGVS by proper format")
+	@Path("/getHGVS")
+	public List<String> getHGVSByChr(String searchHGVS) {
 	
 		List<String> results = new ArrayList<String>();
 
 		try {
-			results = variantService.getHGVSByChr(chrInfo);
+			results = variantService.getHGVS(searchHGVS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

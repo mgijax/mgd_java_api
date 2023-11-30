@@ -679,15 +679,12 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// run the runCmd
 		log.info(Constants.LOG_INPROGRESS_EIUTILITIES + runCmd);
 		RunCommand runner = RunCommand.runCommand(runCmd);
-		log.info("runner getStdOut: " + runner.getStdOut());		
-		log.info("runner getExistCode: " + runner.getExitCode ());		
 
 		// check exit code from RunCommand
 		if (runner.getExitCode() == 0) {
 			//log.info(Constants.LOG_SUCCESS_EIUTILITIES);
 			results.add(runner.getStdOut());
-			log.info("runner good: " + runner.getStdOut());	
-			log.info("runner other: " + runner.toString());
+			log.info("runner getStdOut: " + runner.getStdOut());	
 		}
 		else {
 			log.info(Constants.LOG_FAIL_EIUTILITIES + runner.getExitCode());

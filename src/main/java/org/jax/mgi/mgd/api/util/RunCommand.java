@@ -240,7 +240,7 @@ public class RunCommand
             process.waitFor();
 
             // read & save input stream
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));                    
             while ((line = inputReader.readLine()) != null)
             	this.stdout = this.stdout + line + "\n";
             

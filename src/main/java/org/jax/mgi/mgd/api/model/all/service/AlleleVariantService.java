@@ -670,7 +670,7 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
         
         // input:  chromosome info
 
-        // output: empty string; because we have to return something
+    	// output: return results of jannovar query
     	List<String> results = new ArrayList<String>();
         
 		String runCmd = utilitiesScript;
@@ -683,7 +683,8 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// check exit code from RunCommand
 		if (runner.getExitCode() == 0) {
 			//log.info(Constants.LOG_SUCCESS_EIUTILITIES);
-			results.add(runner.getStdOut());
+			String[] tokens = runner.getStdOut().split("\t");
+			results.add(tokens[5]);
 			log.info("getStdOut: " + results.get(0).toString());
 		}
 		else {

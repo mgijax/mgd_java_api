@@ -106,7 +106,7 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	}
 
 	@POST
-	@ApiOperation(value = "Get Jannovar HGVS string by chr")
+	@ApiOperation(value = "Get HGVS string by chr")
 	@Path("/getHGVSByChr")
 	public List<String> getHGVSByChr(String chrInfo) {
 	

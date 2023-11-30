@@ -235,6 +235,7 @@ public class RunCommand
 
             // execute 'cmdArr' in a new process
             Process process = Runtime.getRuntime().exec(cmdArr, this.envp);
+            process.waitFor();
 
             // read input stream
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
@@ -249,7 +250,7 @@ public class RunCommand
 	        // wait until that process has finished
             // save exit value
             //System.out.println("waitFor(): start");  
-            process.waitFor();
+            //process.waitFor();
             this.exitcode = process.exitValue();
             this.cmdRun = true;
             //System.out.println("waitFor(): stop");          

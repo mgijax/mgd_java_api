@@ -133,8 +133,8 @@ public class RunCommand
     {
         this.cmd = cmdStr;
         this.cmdRun = false;
-        this.stdout = null;
-        this.stderr = null;
+        this.stdout = "";
+        this.stderr = "";
         this.exitcode = 0;
     }
 
@@ -339,10 +339,10 @@ public class RunCommand
     private boolean cmdRun = false;
 
     // stdout from process running command
-    private String stdout = null;
+    private String stdout = "";
 
     // stderr from process running command
-    private String stderr = null;
+    private String stderr = "";
 
     // exit code from process running command
     private int exitcode = 0;

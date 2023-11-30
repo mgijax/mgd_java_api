@@ -235,25 +235,25 @@ public class RunCommand
 
             // execute 'cmdArr' in a new process
             Process process = Runtime.getRuntime().exec(cmdArr, this.envp);
+            
+	        // wait until that process has finished
             process.waitFor();
 
-            // read input stream
+            // read & save input stream
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
             while ((line = inputReader.readLine()) != null)
             	this.stdout = this.stdout + line + "\n";
             
-            // read error stream
+            // read & save error stream
             BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
 	        while ((line = errorReader.readLine()) != null)
 	            this.stdout = this.stdout + line + "\n";
 
-	        // wait until that process has finished
-            // save exit value
-            //System.out.println("waitFor(): start");  
-            //process.waitFor();
+	        // save exitValue()
             this.exitcode = process.exitValue();
+            
+            // set cmdRun = true/has finished
             this.cmdRun = true;
-            //System.out.println("waitFor(): stop");          
         }
         catch (IOException e) {
             //throw new IOException("RunCommand Error: No command to run.");

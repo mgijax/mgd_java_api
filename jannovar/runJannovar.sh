@@ -3,16 +3,14 @@
 #
 # Run Jannavar Utility
 #
-# Usage:  runJannovar.csh [text]
-#
-# example:  runJannovar.csh "chrX:106092104G>A"
-#
-# chr[allele chromosome]:[curated genomic start][curated genomic reference allele]>[curated genomic variant allele]
-# which is built by the pwi/variant/VariantController.js/copyHGVS()
+# Usage:  runJannovar.sh [text]
 #
 # example:
 # Col1a1<m1Btlr>
 # chr11:94838000GC>AT
+#
+# split by "\t"
+# chr11:94838000GC>AT     INTERGENIC_VARIANT,INTERGENIC_VARIANT   Gm11544:NM_001205037.1::,Gm11543:XM_975056.4::  .;.
 #
 
 cd `dirname $0` && . ../Configuration

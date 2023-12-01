@@ -37,7 +37,7 @@ echo "swarm.ds.gxdexpressionUtilities=${PYTHON} ${DBUTILS}/mgicacheload/gxdexpre
 echo "swarm.ds.gorefsUtilities=${PYTHON} ${QCRPTS}/pwi/GORefs.py" >> ${PROP_FILE}
 echo "swarm.ds.pixeldb=/data/pixeldb" >> ${PROP_FILE}
 echo "swarm.ds.pixeldbCounter=/data/pixeldb/accession/counter" >> ${PROP_FILE}
-echo "swarm.ds.jannovarUtilities=${PG_DBUTILS}/bin/jannovar/runJannovar.csh" >> ${PROP_FILE}
+echo "swarm.ds.jannovarUtilities=${MGD_JAVA_API}/jannovar/runJannovar.sh" >> ${PROP_FILE}
 
 
 make all

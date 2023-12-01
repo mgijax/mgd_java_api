@@ -1,0 +1,23 @@
+Install Jannovar on PWI server (bhmgipwi01ld, bhmgipwi01lt, bhmgipwi01lp)
+These server have maven (see mgiconfig)
+
+MAVEN_HOME=/opt/apache-maven-3.5.4
+
+Quickstart — Jannovar  documentation 
+https://doc-openbio.readthedocs.io/projects/jannovar/en/master/quickstart.html
+
+unzip jannovar-0.38.zip
+cd jannovar-0.38
+mvn package
+
+jar files are created:  
+jannovar-cli/target/jannovar-cli-0.38.jar
+
+mv jannovar-cli-0.38.jar pgdbutilities/bin/jannovar
+
+Tried to download this data:
+https://zenodo.org/record/5410367/files/refseq_139_mm39.ser?download=1
+
+it was bad, so Lauren's sent me his laptop copy:
+mm39_refseq_curated.ser
+

@@ -17,3 +17,4 @@ swarm.ds.gxdexpressionUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/d
 swarm.ds.gorefsUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/qcreports_db/pwi/GORefs.py
 swarm.ds.pixeldb=/data/pixeldb
 swarm.ds.pixeldbCounter=/data/pixeldb/accession/counter
+swarm.ds.jannovarUtilities=/usr/local/mgi/live/mgd_java_api/jannovar/runJannovar.sh

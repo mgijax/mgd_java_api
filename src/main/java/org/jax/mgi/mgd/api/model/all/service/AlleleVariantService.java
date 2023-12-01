@@ -663,13 +663,13 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	
 	@Transactional		
 	public List<String> getHGVS(String searchHGVS) throws IOException, InterruptedException {
-		// see lib/java/jannovar-cli-0.38.jar
+		// this method will call jannovarUtilities product
+		// input:  searchHGVS
+		// output:  return values from jannovarUtilities
 		
 		// these swarm variables are in 'app.properties'
     	String utilitiesScript = System.getProperty("swarm.ds.jannovarUtilities");
         
-        // input:  chromosome info
-
     	// output: return results of jannovar query
     	List<String> results = new ArrayList<String>();
         

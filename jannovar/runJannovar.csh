@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/sh
 
 #
 # Run Jannavar Utility
@@ -15,7 +15,7 @@
 # chr11:94838000GC>AT
 #
 
-cd `dirname $0` && source ../Configuration
+cd `dirname $0` && . ../Configuration
 
 ${JAVA} -Xms2G -Xmx2G -jar ${MGD_JAVA_API}/jannovar/jannovar-cli-0.38.jar annotate-pos -d ${MGD_JAVA_API}/jannovar/refseq_108_mm10.ser --3-letter-amino-acids --show-all -c $1
 

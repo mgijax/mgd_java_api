@@ -15,8 +15,9 @@ jannovar-cli/target/jannovar-cli-0.38.jar
 
 mv jannovar-cli-0.38.jar pgdbutilities/bin/jannovar
 
-Download this data:
+Tried to download this data:
+https://zenodo.org/record/5410367/files/refseq_139_mm39.ser?download=1
 
-https://zenodo.org/record/5410367/files/refseq_108_mm10.ser?download=1
-mv refseq_108_mm10.ser pgdbutilities/bin/jannovar
+it was bad, so Lauren's sent me his laptop copy:
+mm39_refseq_curated.ser
 

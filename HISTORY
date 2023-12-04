@@ -4,6 +4,12 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+
+TAG: mgd_java_api-6-0-22-66
+DATE: 12/04/2023
+STAFF: lec
+wts2-511/flr-540/Variant Module: automate HGVS string creation/analysis
+
 TAG: mgi_java_api-6-0-22-64
 TAG: mgi_java_api-6-0-22-65
 DATE: 10/18/2023

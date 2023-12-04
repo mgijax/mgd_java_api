@@ -682,7 +682,6 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 		// check exit code from RunCommand
 		if (runner.getExitCode() == 0) {
-			//String[] tokens = runner.getStdOut().split("\t");
 			results.add(runner.getStdOut());
 			log.info("getHGVSByChr: " + results.get(0).toString());
 		}

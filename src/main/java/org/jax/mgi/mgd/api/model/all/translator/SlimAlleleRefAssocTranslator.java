@@ -23,6 +23,7 @@ public class SlimAlleleRefAssocTranslator extends BaseEntityDomainTranslator<All
 				domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 				domain.setMarkerSymbol(entity.getMarker().getSymbol());
 				domain.setAlleleStatus(entity.getAlleleStatus().getTerm());
+				domain.setAlleleStatusKey(String.valueOf(entity.getAlleleStatus().get_term_key()));
 				domain.setChromosome(entity.getMarker().getChromosome());
 				domain.setStrand(entity.getMarker().getLocationCache().getStrand());				
 			}

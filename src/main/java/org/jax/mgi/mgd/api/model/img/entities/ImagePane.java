@@ -3,33 +3,31 @@ package org.jax.mgi.mgd.api.model.img.entities;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.annotations.OrderBy;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Image Pane Entity Object")
+@Schema(description = "Image Pane Entity Object")
 @Table(name="img_imagepane")
 public class ImagePane extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="img_imagepane_generator")
 	@SequenceGenerator(name="img_imagepane_generator", sequenceName = "img_imagepane_seq", allocationSize=1)
-	@ApiModelProperty(value="primary key")
+	@Schema(name="primary key")
 	private int _imagepane_key;	
 	private Integer _image_key;
 	private String paneLabel;

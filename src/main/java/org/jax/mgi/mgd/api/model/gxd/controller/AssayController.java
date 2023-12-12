@@ -3,16 +3,8 @@ package org.jax.mgi.mgd.api.model.gxd.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeReplaceDomain;
@@ -28,11 +20,18 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/assay")
-@Api(value = "Assay Endpoints")
+@Tag(name = "Assay Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AssayController extends BaseController<AssayDomain> {
@@ -87,14 +86,14 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from gxd_assay table")
+	@Operation(description = "Get the object count from gxd_assay table")
 	@Path("/getObjectCount")
 	public SearchResults<AssayDomain> getObjectCount() {
 		return assayService.getObjectCount();
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns Assay domain")
+	@Operation(description = "Search/returns Assay domain")
 	@Path("/search")
 	public List<SlimAssayDomain> search(AssayDomain searchDomain) {
 	
@@ -110,7 +109,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get Genotype Set Members by Specimen and Set/User")
+	@Operation(description = "Get Genotype Set Members by Specimen and Set/User")
 	@Path("/getGenotypeBySetUser")	
 	public List<MGISetMemberGenotypeDomain> getGenotypeBySetUser(SlimAssayDomain domain) {
 			
@@ -126,7 +125,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get EMAPA Set Members by Specimen and Set/User")
+	@Operation(description = "Get EMAPA Set Members by Specimen and Set/User")
 	@Path("/getEmapaInSituBySetUser")
 	public List<MGISetMemberEmapaDomain> getEmapaBySetUser(SlimEmapaDomain domain) {
 			
@@ -142,7 +141,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get EMAPA Set Members by Specimen and Set/User")
+	@Operation(description = "Get EMAPA Set Members by Specimen and Set/User")
 	@Path("/getEmapaGelBySetUser")
 	public List<MGISetMemberEmapaDomain> getEmapaGelBySetUser(SlimEmapaDomain domain) {
 			
@@ -158,7 +157,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get CellType Set Members by Specimen and Set/User")
+	@Operation(description = "Get CellType Set Members by Specimen and Set/User")
 	@Path("/getCellTypeInSituBySetUser")
 	public List<MGISetMemberCellTypeDomain> getCellTypeBySetUser(SlimCellTypeDomain domain) {
 			
@@ -174,7 +173,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Add to EMAPA clipboard")
+	@Operation(description = "Add to EMAPA clipboard")
 	@Path("/addToEmapaClipboard")
 	public List<SlimAssayDomain> addToEmapaClipboard(SlimAssayDomain domain) {
 	
@@ -190,7 +189,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Add to Cell Type clipboard")
+	@Operation(description = "Add to Cell Type clipboard")
 	@Path("/addToCellTypeClipboard")
 	public List<SlimAssayDomain> addToCellTypeClipboard(SlimAssayDomain domain) {
 	
@@ -206,7 +205,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Add to Genotype clipboard")
+	@Operation(description = "Add to Genotype clipboard")
 	@Path("/addToGenotypeClipboard")
 	public List<SlimAssayDomain> addToGenotypeClipboard(SlimAssayDomain domain) {
 	
@@ -222,7 +221,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Process Replace Genotype/returns GenotypeReplaceDomain")
+	@Operation(description = "Process Replace Genotype/returns GenotypeReplaceDomain")
 	@Path("/processReplaceGenotype")
 	public List<GenotypeReplaceDomain> processReplaceGenotype(GenotypeReplaceDomain domain) {
 	
@@ -241,7 +240,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	// get assay by allele
 
 	@GET
-	@ApiOperation(value = "Get list of assay domains by allele accession id")
+	@Operation(description = "Get list of assay domains by allele accession id")
 	@Path("/getAssayByAllele")
 	public List<SlimAssayDomain> getAssayByAllele(@QueryParam("accid") String accid) {
 		
@@ -256,7 +255,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadAssayByAllele")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadAssayByAllele(@QueryParam("accid") String accid) {
@@ -267,7 +266,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	// get assay by antibody
 
 	@GET
-	@ApiOperation(value = "Get list of assay domains by antibody accession id")
+	@Operation(description = "Get list of assay domains by antibody accession id")
 	@Path("/getAssayByAntibody")
 	public List<SlimAssayDomain> getAssayByAntibody(@QueryParam("accid") String accid) {
 		
@@ -283,7 +282,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}	
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadAssayByAntibody")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadAssayByAntibody(@QueryParam("accid") String accid) {
@@ -294,7 +293,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	// get assay by marker
 
 	@GET
-	@ApiOperation(value = "Get list of assay domains by marker accession id")
+	@Operation(description = "Get list of assay domains by marker accession id")
 	@Path("/getAssayByMarker")
 	public List<SlimAssayDomain> getAssayByMarker(@QueryParam("accid") String accid) {
 		
@@ -310,7 +309,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}	
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadAssayByMarker")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadAssayByMarker(@QueryParam("accid") String accid) {
@@ -321,7 +320,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	// get assay by probe
 
 	@GET
-	@ApiOperation(value = "Get list of assay domains by probe accession id")
+	@Operation(description = "Get list of assay domains by probe accession id")
 	@Path("/getAssayByProbe")
 	public List<SlimAssayDomain> getAssayByProbe(@QueryParam("accid") String accid) {
 		
@@ -337,7 +336,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadAssayByProbe")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadAssayByProbe(@QueryParam("accid") String accid) {
@@ -348,7 +347,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	// get assay by probe
 
 	@GET
-	@ApiOperation(value = "Get list of assay domains by jnumid")
+	@Operation(description = "Get list of assay domains by jnumid")
 	@Path("/getAssayByRef")
 	public List<SlimAssayDomain> getAssayByRef(@QueryParam("accid") String jnumid) {
 		
@@ -364,7 +363,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadAssayByRef")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadAssayByRef(@QueryParam("accid") String accid) {
@@ -375,7 +374,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	// get result by cell type
 
 	@GET
-	@ApiOperation(value = "Get list of summary result domains by cell type")
+	@Operation(description = "Get list of summary result domains by cell type")
 	@Path("/getResultByCellType")
 	public SearchResults<SummaryResultDomain> getResultByCellType(
                 @QueryParam("accid") String accid,
@@ -395,7 +394,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}	
 
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadResultByCellType")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadResultByCellType(@QueryParam("accid") String accid) {
@@ -407,7 +406,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	// get result by marker
 
 	@GET
-	@ApiOperation(value = "Get list of summary result domains by markerid")
+	@Operation(description = "Get list of summary result domains by markerid")
 	@Path("/getResultByMarker")
 	public SearchResults<SummaryResultDomain> getResultByMarker(
                 @QueryParam("accid") String accid,
@@ -427,7 +426,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadResultByMarker")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadResultByMarker(@QueryParam("accid") String accid) {
@@ -438,7 +437,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	// get result by reference
 
 	@GET
-	@ApiOperation(value = "Get list of summary result domains by reference jnumid")
+	@Operation(description = "Get list of summary result domains by reference jnumid")
 	@Path("/getResultByRef")
 	public SearchResults<SummaryResultDomain> getResultByRef(
                 @QueryParam("accid") String accid,
@@ -457,7 +456,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadResultByRef")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadResultByRef(@QueryParam("accid") String accid) {
@@ -468,7 +467,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	// get result by structure
 
 	@GET
-	@ApiOperation(value = "Get list of summary result domains by structure")
+	@Operation(description = "Get list of summary result domains by structure")
 	@Path("/getResultByStructure")
 	public SearchResults<SummaryResultDomain> getResultByStructure(
                 @QueryParam("accid") String accid,
@@ -488,7 +487,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}	
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadResultByStructure")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadResultByStructure(@QueryParam("accid") String accid) {
@@ -496,7 +495,7 @@ public class AssayController extends BaseController<AssayDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get Assay Double Label (DL) by assay key")
+	@Operation(description = "Get Assay Double Label (DL) by assay key")
 	@Path("/getAssayDLByKey")	
 	public List<SlimAssayDLDomain> getAssayDLByKey(String assayKey) {
 		

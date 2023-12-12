@@ -1,13 +1,13 @@
 package org.jax.mgi.mgd.api.model.acc.domain;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "AccessionReference Domain")
+@Schema(description = "AccessionReference Domain")
 public class AccessionReferenceDomain extends BaseDomain {
 
 	private String accessionKey;

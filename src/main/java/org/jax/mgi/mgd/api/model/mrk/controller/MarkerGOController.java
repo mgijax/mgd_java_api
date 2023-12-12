@@ -3,15 +3,8 @@ package org.jax.mgi.mgd.api.model.mrk.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.DenormMarkerAnnotDomain;
@@ -26,11 +19,17 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/markerGOannot")
-@Api(value = "Marker GO Annotations Endpoints")
+@Tag(name = "Marker GO Annotations Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MarkerGOController extends BaseController<DenormMarkerAnnotDomain> {
@@ -74,21 +73,21 @@ public class MarkerGOController extends BaseController<DenormMarkerAnnotDomain> 
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from voc_annot table where _annottype_key = 1021")
+	@Operation(description = "Get the object count from voc_annot table where _annottype_key = 1021")
 	@Path("/getObjectCount")
 	public SearchResults<DenormMarkerAnnotDomain> getObjectCount() {
 		return markerAnnotService.getObjectCount(annotType);
 	}
 	
 	@POST
-	@ApiOperation(value = "Get ordered searh results")
+	@Operation(description = "Get ordered searh results")
 	@Path("/getOrderBy")
 	public SearchResults<DenormAnnotationDomain> getOrderBy(DenormMarkerAnnotDomain domain) {
 		return markerAnnotService.getOrderBy(domain);
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns slim marker domain")
+	@Operation(description = "Search/returns slim marker domain")
 	@Path("/search")
 	public List<SlimMarkerAnnotDomain> search(DenormMarkerAnnotDomain searchDomain) {
 	
@@ -104,14 +103,14 @@ public class MarkerGOController extends BaseController<DenormMarkerAnnotDomain> 
 	}
 
 	@GET
-	@ApiOperation(value = "Get references not coded for GO by marker key")
+	@Operation(description = "Get references not coded for GO by marker key")
 	@Path("/getReferences/{key}")
 	public List<MarkerGOReferenceDomain> getReferences(@PathParam("key") Integer key) {
 		return markerAnnotService.getGOReferences(key);
 	}
 
 	@POST
-	@ApiOperation(value = "Get GO reference report by marker key")
+	@Operation(description = "Get GO reference report by marker key")
 	@Path("/getReferenceReport")
 	public List<SlimMarkerDomain> getReferenceReport(SlimMarkerDomain domain) {
 	

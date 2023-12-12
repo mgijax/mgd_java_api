@@ -3,24 +3,23 @@ package org.jax.mgi.mgd.api.model.bib.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceCitationCacheDomain;
 import org.jax.mgi.mgd.api.model.bib.service.ReferenceCitationCacheService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/referencecitation")
-@Api(value = "Reference Citation Cache Endpoints")
+@Tag(name = "Reference Citation Cache Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ReferenceCitationCacheController extends BaseController<ReferenceCitationCacheDomain> {
@@ -49,7 +48,7 @@ public class ReferenceCitationCacheController extends BaseController<ReferenceCi
 	}
 	
 	@POST
-	@ApiOperation(value = "Search")
+	@Operation(description = "Search")
 	@Path("/search")
 	public List<ReferenceCitationCacheDomain> search(ReferenceCitationCacheDomain searchDomain) {	
 		List<ReferenceCitationCacheDomain> results = new ArrayList<ReferenceCitationCacheDomain>();

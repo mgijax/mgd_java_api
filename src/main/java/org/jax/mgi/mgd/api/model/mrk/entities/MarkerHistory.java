@@ -2,38 +2,36 @@ package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "History Model Object")
+@Schema(description = "History Model Object")
 @Table(name="mrk_history")
 public class MarkerHistory extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="mrk_history_generator")
 	@SequenceGenerator(name="mrk_history_generator", sequenceName = "mrk_history_seq", allocationSize=1)
-	@ApiModelProperty(value="primary key")
+	@Schema(name="primary key")
 	private int _assoc_key;
 	
 	private int _marker_key;

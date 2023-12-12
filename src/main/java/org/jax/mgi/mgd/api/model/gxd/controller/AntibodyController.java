@@ -3,14 +3,8 @@ package org.jax.mgi.mgd.api.model.gxd.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntibodyDomain;
@@ -19,11 +13,16 @@ import org.jax.mgi.mgd.api.model.gxd.service.AntibodyService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/antibody")
-@Api(value = "Antibody Endpoints")
+@Tag(name = "Antibody Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AntibodyController extends BaseController<AntibodyDomain> {
@@ -58,14 +57,14 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from gxd_antibody table")
+	@Operation(description = "Get the object count from gxd_antibody table")
 	@Path("/getObjectCount")
 	public SearchResults<AntibodyDomain> getObjectCount() {
 		return antibodyService.getObjectCount();
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns antibody domain")
+	@Operation(description = "Search/returns antibody domain")
 	@Path("/search")
 	public List<SlimAntibodyDomain> search(AntibodyDomain searchDomain) {
 	
@@ -81,7 +80,7 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	}	
 
 	@POST
-	@ApiOperation(value = "Validate Antibody by accID, returns List of SlimAntibodyDomain")
+	@Operation(description = "Validate Antibody by accID, returns List of SlimAntibodyDomain")
 	@Path("/validateAntibody")
 	public List<SlimAntibodyDomain> validateAntibody(SlimAntibodyDomain searchDomain) {
 	
@@ -97,7 +96,7 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get list of antibody domains by marker accession id")
+	@Operation(description = "Get list of antibody domains by marker accession id")
 	@Path("/getAntibodyByMarker")
 	public List<SummaryAntibodyDomain> getAntibodyByMarker(String accid) {
 		
@@ -113,7 +112,7 @@ public class AntibodyController extends BaseController<AntibodyDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get list of antibody domains by reference jnumid")
+	@Operation(description = "Get list of antibody domains by reference jnumid")
 	@Path("/getAntibodyByRef")
 	public List<SummaryAntibodyDomain> getAntibodyByRef(String jnumid) {
 		

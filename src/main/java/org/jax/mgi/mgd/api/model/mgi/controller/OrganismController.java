@@ -2,14 +2,8 @@ package org.jax.mgi.mgd.api.model.mgi.controller;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.OrganismDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.SlimOrganismDomain;
@@ -17,11 +11,16 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.OrganismService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/organism")
-@Api(value = "Organism Endpoints")
+@Tag(name = "Organism Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class OrganismController extends BaseController<OrganismDomain> {
@@ -56,63 +55,63 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from prb_probe table")
+	@Operation(description = "Get the object count from prb_probe table")
 	@Path("/getObjectCount")
 	public SearchResults<OrganismDomain> getObjectCount() {
 		return organismService.getObjectCount();
 	}
 
 	@POST
-	@ApiOperation(value = "Search")
+	@Operation(description = "Search")
 	@Path("/search")
 	public List<OrganismDomain> search(OrganismDomain searchDomain) {
 		return organismService.search(searchDomain);
 	}
 
 	@POST
-	@ApiOperation(value = "Search for Allele Module/Driver Gene")
+	@Operation(description = "Search for Allele Module/Driver Gene")
 	@Path("/searchDriverGene")
 	public List<OrganismDomain> searchDriverGene() {
 		return organismService.searchDriverGene();
 	}
 	
 	@POST
-	@ApiOperation(value = "Search for Marker module")
+	@Operation(description = "Search for Marker module")
 	@Path("/searchMarker")
 	public List<OrganismDomain> searchMarker() {
 		return organismService.searchMarker();
 	}
 
 	@POST
-	@ApiOperation(value = "Search for Probe module")
+	@Operation(description = "Search for Probe module")
 	@Path("/searchProbe")
 	public List<OrganismDomain> searchProbe() {
 		return organismService.searchProbe();
 	}
 	
 	@POST
-	@ApiOperation(value = "Search for organisms Antigen module")
+	@Operation(description = "Search for organisms Antigen module")
 	@Path("/searchAntigen")
 	public List<OrganismDomain> searchAntigen() {
 		return organismService.searchAntigen();
 	}
 	
 	@POST
-	@ApiOperation(value = "Search for organisms Antibody module")
+	@Operation(description = "Search for organisms Antibody module")
 	@Path("/searchAntibody")
 	public List<OrganismDomain> searchAntibody() {
 		return organismService.searchAntibody();
 	}
 	
 	@POST
-	@ApiOperation(value = "Search for organisms GXD/HT Sample module")
+	@Operation(description = "Search for organisms GXD/HT Sample module")
 	@Path("/searchGXDHTSample")
 	public List<SlimOrganismDomain> searchGXDHTSample() {
 		return organismService.searchGXDHTSample();
 	}	
 	
 	@POST
-	@ApiOperation(value = "Search for organisms Allele Relationship module")
+	@Operation(description = "Search for organisms Allele Relationship module")
 	@Path("/searchAlleleRelationship")
 	public List<SlimOrganismDomain> searchAlleleRelationship() {
 		return organismService.searchAlleleRelationship();

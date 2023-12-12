@@ -3,16 +3,8 @@ package org.jax.mgi.mgd.api.model.img.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.ImageDomain;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssayDomain;
@@ -28,11 +20,18 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/image")
-@Api(value = "Image Endpoints")
+@Tag(name = "Image Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ImageController extends BaseController<ImageDomain> {
@@ -75,14 +74,14 @@ public class ImageController extends BaseController<ImageDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from img_image table")
+	@Operation(description = "Get the object count from img_image table")
 	@Path("/getObjectCount")
 	public SearchResults<ImageDomain> getObjectCount() {
 		return imageService.getObjectCount();
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns slim image domain")
+	@Operation(description = "Search/returns slim image domain")
 	@Path("/search")
 	public List<SlimImageDomain> search(ImageDomain searchDomain) {
 	
@@ -98,7 +97,7 @@ public class ImageController extends BaseController<ImageDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Search by Jnum/returns image domain with image panes")
+	@Operation(description = "Search by Jnum/returns image domain with image panes")
 	@Path("/searchImagePaneByJnum")
 	public List<ImageSubmissionDomain> searchImagePaneByJnum(ImageSubmissionDomain searchDomain) {
 	
@@ -142,7 +141,7 @@ public class ImageController extends BaseController<ImageDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Search Assay Image Panes by image key/returns image pane assay domain")
+	@Operation(description = "Search Assay Image Panes by image key/returns image pane assay domain")
 	@Path("/searchAssayPanesByImage")
 	public List<ImagePaneAssayDomain> searchAssayPanesByImage(Integer imageKey) {
 	
@@ -158,7 +157,7 @@ public class ImageController extends BaseController<ImageDomain> {
 	}	
 
 	@POST
-	@ApiOperation(value = "Get list of image domains by allele accession id")
+	@Operation(description = "Get list of image domains by allele accession id")
 	@Path("/getImageByAllele")
 	public SummaryImageDomain getImageByAllele(String accid) {
 		
@@ -174,7 +173,7 @@ public class ImageController extends BaseController<ImageDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get Assay Image Panes by reference accession id/returns image pane assay domain")
+	@Operation(description = "Get Assay Image Panes by reference accession id/returns image pane assay domain")
 	@Path("/getImagePanesAssayByRef")
 	public List<ImagePaneAssayDomain> getImagePanesAssayByRef(String accid) {
 	

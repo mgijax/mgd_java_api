@@ -1,13 +1,13 @@
 package org.jax.mgi.mgd.api.model.all.domain;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Slim Allele DO Domain")
+@Schema(description = "Slim Allele DO Domain")
 public class SlimAlleleDODomain extends BaseDomain {
 	// this domain is used by get() to determine if DO annotations are duplicates
 	

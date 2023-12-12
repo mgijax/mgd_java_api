@@ -3,40 +3,38 @@ package org.jax.mgi.mgd.api.model.gxd.entities;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.annotations.Where;
-
 import org.jax.mgi.mgd.api.model.BaseEntity;
+import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPA;
-import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "HTSample Model Object")
+@Schema(description = "HTSample Model Object")
 @Table(name="gxd_htsample")
 public class HTSample extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="gxd_htsample_generator")
 	@SequenceGenerator(name="gxd_htsample_generator", sequenceName = "gxd_htsample_seq", allocationSize=1)
-	@ApiModelProperty(value="primary key")
+	@Schema(name="primary key")
 	private Integer _sample_key;
 	private Integer _experiment_key;
  	private String name;

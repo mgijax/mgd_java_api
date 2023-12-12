@@ -2,15 +2,15 @@ package org.jax.mgi.mgd.api.model.voc.domain;
 
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Evidence Domain")
+@Schema(description = "Evidence Domain")
 public class EvidenceDomain extends BaseDomain {
 
 	private String processStatus;

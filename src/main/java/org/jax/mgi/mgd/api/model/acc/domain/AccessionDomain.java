@@ -2,14 +2,14 @@ package org.jax.mgi.mgd.api.model.acc.domain;
 
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Accession Domain")
+@Schema(description = "Accession Domain")
 public class AccessionDomain extends BaseDomain {
 
 	private String processStatus;

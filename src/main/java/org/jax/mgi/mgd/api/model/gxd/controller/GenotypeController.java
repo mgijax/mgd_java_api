@@ -3,17 +3,8 @@ package org.jax.mgi.mgd.api.model.gxd.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDataSetDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeDomain;
@@ -28,11 +19,19 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/genotype")
-@Api(value = "Genotype Endpoints")
+@Tag(name = "Genotype Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GenotypeController extends BaseController<GenotypeDomain> {
@@ -103,14 +102,14 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from gxd_genotype table")
+	@Operation(description = "Get the object count from gxd_genotype table")
 	@Path("/getObjectCount")
 	public SearchResults<GenotypeDomain> getObjectCount() {
 		return genotypeService.getObjectCount();
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns slim genotype domain")
+	@Operation(description = "Search/returns slim genotype domain")
 	@Path("/search")
 	public List<SlimGenotypeDomain> search(GenotypeDomain searchDomain) {
 	
@@ -126,21 +125,21 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Get genotype data sets by genotype key")
+	@Operation(description = "Get genotype data sets by genotype key")
 	@Path("/getDataSets/{key}")
 	public List<GenotypeDataSetDomain> getDataSet(@PathParam("key") Integer key) {
 		return genotypeService.getDataSets(key);
 	}
 	
 	@GET
-	@ApiOperation(value = "Search genotypes by jnum key")
+	@Operation(description = "Search genotypes by jnum key")
 	@Path("/searchDataSets/{key}")
 	public List<SlimGenotypeDomain> searchDataSet(@PathParam("key") Integer key) {
 		return genotypeService.searchDataSets(key);
 	}
 
 	@POST
-	@ApiOperation(value = "Validate Genotype exists, returns List of SlimGenotypeDomain")
+	@Operation(description = "Validate Genotype exists, returns List of SlimGenotypeDomain")
 	@Path("/validateGenotype")
 	public List<SlimGenotypeDomain> validateGenotype(SlimGenotypeDomain searchDomain) {
 	
@@ -156,7 +155,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get list of genotype domains by allele key")
+	@Operation(description = "Get list of genotype domains by allele key")
 	@Path("/getGenotypesByAllele")
 	public List<GenotypeDomain> getGenotypesByAllele(String key) {
 		
@@ -172,7 +171,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get list of genotype domains by reference jnum id")
+	@Operation(description = "Get list of genotype domains by reference jnum id")
 	@Path("/getGenotypeByRef")
 	public SearchResults<SummaryGenotypeDomain> getGenotypeByRef(
 		@QueryParam("accid") String accid,
@@ -192,7 +191,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadGenotypeByRef")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response downloadGenotypeByRef(@QueryParam("accid") String accid) {
@@ -200,7 +199,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get list of genotype domains by acc ids")
+	@Operation(description = "Get list of genotype domains by acc ids")
 	@Path("/getGenotypeByAccIDs")
 	public SearchResults<SummaryGenotypeDomain> getGenotypeByAccIDs(String accid) {
 
@@ -216,7 +215,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadGenotypeByAccIDs")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response downloadGenotypeByAccIDs(@QueryParam("accid") String accid) {
@@ -224,7 +223,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Get list of genotype domains by clipboard userid")
+	@Operation(description = "Get list of genotype domains by clipboard userid")
 	@Path("/getGenotypeByClipboard")
 	public SearchResults<SummaryGenotypeDomain> getGenotypeByClipboard(
 		@QueryParam("accid") String userid,
@@ -244,7 +243,7 @@ public class GenotypeController extends BaseController<GenotypeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadGenotypeByClipboard")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response downloadGenotypeByClipboard(@QueryParam("accid") String userid) {

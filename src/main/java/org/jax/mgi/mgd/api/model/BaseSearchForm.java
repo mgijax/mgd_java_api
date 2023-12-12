@@ -2,25 +2,25 @@ package org.jax.mgi.mgd.api.model;
 
 import java.util.Map;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @ApiModel(value="Base Search Form")
+@Getter @Setter @Schema(description="Base Search Form")
 public abstract class BaseSearchForm {
 
-	@ApiModelProperty(hidden=true)
+	@Schema(hidden=true)
 	protected String orderBy;
-	@ApiModelProperty(hidden=true)
+	@Schema(hidden=true)
 	protected Integer pageNum;
-	@ApiModelProperty(hidden=true)
+	@Schema(hidden=true)
 	protected Integer pageSize;
-	@ApiModelProperty(hidden=true)
+	@Schema(hidden=true)
 	protected Integer searchDepth = 1;
 	
 	// <Database Field, Value to Search for>
-	@ApiModelProperty(hidden=true)
+	@Schema(hidden=true)
 	public abstract Map<String, Object> getSearchFields();
 	
 }

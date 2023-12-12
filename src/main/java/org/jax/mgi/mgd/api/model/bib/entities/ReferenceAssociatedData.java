@@ -1,18 +1,17 @@
 package org.jax.mgi.mgd.api.model.bib.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
-import io.swagger.annotations.ApiModel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Reference Associated Data Model Object")
+@Schema(description = "Reference Associated Data Model Object")
 @Table(name="bib_associateddata_view")
 public class ReferenceAssociatedData extends BaseEntity {
 

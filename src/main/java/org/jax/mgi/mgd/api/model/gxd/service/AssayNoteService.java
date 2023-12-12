@@ -2,10 +2,6 @@ package org.jax.mgi.mgd.api.model.gxd.service;
 
 import java.util.Date;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AssayNoteDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AssayNoteDomain;
@@ -15,6 +11,10 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class AssayNoteService extends BaseService<AssayNoteDomain> {

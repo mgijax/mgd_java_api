@@ -3,14 +3,8 @@ package org.jax.mgi.mgd.api.model.prb.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
@@ -18,11 +12,16 @@ import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/source")
-@Api(value = "Source Endpoints")
+@Tag(name = "Source Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
@@ -52,7 +51,7 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from prb_source table")
+	@Operation(description = "Get the object count from prb_source table")
 	@Path("/getObjectCount")
 	public SearchResults<ProbeSourceDomain> getObjectCount() {
 		return probeSourceService.getObjectCount();
@@ -64,7 +63,7 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Search/returns probe source domain")
+	@Operation(description = "Search/returns probe source domain")
 	@Path("/search")
 	public List<ProbeSourceDomain> search(ProbeSourceDomain searchDomain) {
 	
@@ -80,7 +79,7 @@ public class ProbeSourceController extends BaseController<ProbeSourceDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Search Library Set")
+	@Operation(description = "Search Library Set")
 	@Path("/searchLibrarySet")
 	public List<SlimProbeSourceDomain> searchLibrarySet() {
 

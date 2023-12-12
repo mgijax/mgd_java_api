@@ -3,14 +3,8 @@ package org.jax.mgi.mgd.api.model.all.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleFearDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearDomain;
@@ -24,11 +18,16 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/allelefear")
-@Api(value = "Allele Fear Endpoints")
+@Schema(description = "Allele Fear Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AlleleFearController extends BaseController<AlleleFearDomain> {
@@ -69,14 +68,14 @@ public class AlleleFearController extends BaseController<AlleleFearDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from mgi_relationship_Fear_view")
+	@Operation(description = "Get the object count from mgi_relationship_Fear_view")
 	@Path("/getObjectCount")
 	public SearchResults<AlleleFearDomain> getObjectCount() {
 		return alleleFearService.getObjectCount();
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns slim allele fear domain")
+	@Operation(description = "Search/returns slim allele fear domain")
 	@Path("/search")
 	public List<SlimAlleleFearDomain> search(AlleleFearDomain searchDomain) {
 	
@@ -92,7 +91,7 @@ public class AlleleFearController extends BaseController<AlleleFearDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get Marker Region by Chr, Start Coord, End Coord")
+	@Operation(description = "Get Marker Region by Chr, Start Coord, End Coord")
 	@Path("/getMarkerByRegion")
 	public List<SlimMarkerDomain> getMarkerByRegion(SlimAlleleFearRegionDomain searchDomain) {
 		

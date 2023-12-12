@@ -3,27 +3,25 @@ package org.jax.mgi.mgd.api.model.all.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleVariantDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleVariantService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/allelevariant")
-@Api(value = "Allele Variant Endpoints")
+@Schema(description = "Allele Variant Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AlleleVariantController extends BaseController<AlleleVariantDomain> {
@@ -60,21 +58,21 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	}
 	
 	@GET
-	@ApiOperation(value = "Get the object count from all_variant table")
+	@Operation(description = "Get the object count from all_variant table")
 	@Path("/getObjectCount")
 	public SearchResults<AlleleVariantDomain> getObjectCount() {
 		return variantService.getObjectCount();
 	}
 		
 	@POST
-	@ApiOperation(value = "Search")
+	@Operation(description = "Search")
 	@Path("/search")
 	public List<SlimAlleleVariantDomain> search(AlleleVariantDomain searchDomain) {
 		return variantService.search(searchDomain);
 	}
 
 	@POST
-	@ApiOperation(value = "Get SlimAlleleVariant by Allele")
+	@Operation(description = "Get SlimAlleleVariant by Allele")
 	@Path("/getSlimByAllele")
 	public List<SlimAlleleVariantDomain> getSlimByAllele(Integer key) {
 			
@@ -90,7 +88,7 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	}
 
 	@POST
-	@ApiOperation(value = "Get All Variants per Allele")
+	@Operation(description = "Get All Variants per Allele")
 	@Path("/getByAllele")
 	public List<AlleleVariantDomain> getByAllele(Integer key) {
 			
@@ -106,7 +104,7 @@ public class AlleleVariantController extends BaseController<AlleleVariantDomain>
 	}
 
 	@POST
-	@ApiOperation(value = "Get HGVS by proper input format")
+	@Operation(description = "Get HGVS by proper input format")
 	@Path("/getHGVS")
 	public List<String> getHGVS(String searchHGVS) {
 	

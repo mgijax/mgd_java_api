@@ -1,18 +1,17 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
-import io.swagger.annotations.ApiModel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Database Info Model Object")
+@Schema(description = "Database Info Model Object")
 @Table(name="mgi_dbinfo")
 public class DatabaseInfo extends BaseEntity {
 

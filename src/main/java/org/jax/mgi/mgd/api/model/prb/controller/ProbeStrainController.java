@@ -3,15 +3,8 @@ package org.jax.mgi.mgd.api.model.prb.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGenotypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -23,11 +16,17 @@ import org.jax.mgi.mgd.api.model.prb.service.ProbeStrainService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/strain")
-@Api(value = "Strain Endpoints")
+@Tag(name = "Strain Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
@@ -57,7 +56,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from prb_strain table")
+	@Operation(description = "Get the object count from prb_strain table")
 	@Path("/getObjectCount")
 	public SearchResults<ProbeStrainDomain> getObjectCount() {
 		return probeStrainService.getObjectCount();
@@ -69,7 +68,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Search/returns slim probe strain domain")
+	@Operation(description = "Search/returns slim probe strain domain")
 	@Path("/search")
 	public List<SlimProbeStrainDomain> search(ProbeStrainDomain searchDomain) {
 	
@@ -85,7 +84,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate Strain")
+	@Operation(description = "Validate Strain")
 	@Path("/validateStrain")
 	public List<SlimProbeStrainDomain> validateStrain(SlimProbeStrainDomain searchDomain) {
 		
@@ -101,7 +100,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate Strain/Private can be changed")
+	@Operation(description = "Validate Strain/Private can be changed")
 	@Path("/validateStrainPrivate")
 	public List<SlimProbeStrainDomain> validateStrainPrivate(SlimProbeStrainDomain searchDomain) {
 		
@@ -117,7 +116,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "get list of strains")
+	@Operation(description = "get list of strains")
 	@Path("/getStrainList")
 	public SearchResults<String> getStrainList() {
 	
@@ -134,7 +133,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "get list of strains for probes/antigen")
+	@Operation(description = "get list of strains for probes/antigen")
 	@Path("/getStrainListProbeAntigen")
 	public SearchResults<String> getStrainListProbeAntigen() {
 	
@@ -151,28 +150,28 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get accession data sets by strain key")
+	@Operation(description = "Get accession data sets by strain key")
 	@Path("/getDataSetsAcc/{key}")
 	public List<StrainDataSetDomain> getDataSetsAcc(@PathParam("key") Integer key) {
 		return probeStrainService.getDataSetsAcc(key);
 	}
 
 	@GET
-	@ApiOperation(value = "Get reference data sets by strain key")
+	@Operation(description = "Get reference data sets by strain key")
 	@Path("/getDataSetsRef/{key}")
 	public List<StrainDataSetDomain> getDataSetsRef(@PathParam("key") Integer key) {
 		return probeStrainService.getDataSetsRef(key);
 	}
 
 	@GET
-	@ApiOperation(value = "Get strains by refs key")
+	@Operation(description = "Get strains by refs key")
 	@Path("/getByRef/{key}")
 	public List<SlimProbeStrainDomain> getByRef(@PathParam("key") Integer key) {
 		return probeStrainService.getByRef(key);
 	}
 
 	@POST
-	@ApiOperation(value = "Process Strain Merge/returns slim probe strain domain")
+	@Operation(description = "Process Strain Merge/returns slim probe strain domain")
 	@Path("/processMerge")
 	public SearchResults<SlimProbeStrainDomain> processMerge(ProbeStrainMergeDomain mergeDomain) {
 	
@@ -199,7 +198,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Search Duplicates/returns slim probe strain domain")
+	@Operation(description = "Search Duplicates/returns slim probe strain domain")
 	@Path("/searchDuplicates")
 	public List<SlimProbeStrainDomain> searchDuplicates() {
 	
@@ -215,7 +214,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Validate Genotype/Strain association exists, returns List of SlimGenotypeDomain")
+	@Operation(description = "Validate Genotype/Strain association exists, returns List of SlimGenotypeDomain")
 	@Path("/validateGenotypeStrain")
 	public List<SlimGenotypeDomain> validateGenotypeStrain(SlimProbeStrainDomain searchDomain) {
 	

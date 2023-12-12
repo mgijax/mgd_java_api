@@ -1,15 +1,15 @@
 package org.jax.mgi.mgd.api.model.voc.domain;
 
-import org.jax.mgi.mgd.api.model.BaseDomain;
-import java.lang.StringBuffer;
 import java.util.List;
 
-import io.swagger.annotations.ApiModel;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.jax.mgi.mgd.api.model.BaseDomain;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Tree View Node domain")
+@Schema(description = "Tree View Node domain")
 public class TreeViewNodeDomain extends BaseDomain {
 
 	private String termKey;

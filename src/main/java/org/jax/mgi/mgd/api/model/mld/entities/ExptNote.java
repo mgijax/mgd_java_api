@@ -2,19 +2,18 @@ package org.jax.mgi.mgd.api.model.mld.entities;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
-import io.swagger.annotations.ApiModel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "MLD Expt Notes Object")
+@Schema(description = "MLD Expt Notes Object")
 @Table(name="mld_expt_notes")
 public class ExptNote extends BaseEntity {
 

@@ -2,16 +2,16 @@ package org.jax.mgi.mgd.api.model.voc.domain;
 
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.GenotypeAnnotHeaderViewDomain;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-@ApiModel(value = "Annotation Domain")
+@Schema(description = "Annotation Domain")
 public class AnnotationDomain extends BaseDomain {
 
 	private String processStatus;

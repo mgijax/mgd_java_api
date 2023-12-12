@@ -1,26 +1,25 @@
 package org.jax.mgi.mgd.api.model.gxd.service;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.ResultSet;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 import org.jax.mgi.mgd.api.model.BaseService;
+import org.jax.mgi.mgd.api.model.gxd.dao.HTRawSampleDAO;
+import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTRawSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTRawSampleDomain;
-import org.jax.mgi.mgd.api.model.gxd.domain.HTDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.User;
-import org.jax.mgi.mgd.api.model.gxd.dao.HTRawSampleDAO;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTRawSample;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTRawSampleTranslator;
-
+import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
-import org.jax.mgi.mgd.api.util.Constants;
 import org.jboss.logging.Logger;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 
 @RequestScoped

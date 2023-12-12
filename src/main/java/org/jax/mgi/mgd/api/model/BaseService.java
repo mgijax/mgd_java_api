@@ -7,10 +7,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.sql.ResultSet;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -18,6 +14,10 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.StreamingOutput;
 
 public abstract class BaseService<D extends BaseDomain> {
 

@@ -3,14 +3,8 @@ package org.jax.mgi.mgd.api.model.img.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImageSubmissionService;
@@ -22,11 +16,16 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/imageSubmission")
-@Api(value = "Image Submission Endpoints")
+@Tag(name = "Image Submission Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ImageSubmissionController extends BaseController<ImageSubmissionDomain> {
@@ -67,7 +66,7 @@ public class ImageSubmissionController extends BaseController<ImageSubmissionDom
 	}
 
 	@POST
-	@ApiOperation(value = "Search/returns image submission domain")
+	@Operation(description = "Search/returns image submission domain")
 	@Path("/search")
 	public List<ImageSubmissionDomain> search(ImageSubmissionDomain searchDomain) {
 	

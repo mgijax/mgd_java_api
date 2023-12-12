@@ -2,19 +2,18 @@ package org.jax.mgi.mgd.api.model.mrk.entities;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
-import io.swagger.annotations.ApiModel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Marker Type Entity Object")
+@Schema(description = "Marker Type Entity Object")
 @Table(name="mrk_types")
 public class MarkerType extends BaseEntity {
 

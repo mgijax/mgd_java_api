@@ -3,16 +3,9 @@ package org.jax.mgi.mgd.api.model.acc.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.domain.SlimAccessionDomain;
@@ -20,12 +13,18 @@ import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/accession")
-@Api(value = "Accession Endpoints")
+@Tag(name = "Accession Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AccessionController extends BaseController<AccessionDomain> {
@@ -54,29 +53,29 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Search by accID only")
+	@Operation(description = "Search by accID only")
 	@Path("/search")
 	public List<AccessionDomain> search(AccessionDomain searchDomain) {
 		return accessionService.search(searchDomain);
 	}
 
 	@POST
-	@ApiOperation(value = "is accession id a duplicate of object/logicaldb/mgitype")
+	@Operation(description = "is accession id a duplicate of object/logicaldb/mgitype")
 	@Path("/validIsDuplicate")
 	public List<SlimAccessionDomain> validIsDuplicate(
-			@ApiParam(value = "the primary key of the object")		
+			@Parameter(description = "the primary key of the object")		
 			@HeaderParam("key") String key, 
-			@ApiParam(value = "accession id value")				
+			@Parameter(description = "accession id value")				
 			@HeaderParam("accid") String accid, 
-			@ApiParam(value = "see acc_logicaldb")					
+			@Parameter(description = "see acc_logicaldb")					
 			@HeaderParam("logicalddbKey") String logicaldbKey, 
-			@ApiParam(value = "see acc_mgitype")						
+			@Parameter(description = "see acc_mgitype")						
 			@HeaderParam("mgiTypeKey") String mgiTypeKey) {
 		return accessionService.validIsDuplicate(key, accid, logicaldbKey, mgiTypeKey);
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate Strain Accession Id")
+	@Operation(description = "Validate Strain Accession Id")
 	@Path("/validStrainAccessionId")
 	public List<SlimAccessionDomain> validStrainAccessionId(SlimAccessionDomain domain) {
 			
@@ -92,7 +91,7 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get Marker Edit Accession Ids")
+	@Operation(description = "Get Marker Edit Accession Ids")
 	@Path("/markerEditAccessionIds")
 	public List<AccessionDomain> getMarkerEditAccessionIds(Integer key) {
 			
@@ -108,7 +107,7 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get Marker Non-Edit Accession Ids")
+	@Operation(description = "Get Marker Non-Edit Accession Ids")
 	@Path("/markerNonEditAccessionIds")
 	public List<AccessionDomain> getMarkerNonEditAccessionIds(Integer key) {
 			
@@ -124,7 +123,7 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get Mutant Cell Line Edit Accession Ids")
+	@Operation(description = "Get Mutant Cell Line Edit Accession Ids")
 	@Path("/mclEditAccessionIds")
 	public List<AccessionDomain> getMCLEditAccessionIds(Integer key) {
 			
@@ -140,7 +139,7 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Validate GO Isoform")
+	@Operation(description = "Validate GO Isoform")
 	@Path("/validateGOIsoform")
 	public List<SlimAccessionDomain> validateMarker(SlimAccessionDomain searchDomain) {
 		
@@ -156,7 +155,7 @@ public class AccessionController extends BaseController<AccessionDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Get list of quick searrch results by accid(s).")
+	@Operation(description = "Get list of quick searrch results by accid(s).")
 	@Path("/getQSResultByAccid")
 	public List<SlimAccessionDomain> getQSResultByAccid(@QueryParam("ids") String ids) {
 

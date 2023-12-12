@@ -1,9 +1,5 @@
 package org.jax.mgi.mgd.api.model.mgi.service;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.MGIKeyValueDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIKeyValueDomain;
@@ -13,6 +9,10 @@ import org.jax.mgi.mgd.api.model.mgi.translator.MGIKeyValueTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class MGIKeyValueService extends BaseService<MGIKeyValueDomain> {

@@ -2,13 +2,8 @@ package org.jax.mgi.mgd.api.model.img.controller;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.img.domain.ImagePaneAssocDomain;
 import org.jax.mgi.mgd.api.model.img.service.ImagePaneAssocService;
@@ -18,11 +13,15 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/imagepaneassoc")
-@Api(value = "ImagePaneAssoc Endpoints")
+@Tag(name = "ImagePaneAssoc Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ImagePaneAssocController extends BaseController<ImagePaneAssocDomain> {
@@ -59,14 +58,14 @@ public class ImagePaneAssocController extends BaseController<ImagePaneAssocDomai
 	}
 	
 	@POST
-	@ApiOperation(value = "Search")
+	@Operation(description = "Search")
 	@Path("/search")
 	public List<ImagePaneAssocDomain> search(Integer key) {
 		return imagePaneAssocService.search(key);
 	}
 	
 	@POST
-	@ApiOperation(value = "Process")
+	@Operation(description = "Process")
 	@Path("/process")
 	public Boolean process(String parentKey, List<ImagePaneAssocDomain> domain, User user) {
 		return imagePaneAssocService.process(parentKey, domain, user);

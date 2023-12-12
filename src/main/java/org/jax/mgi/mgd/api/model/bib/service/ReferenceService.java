@@ -11,12 +11,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.Query;
-import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
-
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
@@ -49,6 +43,12 @@ import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 
 @RequestScoped
 public class ReferenceService extends BaseService<ReferenceDomain> {

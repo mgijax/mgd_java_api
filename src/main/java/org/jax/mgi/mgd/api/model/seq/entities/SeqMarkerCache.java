@@ -2,30 +2,28 @@ package org.jax.mgi.mgd.api.model.seq.entities;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-@ApiModel(value = "Seq Marker Cache Entity Object")
+@Schema(description = "Seq Marker Cache Entity Object")
 @Table(name="seq_marker_cache")
 public class SeqMarkerCache extends BaseEntity {
 
 	@Id
-	@ApiModelProperty(value="primary key")
+	@Schema(name="primary key")
 	private int _cache_key;
     private int _marker_key;
     private int _sequence_key;

@@ -3,13 +3,8 @@ package org.jax.mgi.mgd.api.model.gxd.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.HTSampleDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimHTDomain;
@@ -19,11 +14,15 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGISetMemberEmapaDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/htsample")
-@Api(value = "HT Sample Endpoints")
+@Tag(name = "HT Sample Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class HTSampleController extends BaseController<HTSampleDomain> {
@@ -58,14 +57,14 @@ public class HTSampleController extends BaseController<HTSampleDomain> {
 	}
 
 //	@GET
-//	@ApiOperation(value = "Get the object count from gxd_antibody table")
+//	@Operation(description = "Get the object count from gxd_antibody table")
 //	@Path("/getObjectCount")
 //	public SearchResults<HTSampleDomain> getObjectCount() {
 //		return htSampleService.getObjectCount();
 //	}
 
 	@POST
-	@ApiOperation(value = "Get CellType Set Members by HT Sample and Set/User")
+	@Operation(description = "Get CellType Set Members by HT Sample and Set/User")
 	@Path("/getCellTypeHTSampleBySetUser")
 	public List<MGISetMemberCellTypeDomain> getCellTypeHTSampleBySetUser(SlimHTDomain domain) {
 			
@@ -81,7 +80,7 @@ public class HTSampleController extends BaseController<HTSampleDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get EMAPA Set Members by HT Sample and Set/User")
+	@Operation(description = "Get EMAPA Set Members by HT Sample and Set/User")
 	@Path("/getEmapaHTSampleBySetUser")
 	public List<MGISetMemberEmapaDomain> getEmapaHTSampleBySetUser(SlimHTDomain domain) {
 			

@@ -7,10 +7,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.dao.MGITypeDAO;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleDomain;
@@ -26,6 +22,10 @@ import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {

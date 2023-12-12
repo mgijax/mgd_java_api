@@ -2,14 +2,8 @@ package org.jax.mgi.mgd.api.model.voc.controller;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.SlimVocabularyDomain;
@@ -18,11 +12,16 @@ import org.jax.mgi.mgd.api.model.voc.domain.VocabularyDomain;
 import org.jax.mgi.mgd.api.model.voc.service.VocabService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/vocab")
-@Api(value = "Vocab Endpoints")
+@Tag(name = "Vocab Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class VocabController extends BaseController<VocabularyDomain> {
@@ -54,7 +53,7 @@ public class VocabController extends BaseController<VocabularyDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Get the object count from voc_vocab table")
+	@Operation(description = "Get the object count from voc_vocab table")
 	@Path("/getObjectCount")
 	public SearchResults<VocabularyDomain> getObjectCount() {
 		return vocabService.getObjectCount();
@@ -66,21 +65,21 @@ public class VocabController extends BaseController<VocabularyDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Search by vocab key or name")
+	@Operation(description = "Search by vocab key or name")
 	@Path("/search")	
 	public SearchResults<SlimVocabularyTermDomain> search(SlimVocabularyTermDomain searchDomain) {
 		return vocabService.search(searchDomain);
 	}
 	
 	@GET
-	@ApiOperation(value = "return all simple vocabs")
+	@Operation(description = "return all simple vocabs")
 	@Path("/searchsimple")	
 	public List<SlimVocabularyDomain> searchSimple() {
 		return vocabService.searchSimple();
 	}
 	
 	@POST
-	@ApiOperation(value = "Search by vocab key or name")
+	@Operation(description = "Search by vocab key or name")
 	@Path("/getVocabList")	
 	public SearchResults<String> getVocabList(SlimVocabularyTermDomain searchDomain) {
 		return vocabService.getVocabList(searchDomain);

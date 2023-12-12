@@ -3,24 +3,23 @@ package org.jax.mgi.mgd.api.model.prb.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeMarkerService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/probemarker")
-@Api(value = "Probe Marker Endpoints")
+@Tag(name = "Probe Marker Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProbeMarkerController extends BaseController<ProbeMarkerDomain> {
@@ -55,7 +54,7 @@ public class ProbeMarkerController extends BaseController<ProbeMarkerDomain> {
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns probe marker domain")
+	@Operation(description = "Search/returns probe marker domain")
 	@Path("/search")
 	public List<ProbeMarkerDomain> search(ProbeMarkerDomain searchDomain) {
 	
@@ -71,7 +70,7 @@ public class ProbeMarkerController extends BaseController<ProbeMarkerDomain> {
 	}	
 
 	@POST
-	@ApiOperation(value = "Validate Probe/Marker, returns List of ProbeMarkerDomain")
+	@Operation(description = "Validate Probe/Marker, returns List of ProbeMarkerDomain")
 	@Path("/validateProbeMarker")
 	public List<ProbeMarkerDomain> validateProbeMarker(ProbeMarkerDomain searchDomain) {
 	

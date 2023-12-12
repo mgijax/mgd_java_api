@@ -3,24 +3,23 @@ package org.jax.mgi.mgd.api.model.mgi.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGISetDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGISetService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/mgiset")
-@Api(value = "MGI Set Endpoints")
+@Tag(name = "MGI Set Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MGISetController extends BaseController<MGISetDomain> {
@@ -51,7 +50,7 @@ public class MGISetController extends BaseController<MGISetDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get Set Members by Set/User ordered by label")
+	@Operation(description = "Get Set Members by Set/User ordered by label")
 	@Path("/getBySetUser")
 	public List<MGISetDomain> getBySetUser(MGISetDomain domain) {
 			
@@ -67,7 +66,7 @@ public class MGISetController extends BaseController<MGISetDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get Set Members by Set/User ordered by seqNum")
+	@Operation(description = "Get Set Members by Set/User ordered by seqNum")
 	@Path("/getBySetUserBySeqNum")
 	public List<MGISetDomain> getBySetUserBySeqNum(MGISetDomain domain) {
 			

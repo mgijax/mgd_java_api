@@ -3,14 +3,8 @@ package org.jax.mgi.mgd.api.model.mgi.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAlleleAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
@@ -21,11 +15,16 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/mgireferenceassoc")
-@Api(value = "MGI Reference Assoc Endpoints")
+@Tag(name = "MGI Reference Assoc Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MGIReferenceAssocController extends BaseController<MGIReferenceAssocDomain> {
@@ -57,7 +56,7 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	}
 	
 	@GET
-	@ApiOperation(value = "Get Reference Associations by Marker key")
+	@Operation(description = "Get Reference Associations by Marker key")
 	@Path("/marker/{key}")
 	public List<MGIReferenceAssocDomain> getByMarker(@PathParam("key") Integer key) {
 			
@@ -73,7 +72,7 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	}
 
 	@GET
-	@ApiOperation(value = "Get Allele Associations by Reference key")
+	@Operation(description = "Get Allele Associations by Reference key")
 	@Path("/alleleByReference/{key}")
 	public List<MGIReferenceAlleleAssocDomain> getAlleles(@PathParam("key") Integer key) {
 		
@@ -89,7 +88,7 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	}
 
 	@GET
-	@ApiOperation(value = "Get Marker Associations by Reference key")
+	@Operation(description = "Get Marker Associations by Reference key")
 	@Path("/markerByReference/{key}")
 	public List<MGIReferenceMarkerAssocDomain> getMarker(@PathParam("key") Integer key) {
 		
@@ -105,7 +104,7 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	}
 		
 	@GET
-	@ApiOperation(value = "Get Strain Associations by Reference key")
+	@Operation(description = "Get Strain Associations by Reference key")
 	@Path("/strainByReference/{key}")
 	public List<MGIReferenceStrainAssocDomain> getStrains(@PathParam("key") Integer key) {
 		
@@ -121,7 +120,7 @@ public class MGIReferenceAssocController extends BaseController<MGIReferenceAsso
 	}
 
 	@GET
-	@ApiOperation(value = "Get DOID Associations by Reference key")
+	@Operation(description = "Get DOID Associations by Reference key")
 	@Path("/doidByReference/{key}")
 	public List<MGIReferenceDOIDAssocDomain> getDOIDs(@PathParam("key") Integer key) {
 		

@@ -12,11 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.context.RequestScoped;
 import javax.imageio.ImageIO;
-import javax.inject.Inject;
-import javax.persistence.Query;
-import javax.transaction.Transactional;
 
 import org.apache.commons.io.FileUtils;
 import org.jax.mgi.mgd.api.model.BaseService;
@@ -30,6 +26,11 @@ import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {

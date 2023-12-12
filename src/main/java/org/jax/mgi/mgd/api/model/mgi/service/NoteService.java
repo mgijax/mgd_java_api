@@ -5,11 +5,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.Query;
-import javax.transaction.Transactional;
-
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.dao.NoteDAO;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
@@ -22,6 +17,11 @@ import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class NoteService extends BaseService<NoteDomain> {

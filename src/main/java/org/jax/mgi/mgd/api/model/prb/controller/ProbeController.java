@@ -3,16 +3,8 @@ package org.jax.mgi.mgd.api.model.prb.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeDomain;
@@ -22,11 +14,18 @@ import org.jax.mgi.mgd.api.model.prb.domain.SummaryProbeDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeService;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/probe")
-@Api(value = "Probe Endpoints")
+@Tag(name = "Probe Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProbeController extends BaseController<ProbeDomain> {
@@ -61,14 +60,14 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from prb_probe table")
+	@Operation(description = "Get the object count from prb_probe table")
 	@Path("/getObjectCount")
 	public SearchResults<ProbeDomain> getObjectCount() {
 		return probeService.getObjectCount();
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns slim probe domain")
+	@Operation(description = "Search/returns slim probe domain")
 	@Path("/search")
 	public List<SlimProbeDomain> search(ProbeDomain searchDomain) {
 	
@@ -84,7 +83,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Validate Probe by accID, returns List of SlimProbeDomain")
+	@Operation(description = "Validate Probe by accID, returns List of SlimProbeDomain")
 	@Path("/validateProbe")
 	public List<SlimProbeDomain> validateProbe(SlimProbeDomain searchDomain) {
 	
@@ -100,7 +99,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Validate Amp Primer by accID, returns List of SlimProbeDomain")
+	@Operation(description = "Validate Amp Primer by accID, returns List of SlimProbeDomain")
 	@Path("/validateAmpPrimer")
 	public List<SlimProbeDomain> validateAmpPrimer(SlimProbeDomain searchDomain) {
 	
@@ -116,7 +115,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Get list of summary domains by marker accession id")
+	@Operation(description = "Get list of summary domains by marker accession id")
 	@Path("/getProbeByMarker")
 	public SearchResults<SummaryProbeDomain> getProbeByMarker(
 		@QueryParam("accid") String accid,
@@ -136,7 +135,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadProbeByMarker")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadProbeByMarker(@QueryParam("accid") String accid) {
@@ -144,7 +143,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Get list of summary domains by reference jnumid")
+	@Operation(description = "Get list of summary domains by reference jnumid")
 	@Path("/getProbeByRef")
 	public SearchResults<SummaryProbeDomain> getProbeByRef(
 		@QueryParam("accid") String accid,
@@ -164,7 +163,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadProbeByRef")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadProbeByRef(@QueryParam("accid") String accid) {
@@ -172,7 +171,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Get list of summary domains by search")
+	@Operation(description = "Get list of summary domains by search")
 	@Path("/getProbeBySearch")
 	public SearchResults<SummaryProbeDomain> getProbeBySearch(
 		@QueryParam("name") String name,
@@ -193,7 +192,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
 	}	
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadProbeBySearch")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadProbeBySearch(
@@ -203,7 +202,7 @@ public class ProbeController extends BaseController<ProbeDomain> {
              return probeService.downloadProbeBySearch(name, segmentTypeKey);
 	}
 	@POST
-	@ApiOperation(value = "Get list of child clones of probe key")
+	@Operation(description = "Get list of child clones of probe key")
 	@Path("/getChildClones")
 	public List<SlimProbeSummaryDomain> getChildClones(Integer key) {
 		

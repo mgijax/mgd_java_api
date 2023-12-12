@@ -3,13 +3,13 @@ package org.jax.mgi.mgd.api.model.mrk.search;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseSearchForm;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @ApiModel("Marker Utilities Form")
+@Getter @Setter @Schema(name = "Marker Utilities Form")
 public class MarkerUtilitiesForm extends BaseSearchForm {
 
 	private String eventKey;

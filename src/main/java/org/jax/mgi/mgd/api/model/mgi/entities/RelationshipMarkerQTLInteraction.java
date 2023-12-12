@@ -1,20 +1,20 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
 import javax.annotation.concurrent.Immutable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
-import io.swagger.annotations.ApiModel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
 @Immutable
-@ApiModel(value = "Relationship Marker QTL Interaction Object")
+@Schema(description = "Relationship Marker QTL Interaction Object")
 @Table(name="mgi_relationship_markerqtlinteraction_view")
 public class RelationshipMarkerQTLInteraction extends BaseEntity {
 	

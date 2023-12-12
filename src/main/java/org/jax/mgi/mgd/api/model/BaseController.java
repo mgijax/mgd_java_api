@@ -1,35 +1,7 @@
 package org.jax.mgi.mgd.api.model;
 
-import javax.inject.Inject;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
-/* Start download functionality imports */
-/*
-import java.util.List;
-import java.lang.StringBuffer;
-import java.lang.Exception;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.io.IOException;
-import java.io.Writer;
-import java.io.BufferedWriter;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException; 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-*/
-/* End download functionality imports */
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.UserService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -38,8 +10,14 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 
 public abstract class BaseController<T extends BaseDomain> {
 
@@ -78,11 +56,11 @@ public abstract class BaseController<T extends BaseDomain> {
 	// if results.error is not null, then API assumes fail
 	
 	@POST
-	@ApiOperation(value = "Create", notes = "Create")
+	@Operation(description = "Create", summary = "Create")
 	public SearchResults<T> create(
 			@HeaderParam(value="api_access_token") String api_access_token,
 			@HeaderParam(value="username") String username,
-			@ApiParam(value = "This is the passed in json object") T object) {
+			@Parameter(description = "This is the passed in json object") T object) {
 
 		SearchResults<T> results = new SearchResults<T>();
 		
@@ -112,18 +90,18 @@ public abstract class BaseController<T extends BaseDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Read")
+	@Operation(description = "Read")
 	@Path("/{key}")
-	public T getByKey(@PathParam("key") @ApiParam(value = "This is for retrieving by key") Integer key) {
+	public T getByKey(@PathParam("key") @Parameter(description = "This is for retrieving by key") Integer key) {
 		return get(key);
 	}
 	
 	@PUT
-	@ApiOperation(value = "Update", notes="Update")
+	@Operation(description = "Update", summary="Update")
 	public SearchResults<T> update(
 			@HeaderParam(value="api_access_token") String api_access_token,
 			@HeaderParam(value="username") String username,
-			@ApiParam(value = "This is the passed in json object") T object) {
+			@Parameter(description = "This is the passed in json object") T object) {
 		
 		SearchResults<T> results = new SearchResults<T>();
 		
@@ -155,12 +133,12 @@ public abstract class BaseController<T extends BaseDomain> {
 	}
 	
 	@DELETE
-	@ApiOperation(value = "Delete")
+	@Operation(description = "Delete")
 	@Path("/{key}")
 	public SearchResults<T> delete(
 			@HeaderParam(value="api_access_token") String api_access_token,
 			@HeaderParam(value="username") String username,
-			@PathParam("key") @ApiParam(value = "Delete object by primary key") Integer key) {
+			@PathParam("key") @Parameter(description = "Delete object by primary key") Integer key) {
 		
 		SearchResults<T> results = new SearchResults<T>();
 					

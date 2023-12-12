@@ -3,14 +3,8 @@ package org.jax.mgi.mgd.api.model.gxd.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.gxd.domain.GXDIndexDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimGXDIndexDomain;
@@ -19,11 +13,16 @@ import org.jax.mgi.mgd.api.model.gxd.service.GXDIndexService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/gxdindex")
-@Api(value = "GXD Index Endpoints")
+@Tag(name = "GXD Index Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GXDIndexController extends BaseController<GXDIndexDomain> {
@@ -58,14 +57,14 @@ public class GXDIndexController extends BaseController<GXDIndexDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from gxd_index table")
+	@Operation(description = "Get the object count from gxd_index table")
 	@Path("/getObjectCount")
 	public SearchResults<GXDIndexDomain> getObjectCount() {
 		return indexService.getObjectCount();
 	}
 	
 	@POST
-	@ApiOperation(value = "Search/returns Index domain")
+	@Operation(description = "Search/returns Index domain")
 	@Path("/search")
 	public List<SlimGXDIndexDomain> search(GXDIndexDomain searchDomain) {
 	
@@ -81,7 +80,7 @@ public class GXDIndexController extends BaseController<GXDIndexDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get list of index domains by marker accession id")
+	@Operation(description = "Get list of index domains by marker accession id")
 	@Path("/getIndexByMarker")
 	public List<SummaryGXDIndexDomain> getProbeByMarker(String accid) {
 		
@@ -97,7 +96,7 @@ public class GXDIndexController extends BaseController<GXDIndexDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Get list of index domains by reference jnumid")
+	@Operation(description = "Get list of index domains by reference jnumid")
 	@Path("/getIndexByRef")
 	public List<SummaryGXDIndexDomain> getProbeByRef(String jnumid) {
 		

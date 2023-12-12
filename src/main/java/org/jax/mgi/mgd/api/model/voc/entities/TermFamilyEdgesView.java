@@ -1,12 +1,11 @@
 package org.jax.mgi.mgd.api.model.voc.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
-import io.swagger.annotations.ApiModelProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +15,7 @@ import lombok.Setter;
 public class TermFamilyEdgesView extends BaseEntity {
 
 	@Id
-    @ApiModelProperty(value="primary key")
+    @Schema(name="primary key")
 	private int _edge_key;
 	private int _child_key;
 	private int _parent_key;

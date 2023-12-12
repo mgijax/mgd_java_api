@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleVariantDAO;
@@ -21,7 +17,6 @@ import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleVariantTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
-import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -30,6 +25,10 @@ import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class AlleleVariantService extends BaseService<AlleleVariantDomain> {

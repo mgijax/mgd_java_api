@@ -3,19 +3,9 @@ package org.jax.mgi.mgd.api.model.bib.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceBulkDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
@@ -29,12 +19,21 @@ import org.jax.mgi.mgd.api.model.mgi.service.UserService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/reference")
-@Api(value = "Reference Endpoints")
+@Tag(name = "Reference Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ReferenceController extends BaseController<ReferenceDomain> {
@@ -72,13 +71,13 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	
 	@PUT
 	@Path("/bulkUpdate")
-	@ApiOperation(value = "Value: Update list of References en masse")
+	@Operation(description = "Value: Update list of References en masse")
 	public SearchResults<String> updateReferencesBulk(
-			@ApiParam(value = "Name: Token for accessing this API")
+			@Parameter(description = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
-			@ApiParam(value = "Name: Logged-in User")
+			@Parameter(description = "Name: Logged-in User")
 			@HeaderParam("username") String username,
-			@ApiParam(value = "Value: reference keys and data to be updated")
+			@Parameter(description = "Value: reference keys and data to be updated")
 			ReferenceBulkDomain input
 	) {
 		SearchResults<String> results = new SearchResults<String>();
@@ -105,17 +104,17 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 
 	@PUT
 	@Path("/statusUpdate")
-	@ApiOperation(value = "Value: Update the status of a reference/workflow group pair")
+	@Operation(description = "Value: Update the status of a reference/workflow group pair")
 	public SearchResults<String> updateReferenceStatus(
-			@ApiParam(value = "Name: Token for accessing this API")
+			@Parameter(description = "Name: Token for accessing this API")
 			@HeaderParam("api_access_token") String api_access_token,
-			@ApiParam(value = "Name: Logged-in User")
+			@Parameter(description = "Name: Logged-in User")
 			@HeaderParam("username") String username,
-			@ApiParam(value = "Value: comma-delimited list of accession IDs of references for which to set the status")
+			@Parameter(description = "Value: comma-delimited list of accession IDs of references for which to set the status")
 			@QueryParam("accid") String accid,
-			@ApiParam(value = "Value: abbreviation of workflow group for which to set the status")
+			@Parameter(description = "Value: abbreviation of workflow group for which to set the status")
 			@QueryParam("group") String group,
-			@ApiParam(value = "Value: status term to set for the given reference/workflow group pair")
+			@Parameter(description = "Value: status term to set for the given reference/workflow group pair")
 			@QueryParam("status") String status
 	) {
 		SearchResults<String> results = new SearchResults<String>();
@@ -141,7 +140,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Search/returns slim reference domain")
+	@Operation(description = "Search/returns slim reference domain")
 	@Path("/search")
 	public List<SlimReferenceDomain> search(ReferenceSearchDomain searchDomain) {
 		List<SlimReferenceDomain> results = new ArrayList<SlimReferenceDomain>();
@@ -156,7 +155,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "get list of journals")
+	@Operation(description = "get list of journals")
 	@Path("/getJournalList")
 	public SearchResults<String> getJournalList() {
 		SearchResults<String> results = null;
@@ -172,27 +171,27 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Validate reference by J:/returns slim reference domain")
+	@Operation(description = "Validate reference by J:/returns slim reference domain")
 	@Path("/validJnum/{jnum}")
 	public List<SlimReferenceDomain> validJnum(
 			@PathParam("jnum") 
-			@ApiParam(value = "Validating jnum") 
+			@Parameter(description = "Validating jnum") 
 			String jnum) {
 		return referenceService.validJnum(jnum);
 	}
 
 	@GET
-	@ApiOperation(value = "Validate reference by J:/returns slim reference index domain")
+	@Operation(description = "Validate reference by J:/returns slim reference index domain")
 	@Path("/validJnumGxdIndex/{jnum}")
 	public List<SlimReferenceIndexDomain> validJnumGxdIndex(
 			@PathParam("jnum") 
-			@ApiParam(value = "Validating jnum/index") 
+			@Parameter(description = "Validating jnum/index") 
 			String jnum) {
 		return referenceService.validJnumGxdIndex(jnum);
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate reference, copyright, creative commons")
+	@Operation(description = "Validate reference, copyright, creative commons")
 	@Path("/validateJnumImage")
 	public List<SlimReferenceDomain> validateJnumImage(SlimReferenceDomain domain) {
 		return referenceService.validateJnumImage(domain);
@@ -202,7 +201,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	// get reference by allele
 
 	@GET
-	@ApiOperation(value = "Get list of reference domains by allele accession id")
+	@Operation(description = "Get list of reference domains by allele accession id")
 	@Path("/getRefByAllele")
 	public SearchResults<SummaryReferenceDomain> getRefByAllele(
                 @QueryParam("accid") String accid,
@@ -222,7 +221,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadRefByAllele")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadRefByAllele(@QueryParam("accid") String accid) {
@@ -233,7 +232,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	// get reference by marker
 
 	@GET
-	@ApiOperation(value = "Get list of reference domains by marker accession id")
+	@Operation(description = "Get list of reference domains by marker accession id")
 	@Path("/getRefByMarker")
 	public SearchResults<SummaryReferenceDomain> getRefByMarker(
                 @QueryParam("accid") String accid,
@@ -253,7 +252,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadRefByMarker")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadRefByMarker(@QueryParam("accid") String accid) {
@@ -264,7 +263,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	// get reference by search
 
 	@POST
-	@ApiOperation(value = "Get list of reference domains by search domain")
+	@Operation(description = "Get list of reference domains by search domain")
 	@Path("/getRefBySearch")
 	public SearchResults<SummaryReferenceDomain> getRefBySearch(SummaryReferenceDomain searchDomain) {
 		
@@ -280,7 +279,7 @@ public class ReferenceController extends BaseController<ReferenceDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadRefBySearch")
         @Produces(MediaType.TEXT_PLAIN)
 	public Response downloadRefBySearch(

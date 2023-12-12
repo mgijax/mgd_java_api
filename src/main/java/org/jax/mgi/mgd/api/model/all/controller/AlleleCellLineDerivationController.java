@@ -3,14 +3,8 @@ package org.jax.mgi.mgd.api.model.all.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleCellLineDerivationDomain;
 import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleCellLineDerivationDomain;
@@ -18,11 +12,16 @@ import org.jax.mgi.mgd.api.model.all.service.AlleleCellLineDerivationService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/allelecelllinederivation")
-@Api(value = "Allele Cell Line Derivation Endpoints")
+@Tag(name = "Allele Cell Line Derivation Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AlleleCellLineDerivationController extends BaseController<AlleleCellLineDerivationDomain> {
@@ -57,14 +56,14 @@ public class AlleleCellLineDerivationController extends BaseController<AlleleCel
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from all_cellline_derivation table")
+	@Operation(description = "Get the object count from all_cellline_derivation table")
 	@Path("/getObjectCount")
 	public SearchResults<AlleleCellLineDerivationDomain> getObjectCount() {
 		return derivationService.getObjectCount();
 	}
 	
 	@POST
-	@ApiOperation(value = "Search")
+	@Operation(description = "Search")
 	@Path("/search")
 	public List<AlleleCellLineDerivationDomain> search(AlleleCellLineDerivationDomain searchDomain) {
 			
@@ -80,7 +79,7 @@ public class AlleleCellLineDerivationController extends BaseController<AlleleCel
 	}
 	
 	@POST
-	@ApiOperation(value = "Search Mutant Cell Line Set")
+	@Operation(description = "Search Mutant Cell Line Set")
 	@Path("/searchMCLSet")
 	public List<AlleleCellLineDerivationDomain> searchMCLSet() {
 
@@ -96,7 +95,7 @@ public class AlleleCellLineDerivationController extends BaseController<AlleleCel
 	}
 
 	@POST
-	@ApiOperation(value = "Search Duplicate Derivation Name")
+	@Operation(description = "Search Duplicate Derivation Name")
 	@Path("/searchDuplicateByName")
 	public List<AlleleCellLineDerivationDomain> searchDuplicateByName(AlleleCellLineDerivationDomain domain) {
 
@@ -112,7 +111,7 @@ public class AlleleCellLineDerivationController extends BaseController<AlleleCel
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate Derivation")
+	@Operation(description = "Validate Derivation")
 	@Path("/validateDerivation")
 	public List<AlleleCellLineDerivationDomain> validateDerivation(SlimAlleleCellLineDerivationDomain searchDomain) {	
 		

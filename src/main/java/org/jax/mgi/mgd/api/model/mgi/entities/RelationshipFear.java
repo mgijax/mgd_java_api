@@ -3,23 +3,23 @@ package org.jax.mgi.mgd.api.model.mgi.entities;
 import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
-import io.swagger.annotations.ApiModel;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
 @Immutable
-@ApiModel(value = "Relationship Fear (Allele/Marker)")
+@Schema(description = "Relationship Fear (Allele/Marker)")
 @Table(name="mgi_relationship_fear_view")
 public class RelationshipFear extends BaseEntity {
 	

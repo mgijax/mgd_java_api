@@ -3,25 +3,24 @@ package org.jax.mgi.mgd.api.model.acc.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.acc.domain.LogicalDbDomain;
 import org.jax.mgi.mgd.api.model.acc.service.LogicalDbService;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SearchResults;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/logicaldb")
-@Api(value = "Logical DB Endpoints")
+@Tag(name = "Logical DB Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class LogicalDbController extends BaseController<LogicalDbDomain> {
@@ -56,14 +55,14 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from acc_logicalDB table")
+	@Operation(description = "Get the object count from acc_logicalDB table")
 	@Path("/getObjectCount")
 	public SearchResults<LogicalDbDomain> getObjectCount() {
 		return ldbService.getObjectCount();
 	}
 
 	@POST
-	@ApiOperation(value = "Search/returns LogicalDbDomain")
+	@Operation(description = "Search/returns LogicalDbDomain")
 	@Path("/search")	
 	public List<LogicalDbDomain> search(LogicalDbDomain searchDomain) {
 
@@ -79,7 +78,7 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get Mutant Cell Line Logical DBs")
+	@Operation(description = "Get Mutant Cell Line Logical DBs")
 	@Path("/searchMCLSet")
 	public List<LogicalDbDomain> searchMCLSet() {
 			
@@ -95,7 +94,7 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get Probe Logical DBs")
+	@Operation(description = "Get Probe Logical DBs")
 	@Path("/searchProbeSet")
 	public List<LogicalDbDomain> searchProbeSet() {
 			
@@ -111,7 +110,7 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get Probe Source Logical DBs")
+	@Operation(description = "Get Probe Source Logical DBs")
 	@Path("/searchProbeSourceSet")
 	public List<LogicalDbDomain> searchProbeSourceSet() {
 			
@@ -127,7 +126,7 @@ public class LogicalDbController extends BaseController<LogicalDbDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get Probe Strain Logical DBs")
+	@Operation(description = "Get Probe Strain Logical DBs")
 	@Path("/searchProbeStrainSet")
 	public List<LogicalDbDomain> searchProbeStrainSet() {
 			

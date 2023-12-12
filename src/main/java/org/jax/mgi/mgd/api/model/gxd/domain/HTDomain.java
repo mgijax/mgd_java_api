@@ -1,7 +1,7 @@
 package org.jax.mgi.mgd.api.model.gxd.domain;
 
-import java.util.List;
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 

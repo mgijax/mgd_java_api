@@ -3,17 +3,15 @@ package org.jax.mgi.mgd.api.model;
 import java.lang.reflect.Field;
 import java.util.Set;
 
-import javax.ejb.Singleton;
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
 import org.jboss.logging.Logger;
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
 
-@Singleton
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Id;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+
 public abstract class PostgresSQLDAO<T> {
 
 	protected Class<T> myClass;

@@ -3,18 +3,9 @@ package org.jax.mgi.mgd.api.model.mrk.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerDomain;
@@ -30,12 +21,20 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/marker")
-@Api(value = "Marker Endpoints")
+@Tag(name = "Marker Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MarkerController extends BaseController<MarkerDomain> {
@@ -158,14 +157,14 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 
 	@GET
-	@ApiOperation(value = "Get the object count from mrk_marker table")
+	@Operation(description = "Get the object count from mrk_marker table")
 	@Path("/getObjectCount")
 	public SearchResults<MarkerDomain> getObjectCount() {
 		return markerService.getObjectCount();
 	}
 		
 	@POST
-	@ApiOperation(value = "Search/returns slim marker domain")
+	@Operation(description = "Search/returns slim marker domain")
 	@Path("/search")
 	public List<SlimMarkerDomain> search(MarkerDomain searchDomain) {
 	
@@ -181,21 +180,21 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 
 	@POST
-	@ApiOperation(value = "Get next Gm symbol that is available in the sequence")
+	@Operation(description = "Get next Gm symbol that is available in the sequence")
 	@Path("/getNextGmSequence")
 	public List<SlimMarkerDomain> getNextGmSequence() {
 		return markerService.getNextGmSequence();
 	}
 	
 	@POST
-	@ApiOperation(value = "Get next Rr symbol that is available in the sequence")
+	@Operation(description = "Get next Rr symbol that is available in the sequence")
 	@Path("/getNextRrSequence")
 	public List<SlimMarkerDomain> getNextRrSequence() {
 		return markerService.getNextRrSequence();
 	}
 	
 	@GET
-	@ApiOperation(value = "Get list of marker domains by reference jnum id")
+	@Operation(description = "Get list of marker domains by reference jnum id")
 	@Path("/getMarkerByRef")
 	public SearchResults<SummaryMarkerDomain> getMarkerByRef(
 		@QueryParam("accid") String accid,
@@ -215,7 +214,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Download TSV file.")
+	@Operation(description = "Download TSV file.")
 	@Path("/downloadMarkerByRef")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response downloadMarkerByRef(@QueryParam("accid") String accid) {
@@ -223,27 +222,27 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@GET
-	@ApiOperation(value = "Validate marker symbol/any status is valid/returns slim marker domain")
+	@Operation(description = "Validate marker symbol/any status is valid/returns slim marker domain")
 	@Path("/validateAnyStatus/{symbol}")
 	public List<SlimMarkerDomain> validateAnyStatus(
 			@PathParam("symbol") 
-			@ApiParam(value = "Validating Marker Symbol") 
+			@Parameter(description = "Validating Marker Symbol") 
 			String symbol) {
 		return markerService.validate(symbol, true, true);
 	}
 	
 	@GET
-	@ApiOperation(value = "Validate marker symbol/official status is valid/returns slim marker domain")
+	@Operation(description = "Validate marker symbol/official status is valid/returns slim marker domain")
 	@Path("/validateOfficialStatus/{symbol}")
 	public List<SlimMarkerDomain> validateOfficialStatus(
 			@PathParam("symbol") 
-			@ApiParam(value = "Validating Marker Symbol") 
+			@Parameter(description = "Validating Marker Symbol") 
 			String symbol) {
 		return markerService.validate(symbol, false, false);
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate Marker by Marker Symbol(=), Chromosome or AccID (=)")
+	@Operation(description = "Validate Marker by Marker Symbol(=), Chromosome or AccID (=)")
 	@Path("/validateMarker")
 	public List<SlimMarkerDomain> validateMarker(SlimMarkerDomain searchDomain) {
 		
@@ -259,7 +258,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate marker symbol/official status/chromosome match/returns slim markeroffsetchrom domain")
+	@Operation(description = "Validate marker symbol/official status/chromosome match/returns slim markeroffsetchrom domain")
 	@Path("/validateOfficialChrom")
 	public SearchResults<SlimMarkerOfficialChromDomain> validateOfficialChrom(SlimMarkerOfficialChromDomain searchDomain) {
 	
@@ -275,7 +274,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "Validate marker feature types/check result error")
+	@Operation(description = "Validate marker feature types/check result error")
 	@Path("/validateFeatureTypes")
 	public SearchResults<SlimMarkerFeatureTypeDomain> validateFeatureTypes(SlimMarkerFeatureTypeDomain searchDomain) {
 	
@@ -291,7 +290,7 @@ public class MarkerController extends BaseController<MarkerDomain> {
 	}
 	
 	@POST
-	@ApiOperation(value = "EI Utilities ")
+	@Operation(description = "EI Utilities ")
 	@Path("/eiUtilities")
 	public SearchResults<SlimMarkerDomain> eiUtilities(
 			@HeaderParam(value="api_access_token") String api_access_token,

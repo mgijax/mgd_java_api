@@ -6,13 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import org.jax.mgi.mgd.api.model.BaseService;
-import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.all.dao.AlleleDAO;
+import org.jax.mgi.mgd.api.model.all.dao.CellLineDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.AllelePairDAO;
 import org.jax.mgi.mgd.api.model.gxd.dao.GenotypeDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AllelePairDomain;
@@ -26,6 +22,10 @@ import org.jax.mgi.mgd.api.util.RunCommand;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class AllelePairService extends BaseService<AllelePairDomain> {

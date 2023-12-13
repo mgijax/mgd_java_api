@@ -5,6 +5,7 @@ import java.util.Date;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -21,7 +22,9 @@ public class TheilerStage extends BaseEntity {
 	private Integer _stage_key;
 	private Integer stage;
 	private String description;
+	@Column(columnDefinition = "numeric")
 	private Integer dpcMin;
+	@Column(columnDefinition = "numeric")
 	private Integer dpcMax;
 	private Date creation_date;
 	private Date modification_date;

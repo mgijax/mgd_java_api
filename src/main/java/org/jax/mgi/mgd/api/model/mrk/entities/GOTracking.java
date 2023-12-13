@@ -6,6 +6,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -23,6 +24,7 @@ public class GOTracking extends BaseEntity {
 
 	@Id
 	private Integer _marker_key;
+	@Column(columnDefinition = "int2")
 	private Integer isReferenceGene; // obsolete
 	private Date completion_date;
 	private Date creation_date;

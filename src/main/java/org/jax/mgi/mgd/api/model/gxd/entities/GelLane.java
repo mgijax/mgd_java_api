@@ -7,6 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,7 +38,9 @@ public class GelLane extends BaseEntity {
 	private String sampleAmount;
 	private String sex;
 	private String age;
+	@Column(columnDefinition = "numeric")
 	private Integer ageMin;
+	@Column(columnDefinition = "numeric")
 	private Integer ageMax;
 	private String ageNote;
 	private String laneNote;

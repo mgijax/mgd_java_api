@@ -8,6 +8,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -27,7 +28,8 @@ public class ExpressionCache extends BaseEntity {
 	private int _expression_key;
 	private int _stage_key;
 	private String resultNote;
-	private String expressed;
+	@Column(columnDefinition = "int2")
+	private Integer expressed;
 	private String strength;
 	private String age;
 	//private Integer agemin;

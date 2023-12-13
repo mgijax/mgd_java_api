@@ -45,6 +45,7 @@ public class Reference extends BaseEntity {
 	private String date;
 	private int year;
 	private String pgs;
+	@Column(columnDefinition = "int2")
 	private int isReviewArticle;
 	private Date creation_date;
 	private Date modification_date;

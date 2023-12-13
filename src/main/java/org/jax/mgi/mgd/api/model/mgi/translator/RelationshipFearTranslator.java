@@ -33,9 +33,9 @@ public class RelationshipFearTranslator extends BaseEntityDomainTranslator<Relat
 		domain.setJnumid(entity.getJnumid());
 		domain.setJnum(String.valueOf(entity.getJnum()));
 		domain.setShort_citation(entity.getShort_citation());
-		domain.setCreatedByKey(entity.get_createdby_key());
+		domain.setCreatedByKey(entity.get_createdby_key().toString());
 		domain.setCreatedBy(entity.getCreatedBy());
-		domain.setModifiedByKey(entity.get_modifiedby_key());
+		domain.setModifiedByKey(entity.get_modifiedby_key().toString());
 		domain.setModifiedBy(entity.getModifiedBy());
 		domain.setCreation_date(entity.getCreation_date());
 		domain.setModification_date(entity.getModification_date()); 

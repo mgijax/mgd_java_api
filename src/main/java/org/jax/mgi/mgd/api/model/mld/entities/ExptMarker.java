@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,7 @@ public class ExptMarker extends BaseEntity {
 	private int _expt_key;
 	private Integer sequenceNum;
 	private String description;
+	@Column(columnDefinition = "int2")
 	private Integer matrixData;
 	private Date creation_date;
 	private Date modification_date;

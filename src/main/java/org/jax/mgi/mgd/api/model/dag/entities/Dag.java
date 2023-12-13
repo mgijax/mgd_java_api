@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -25,6 +26,7 @@ public class Dag extends BaseEntity {
 	@Id
 	private int _dag_key;
 	private String name;
+	@Column(columnDefinition = "bpchar")
 	private String abbreviation;
 	private Date creation_date;
 	private Date modification_date;

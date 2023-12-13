@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class ReferenceWorkflowRelevance extends BaseEntity {
 	private int _assoc_key;
 
 	private int _refs_key;
+	@Column(columnDefinition = "int2")
 	private int isCurrent;
 	private Double confidence;
 	private String version;

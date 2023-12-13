@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.dag.entities.DagNode;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +41,7 @@ public class Term extends BaseEntity {
 	private String abbreviation;
 	private String note;
 	private Integer sequenceNum;
+	@Column(columnDefinition = "int2")
 	private Integer isObsolete = 0;
 	private Date creation_date;
 	private Date modification_date;

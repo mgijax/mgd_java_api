@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +38,7 @@ public class CellLine extends BaseEntity {
 	@Schema(name="primary key")	
 	private int _cellline_key;
 	private String cellLine;
+	@Column(columnDefinition="int2")
 	private int isMutant;
 	private Date creation_date;
 	private Date modification_date;

@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -40,8 +41,11 @@ public class ProbeSource extends BaseEntity {
 	private String name;
 	private String description;
 	private String age;
+	@Column(columnDefinition = "numeric")
 	private int ageMin;
+	@Column(columnDefinition = "numeric")
 	private int ageMax;
+	@Column(columnDefinition = "int2")
 	private int isCuratorEdited;
 	private Date creation_date;
 	private Date modification_date;

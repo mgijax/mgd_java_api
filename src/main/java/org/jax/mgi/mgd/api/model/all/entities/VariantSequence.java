@@ -11,6 +11,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +37,9 @@ public class VariantSequence extends BaseEntity {
 	@Schema(name="primary key")
 	private int _variantsequence_key;
 	private int _variant_key;
+	@Column(columnDefinition="numeric")
     private Integer startCoordinate;
+    @Column(columnDefinition="numeric")
     private Integer endCoordinate;
 	private String referenceSequence;
 	private String variantSequence;

@@ -7,6 +7,7 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -27,10 +28,11 @@ public class MarkerLocationCache extends BaseEntity {
 	private String chromosome;
 	private Integer sequenceNum;
 	private String cytogeneticOffset;
-	private Integer cmOffset;
+	private Double cmOffset;
 	private String genomicChromosome;
-	private Integer startCoordinate;
-	private Integer endCoordinate;
+	private Double startCoordinate;
+	private Double endCoordinate;
+	@Column(columnDefinition = "bpchar")
 	private String strand;
 	private String mapUnits;
 	private String provider;

@@ -6,6 +6,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,9 +32,12 @@ public class ActualDB extends BaseEntity {
 	private int _actualdb_key;
 	private int _logicaldb_key;
 	private String name;
+	@Column(columnDefinition="int2")
 	private int active;
 	private String url;
+	@Column(columnDefinition="int2")
 	private int allowsMultiple;
+	@Column(columnDefinition="bpchar")
 	private String delimiter;
 	private Date creation_date;
 	private Date modification_date;

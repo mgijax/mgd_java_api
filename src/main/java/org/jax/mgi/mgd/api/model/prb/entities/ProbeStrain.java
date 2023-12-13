@@ -42,9 +42,11 @@ public class ProbeStrain extends BaseEntity {
 	private int _strain_key;
 	
 	private String strain;
+	@Column(columnDefinition = "int2")
 	private int standard;
-	@Column(name="private") // just "private" is a Java reserved word
+	@Column(name="private", columnDefinition = "int2") // just "private" is a Java reserved word
 	private int isPrivate;
+	@Column(columnDefinition = "int2")
 	private int geneticBackground;
 	private Date creation_date;
 	private Date modification_date;

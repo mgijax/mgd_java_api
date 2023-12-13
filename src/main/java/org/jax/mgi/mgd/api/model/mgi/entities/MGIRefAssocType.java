@@ -6,6 +6,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -24,6 +25,7 @@ public class MGIRefAssocType extends BaseEntity {
 	@Id
 	private int _refAssocType_key;
 	private String assocType;
+	@Column(columnDefinition = "int2")
 	private int allowOnlyOne;
 	private Date creation_date;
 	private Date modification_date;

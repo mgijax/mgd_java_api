@@ -8,6 +8,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +41,7 @@ public class MarkerHistory extends BaseEntity {
 	
 	// don't care about the timestamp for this date
 	@Temporal(TemporalType.DATE)
+	@Column(columnDefinition = "timestamp")
 	private Date event_date;
 	
 	private Date creation_date;

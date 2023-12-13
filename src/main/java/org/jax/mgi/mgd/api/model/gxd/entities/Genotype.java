@@ -16,6 +16,7 @@ import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -41,6 +42,7 @@ public class Genotype extends BaseEntity {
 	@Schema(name="primary key")	
 	private int _genotype_key;
 	
+	@Column(columnDefinition = "int2")
 	private Integer isConditional;
 	
 	// obsolte/remove : all are null

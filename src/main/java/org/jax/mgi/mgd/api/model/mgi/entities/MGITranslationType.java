@@ -8,6 +8,7 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.voc.entities.Vocabulary;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -27,6 +28,7 @@ public class MGITranslationType extends BaseEntity {
 	private Integer _translationType_key;
 	private String translationType;
 	private String compressionChars;
+	@Column(columnDefinition = "int2")
 	private Integer regularExpression;
 	private Date creation_date;
 	private Date modification_date;

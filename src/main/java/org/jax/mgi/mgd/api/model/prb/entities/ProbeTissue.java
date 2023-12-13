@@ -5,6 +5,7 @@ import java.util.Date;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +28,7 @@ public class ProbeTissue extends BaseEntity {
 
 	private int _tissue_key;
 	private String tissue;
+	@Column(columnDefinition = "int2")
 	private int standard;
 	private Date creation_date;
 	private Date modification_date;

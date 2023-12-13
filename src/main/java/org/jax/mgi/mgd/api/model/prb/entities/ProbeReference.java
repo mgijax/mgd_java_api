@@ -8,6 +8,7 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,7 +34,9 @@ public class ProbeReference extends BaseEntity {
 	@Schema(name="primary key")
 	private int _reference_key;
 	private int _probe_key;
+	@Column(columnDefinition = "int2")
 	private int hasRmap;
+	@Column(columnDefinition = "int2")
 	private int hasSequence;
 	private Date creation_date;
 	private Date modification_date;

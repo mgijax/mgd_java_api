@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +37,7 @@ public class AlleleVariant extends BaseEntity {
 	@SequenceGenerator(name="all_variant_seq_generator", sequenceName="all_variant_seq", allocationSize=1)
 	@Schema(name="primary key")
 	private int _variant_key;
+	@Column(columnDefinition="int2")
 	private int isReviewed;
 	private String description;
 	private Date creation_date;

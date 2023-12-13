@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -47,8 +48,11 @@ public class Allele extends BaseEntity {
 	private int _allele_key;
 	private String symbol;
 	private String name;
+	@Column(columnDefinition="int2")
 	private Integer isWildType;
+	@Column(columnDefinition="int2")
 	private Integer isExtinct;
+	@Column(columnDefinition="int2")
 	private Integer isMixed;
 	private Date approval_date;
 	private Date creation_date;

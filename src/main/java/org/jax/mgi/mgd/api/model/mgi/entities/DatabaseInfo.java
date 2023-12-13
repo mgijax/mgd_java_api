@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model.mgi.entities;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -21,6 +22,7 @@ public class DatabaseInfo extends BaseEntity {
 	private String schema_version;
 	private String snp_schema_version;
 	private String snp_data_version;
+	@Column(columnDefinition = "timestamp")
 	private String lastdump_date;
 
 }

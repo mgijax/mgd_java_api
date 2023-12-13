@@ -8,6 +8,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -44,11 +45,13 @@ public class RelationshipFear extends BaseEntity {
 	private String jnumid;
 	private int jnum;
 	private String short_citation;
-	private String _createdby_key;
+	private Integer _createdby_key;
 	private String createdBy;	
-	private String _modifiedby_key;
+	private Integer _modifiedby_key;
 	private String modifiedBy;
+	@Column(columnDefinition = "timestamp")
 	private String creation_date;
+	@Column(columnDefinition = "timestamp")
 	private String modification_date; 
 
 	//  1042 | Relationship

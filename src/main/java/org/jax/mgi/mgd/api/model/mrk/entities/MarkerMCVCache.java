@@ -6,6 +6,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -25,6 +26,7 @@ public class MarkerMCVCache extends BaseEntity {
 	private Integer _marker_key;
 	private Integer _MCVTerm_key;
 	private String term;
+	@Column(columnDefinition = "bpchar")
 	private String qualifier;
 	private String directTerms;
 	private Date creation_date;

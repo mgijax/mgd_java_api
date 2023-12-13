@@ -6,6 +6,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -25,6 +26,7 @@ public class MGISynonymType extends BaseEntity {
 	private int _synonymType_key;
 	private String synonymType;
 	private String definition;
+	@Column(columnDefinition = "int2")
 	private Integer allowOnlyOne;
 	private Date creation_date;
 	private Date modification_date;

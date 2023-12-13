@@ -5,6 +5,7 @@ import java.util.Date;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -27,7 +28,9 @@ public class Sequence extends BaseEntity {
 	private int length;
 	private String description;
 	private String version;
+	@Column(columnDefinition = "bpchar")
 	private String division;
+	@Column(columnDefinition = "int2")
 	private int virtual;
 	private int numerOfOrganisms;
 	private Date seqrecord_date;

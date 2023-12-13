@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 import org.jax.mgi.mgd.api.model.voc.entities.TermEMAPA;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +40,9 @@ public class HTSample extends BaseEntity {
 	private Integer _experiment_key;
  	private String name;
 	private String age;
+	@Column(columnDefinition = "numeric")
 	private Integer ageMin;
+	@Column(columnDefinition = "numeric")
 	private Integer ageMax;	
 	private Date creation_date;
 	private Date modification_date;

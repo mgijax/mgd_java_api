@@ -5,6 +5,7 @@ import java.util.Date;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +27,9 @@ public class AssayType extends BaseEntity {
 	@Schema(name="primary key")	
 	private int _assaytype_key;
 	private String assayType;
+	@Column(columnDefinition = "int2")
 	private Integer isRNAAssay;
+	@Column(columnDefinition = "int2")
 	private Integer isGelAssay;
 	private Integer sequenceNum;
 	private Date creation_date;

@@ -9,6 +9,7 @@ import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -27,7 +28,9 @@ public class Vocabulary extends BaseEntity {
 
 	@Id
 	private int _vocab_key;
+	@Column(columnDefinition = "int2")
 	private Integer isSimple;
+	@Column(columnDefinition = "int2")
 	private Integer isPrivate;
 	private String name;
 	private Date creation_date;

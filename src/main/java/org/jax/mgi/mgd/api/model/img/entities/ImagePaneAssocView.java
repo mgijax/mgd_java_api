@@ -8,6 +8,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.MGIType;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -32,6 +33,7 @@ public class ImagePaneAssocView extends BaseEntity {
 	private int _assoc_key;
 
 	private Integer _object_key;
+	@Column(columnDefinition = "int2")
 	private Integer isPrimary;
 	private String figureLabel;
 	private String term;

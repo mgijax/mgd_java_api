@@ -6,6 +6,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -28,6 +29,7 @@ public class AnnotationHeader extends BaseEntity {
 	private int _annotheader_key;
 	private Integer _object_key;
 	private Integer sequenceNum;
+	@Column(columnDefinition = "int2")
 	private Integer isNormal;
 	private Date approval_date;
 	private Date creation_date;

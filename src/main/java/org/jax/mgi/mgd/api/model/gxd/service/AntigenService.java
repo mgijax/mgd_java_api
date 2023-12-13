@@ -18,7 +18,6 @@ import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -42,9 +41,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 	
 	// for Search
 	private SlimAntigenTranslator slimtranslator = new SlimAntigenTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<AntigenDomain> create(AntigenDomain domain, User user) {
 		// create new entity object from in-coming domain

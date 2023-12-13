@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.mld.entities.Expts;
 import org.jax.mgi.mgd.api.model.mld.translator.ExptsTranslator;
 import org.jax.mgi.mgd.api.model.mld.translator.SlimExptsTranslator;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -42,8 +41,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	
 	private ExptsTranslator translator = new ExptsTranslator();	
 	private SlimExptsTranslator slimtranslator = new SlimExptsTranslator();		
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	private String exptTypes = "('TEXT-QTL', 'TEXT-Physical Mapping', 'TEXT-Congenic', 'TEXT-QTL-Candidate Genes', 'TEXT-Meta Analysis', 'TEXT', 'TEXT-Genetic Cross')"; 
 
 	//private String mgiTypeKey = "4";

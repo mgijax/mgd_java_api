@@ -24,7 +24,6 @@ import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -45,8 +44,7 @@ public class TermService extends BaseService<TermDomain> {
 	
 	private TermTranslator translator = new TermTranslator();
 	private SlimTermTranslator slimtranslator = new SlimTermTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<TermDomain> create(TermDomain domain, User user) {
 		SearchResults<TermDomain> results = new SearchResults<TermDomain>();		

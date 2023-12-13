@@ -17,7 +17,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -42,7 +41,6 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 	private NoteService noteService;
 	
 	private AlleleCellLineDerivationTranslator translator = new AlleleCellLineDerivationTranslator();				
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	String mgiTypeKey = "36";
 	

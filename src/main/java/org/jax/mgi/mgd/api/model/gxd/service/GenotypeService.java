@@ -22,7 +22,6 @@ import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -53,9 +52,7 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 	
 	private GenotypeTranslator translator = new GenotypeTranslator();
 	private SlimGenotypeTranslator slimtranslator = new SlimGenotypeTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	private String mgiTypeKey = "12";
 	
 	@Transactional

@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.gxd.entities.AssayType;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.domain.TermDomain;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -27,9 +26,7 @@ public class AssayTypeService extends BaseService<AssayTypeDomain> {
 
 	@Inject
 	private AssayTypeDAO assayTypeDAO;
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<AssayTypeDomain> create(AssayTypeDomain domain, User user) {
 		SearchResults<AssayTypeDomain> results = new SearchResults<AssayTypeDomain>();

@@ -18,7 +18,6 @@ import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipFearTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.RelationshipTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -47,8 +46,6 @@ public class RelationshipService extends BaseService<RelationshipDomain> {
 	private NoteService noteService;
 	
 	private RelationshipTranslator translator = new RelationshipTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<RelationshipDomain> create(RelationshipDomain object, User user) {

@@ -21,7 +21,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.SlimMarkerTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -45,8 +44,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 	private AlleleFearTranslator translator = new AlleleFearTranslator();
 	private SlimAlleleFearTranslator slimtranslator = new SlimAlleleFearTranslator();
 	private SlimMarkerTranslator slimmarkertranslator = new SlimMarkerTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	private String mgiTypeKey = "40";
 
 	@Transactional

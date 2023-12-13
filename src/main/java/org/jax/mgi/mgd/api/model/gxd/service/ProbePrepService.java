@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.prb.dao.ProbeDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -38,9 +37,7 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 //	private TermService termService;
 	
 	private ProbePrepTranslator translator = new ProbePrepTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ProbePrepDomain> create(ProbePrepDomain domain, User user) {
 		SearchResults<ProbePrepDomain> results = new SearchResults<ProbePrepDomain>();

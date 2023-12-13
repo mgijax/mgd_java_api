@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -39,8 +38,7 @@ public class VariantSequenceService extends BaseService<VariantSequenceDomain> {
 	// to process Sequence accession IDs
 	@Inject
 	AccessionService accessionService = new AccessionService();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<VariantSequenceDomain> create(VariantSequenceDomain domain, User user) {
 		SearchResults<VariantSequenceDomain> results = new SearchResults<VariantSequenceDomain>();

@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.mgi.translator.NoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.RunCommand;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -32,8 +31,6 @@ public class NoteService extends BaseService<NoteDomain> {
 	private NoteDAO noteDAO;
 
 	private NoteTranslator translator = new NoteTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<NoteDomain> create(NoteDomain object, User user) {

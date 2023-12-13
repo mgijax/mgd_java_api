@@ -31,7 +31,6 @@ import org.jax.mgi.mgd.api.model.voc.entities.AnnotationHeader;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -56,9 +55,7 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 	
 	private GenotypeAnnotTranslator translator = new GenotypeAnnotTranslator();
 	private SlimGenotypeTranslator slimtranslator = new SlimGenotypeTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	private String mgiTypeKey = "12";
 
 	@Transactional

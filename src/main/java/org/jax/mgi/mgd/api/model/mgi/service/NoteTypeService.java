@@ -10,7 +10,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.NoteTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.NoteTypeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -27,8 +26,7 @@ public class NoteTypeService extends BaseService<NoteTypeDomain> {
 	private NoteTypeDAO noteTypeDAO;
 
 	private NoteTypeTranslator translator = new NoteTypeTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<NoteTypeDomain> create(NoteTypeDomain object, User user) {
 		SearchResults<NoteTypeDomain> results = new SearchResults<NoteTypeDomain>();

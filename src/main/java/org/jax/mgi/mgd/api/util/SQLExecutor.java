@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 /**
@@ -24,12 +23,8 @@ public class SQLExecutor {
 
 	protected Logger log = Logger.getLogger(getClass());
 
-	// pull connection parameters from app.properties
-	@ConfigProperty(name = "quarkus.datasource.username")
 	protected String username;
-	@ConfigProperty(name = "quarkus.datasource.password")
 	protected String password;
-	@ConfigProperty(name = "quarkus.datasource.jdbc.url")
 	protected String mgdJDBCUrl;
 
 	/**
@@ -39,7 +34,10 @@ public class SQLExecutor {
 	 * @param config
 	 */
 
-	public SQLExecutor() {
+	public SQLExecutor(String mgdJDBCUrl, String username, String password) {
+		this.mgdJDBCUrl = mgdJDBCUrl;
+		this.username = username;
+		this.password = password;
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (Exception e) {

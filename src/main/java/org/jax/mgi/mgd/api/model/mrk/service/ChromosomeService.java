@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.mrk.domain.ChromosomeDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.Chromosome;
 import org.jax.mgi.mgd.api.model.mrk.translator.ChromosomeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -29,8 +28,7 @@ public class ChromosomeService extends BaseService<ChromosomeDomain> {
 	private ChromosomeDAO chromosomeDAO;
 
 	private ChromosomeTranslator translator = new ChromosomeTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ChromosomeDomain> create(ChromosomeDomain object, User user) {
 		SearchResults<ChromosomeDomain> results = new SearchResults<ChromosomeDomain>();

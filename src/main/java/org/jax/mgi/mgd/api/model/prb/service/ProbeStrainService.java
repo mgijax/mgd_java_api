@@ -26,7 +26,6 @@ import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -61,9 +60,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	
 	private ProbeStrainTranslator translator = new ProbeStrainTranslator();
 	private SlimProbeStrainTranslator slimtranslator = new SlimProbeStrainTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	private String mgiTypeKey = "10";
 	private String mgiTypeName = "Strain";
 	

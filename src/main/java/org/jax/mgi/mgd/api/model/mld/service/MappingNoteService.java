@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.mld.domain.MappingNoteDomain;
 import org.jax.mgi.mgd.api.model.mld.entities.MappingNote;
 import org.jax.mgi.mgd.api.model.mld.translator.MappingNoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -29,8 +28,7 @@ public class MappingNoteService extends BaseService<MappingNoteDomain> {
 	private MappingNoteDAO noteDAO;
 	
 	private MappingNoteTranslator translator = new MappingNoteTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<MappingNoteDomain> create(MappingNoteDomain domain, User user) {
 		SearchResults<MappingNoteDomain> results = new SearchResults<MappingNoteDomain>();

@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.prb.domain.ProbeMarkerDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeMarker;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeMarkerTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -35,8 +34,7 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 	private ReferenceCitationCacheDAO referenceDAO;
 
 	private ProbeMarkerTranslator translator = new ProbeMarkerTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ProbeMarkerDomain> create(ProbeMarkerDomain domain, User user) {
 		SearchResults<ProbeMarkerDomain> results = new SearchResults<ProbeMarkerDomain>();

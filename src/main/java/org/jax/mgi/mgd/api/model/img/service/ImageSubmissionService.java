@@ -21,7 +21,6 @@ import org.jax.mgi.mgd.api.model.img.domain.ImageSubmissionDomain;
 import org.jax.mgi.mgd.api.model.img.translator.ImageSubmissionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -41,8 +40,7 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 	private ImageDAO imageDAO;
 
 	private ImageSubmissionTranslator translator = new ImageSubmissionTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ImageSubmissionDomain> create(ImageSubmissionDomain domain, User user) {
 		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();

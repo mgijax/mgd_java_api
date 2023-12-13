@@ -10,7 +10,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.MGISynonymTypeDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTypeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -27,9 +26,7 @@ public class MGISynonymTypeService extends BaseService<MGISynonymTypeDomain> {
 	private MGISynonymTypeDAO synonymTypeDAO;
 
 	private MGISynonymTypeTranslator translator = new MGISynonymTypeTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<MGISynonymTypeDomain> create(MGISynonymTypeDomain object, User user) {
 		SearchResults<MGISynonymTypeDomain> results = new SearchResults<MGISynonymTypeDomain>();

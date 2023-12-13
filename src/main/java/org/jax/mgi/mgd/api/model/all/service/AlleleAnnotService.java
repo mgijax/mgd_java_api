@@ -24,7 +24,6 @@ import org.jax.mgi.mgd.api.model.voc.entities.Annotation;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -47,9 +46,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 	private AlleleAnnotTranslator translator = new AlleleAnnotTranslator();
 	private SlimAlleleAnnotTranslator slim1translator = new SlimAlleleAnnotTranslator();
 	private SlimAlleleTranslator slim2translator = new SlimAlleleTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	private String mgiTypeKey = "11";
 
 	@Transactional

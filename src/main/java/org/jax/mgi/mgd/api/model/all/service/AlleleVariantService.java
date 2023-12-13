@@ -22,7 +22,6 @@ import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.RunCommand;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -59,8 +58,6 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 	// translate an entity to a domain to return in the results
 	private AlleleVariantTranslator translator = new AlleleVariantTranslator();
 	private SlimAlleleVariantTranslator slimtranslator = new SlimAlleleVariantTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	private String mgiTypeKey = "45";
 	

@@ -40,7 +40,6 @@ import org.jax.mgi.mgd.api.model.voc.service.TermService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.DecodeString;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -79,8 +78,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	private ReferenceTranslator translator = new ReferenceTranslator();
 	private SlimReferenceTranslator slimtranslator = new SlimReferenceTranslator();	
 
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
 	// reference workflow statuses
 	private String WS_CHOSEN = "Chosen";
 	private String WS_FULLCODED = "Full-coded";

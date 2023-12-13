@@ -10,7 +10,6 @@ import org.jax.mgi.mgd.api.model.mgi.domain.UserDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.UserTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -27,7 +26,6 @@ public class UserService extends BaseService<UserDomain> {
 	private UserDAO userDAO;
 	
 	private UserTranslator translator = new UserTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<UserDomain> create(UserDomain object, User user) {

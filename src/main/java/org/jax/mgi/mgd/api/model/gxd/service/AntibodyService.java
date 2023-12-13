@@ -20,7 +20,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -52,9 +51,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	
 	private AntibodyTranslator translator = new AntibodyTranslator();
 	private SlimAntibodyTranslator slimtranslator = new SlimAntibodyTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	String mgiTypeKey = "6";
 	
 	// vocabulary keys

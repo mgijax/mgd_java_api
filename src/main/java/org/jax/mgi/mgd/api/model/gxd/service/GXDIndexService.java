@@ -19,7 +19,6 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.DecodeString;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -45,8 +44,7 @@ public class GXDIndexService extends BaseService<GXDIndexDomain> {
 	
 	private GXDIndexTranslator translator = new GXDIndexTranslator();
 	private SlimGXDIndexTranslator slimtranslator = new SlimGXDIndexTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<GXDIndexDomain> create(GXDIndexDomain domain, User user) {
 		// create new entity object from in-coming domain

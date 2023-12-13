@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceBook;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceBookTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -29,8 +28,7 @@ public class ReferenceBookService extends BaseService<ReferenceBookDomain> {
 	private ReferenceBookDAO bookDAO;
 
 	private ReferenceBookTranslator translator = new ReferenceBookTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ReferenceBookDomain> create(ReferenceBookDomain domain, User user) {
 		SearchResults<ReferenceBookDomain> results = new SearchResults<ReferenceBookDomain>();

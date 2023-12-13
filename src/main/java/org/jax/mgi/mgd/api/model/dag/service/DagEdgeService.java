@@ -24,8 +24,6 @@ public class DagEdgeService extends BaseService<DagEdgeDomain> {
 
 	private DagEdgeTranslator translator = new DagEdgeTranslator();
 
-	//private SQLExecutor sqlExecutor = new SQLExecutor();
-	
 	protected Logger log = Logger.getLogger(getClass());
 
 	@Transactional

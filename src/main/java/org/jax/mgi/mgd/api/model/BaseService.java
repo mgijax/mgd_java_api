@@ -16,6 +16,7 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
@@ -56,10 +57,20 @@ public abstract class BaseService<D extends BaseDomain> {
 	@ConfigProperty(name = "mgi.ds.dbpasswordfile")
 	protected String passwordFile;
 	
+	@ConfigProperty(name = "quarkus.datasource.jdbc.url")
+	protected String mgdJDBCUrl;
+	
 	@ConfigProperty(name = "mgi.pixeldb")
 	protected String pixeldb;
 	@ConfigProperty(name = "mgi.pixeldbCounter")
 	protected String pixeldbCounter;
+	
+	protected SQLExecutor sqlExecutor;
+
+	@PostConstruct
+	public void init() {
+		sqlExecutor = new SQLExecutor(mgdJDBCUrl, username, password);
+	}
 	
 	public interface TsvFormatter {
 	    public String format (ResultSet obj);
@@ -76,7 +87,7 @@ public abstract class BaseService<D extends BaseDomain> {
 					writer.write(firstLine);
 				}
 				try {
-					ResultSet rs = (new SQLExecutor()).executeProto(cmd);
+					ResultSet rs = (new SQLExecutor(mgdJDBCUrl, username, password)).executeProto(cmd);
 					while (rs.next()) {
 						writer.write(formatter.format(rs));
 					}

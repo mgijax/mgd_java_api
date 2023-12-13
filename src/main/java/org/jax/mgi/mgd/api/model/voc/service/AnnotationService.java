@@ -21,7 +21,6 @@ import org.jax.mgi.mgd.api.model.voc.translator.AlleleVariantAnnotationTranslato
 import org.jax.mgi.mgd.api.model.voc.translator.AnnotationTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.MarkerFeatureTypeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -49,8 +48,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
 	private AnnotationTranslator translator = new AnnotationTranslator();
 	private AlleleVariantAnnotationTranslator alleleVariantTranslator = new AlleleVariantAnnotationTranslator();	
 	private MarkerFeatureTypeTranslator markerFeatureTypeTranslator = new MarkerFeatureTypeTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	String mgiTypeKey = "25";
 	

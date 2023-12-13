@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.mld.entities.ExptMarker;
 import org.jax.mgi.mgd.api.model.mld.translator.ExptMarkerTranslator;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -38,8 +37,7 @@ public class ExptMarkerService extends BaseService<ExptMarkerDomain> {
 	private MappingAssayTypeDAO assayTypeDAO;
 	
 	private ExptMarkerTranslator translator = new ExptMarkerTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ExptMarkerDomain> create(ExptMarkerDomain domain, User user) {
 		SearchResults<ExptMarkerDomain> results = new SearchResults<ExptMarkerDomain>();

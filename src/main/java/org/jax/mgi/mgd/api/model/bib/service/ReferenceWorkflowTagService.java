@@ -13,7 +13,6 @@ import org.jax.mgi.mgd.api.model.bib.translator.ReferenceWorkflowTagTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -32,8 +31,7 @@ public class ReferenceWorkflowTagService extends BaseService<ReferenceWorkflowTa
 	private TermDAO termDAO;
 	
 	private ReferenceWorkflowTagTranslator translator = new ReferenceWorkflowTagTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ReferenceWorkflowTagDomain> create(ReferenceWorkflowTagDomain domain, User user) {
 		SearchResults<ReferenceWorkflowTagDomain> results = new SearchResults<ReferenceWorkflowTagDomain>();

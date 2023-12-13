@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceNoteTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -29,8 +28,7 @@ public class ReferenceNoteService extends BaseService<ReferenceNoteDomain> {
 	private ReferenceNoteDAO noteDAO;
 
 	private ReferenceNoteTranslator translator = new ReferenceNoteTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ReferenceNoteDomain> create(ReferenceNoteDomain domain, User user) {
 		SearchResults<ReferenceNoteDomain> results = new SearchResults<ReferenceNoteDomain>();

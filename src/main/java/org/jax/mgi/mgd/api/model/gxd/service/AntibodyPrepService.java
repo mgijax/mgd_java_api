@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -38,10 +37,7 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 //	private TermService termService;
 	
 	private AntibodyPrepTranslator translator = new AntibodyPrepTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
-	
+
 	@Transactional
 	public SearchResults<AntibodyPrepDomain> create(AntibodyPrepDomain domain, User user) {
 		SearchResults<AntibodyPrepDomain> results = new SearchResults<AntibodyPrepDomain>();

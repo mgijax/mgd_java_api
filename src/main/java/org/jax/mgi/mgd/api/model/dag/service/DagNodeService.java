@@ -26,8 +26,6 @@ public class DagNodeService extends BaseService<DagNodeDomain> {
 
 	private DagNodeTranslator translator = new DagNodeTranslator();
 	
-	//private SQLExecutor sqlExecutor = new SQLExecutor();
-	
 	@Transactional
 	public SearchResults<DagNodeDomain> create(DagNodeDomain object, User user) {
 		SearchResults<DagNodeDomain> results = new SearchResults<DagNodeDomain>();

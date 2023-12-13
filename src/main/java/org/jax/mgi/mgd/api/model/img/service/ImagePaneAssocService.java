@@ -19,7 +19,6 @@ import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssoc;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneAssocTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -43,8 +42,7 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 	private AlleleService alleleService;
 	
 	private ImagePaneAssocTranslator translator = new ImagePaneAssocTranslator();	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ImagePaneAssocDomain> create(ImagePaneAssocDomain domain, User user) {
 		SearchResults<ImagePaneAssocDomain> results = new SearchResults<ImagePaneAssocDomain>();

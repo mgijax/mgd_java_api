@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISetMemberTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISetTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -36,7 +35,6 @@ public class MGISetService extends BaseService<MGISetDomain> {
 	
 	private MGISetTranslator translator = new MGISetTranslator();				
 	private MGISetMemberTranslator memberTranslator = new MGISetMemberTranslator();					
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<MGISetDomain> create(MGISetDomain object, User user) {

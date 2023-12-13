@@ -13,7 +13,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.OrganismMGIType;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.OrganismMGITypeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -32,8 +31,7 @@ public class OrganismMGITypeService extends BaseService<OrganismMGITypeDomain> {
 	private MGITypeDAO mgiTypeDAO;
 
 	private OrganismMGITypeTranslator translator = new OrganismMGITypeTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<OrganismMGITypeDomain> create(OrganismMGITypeDomain domain, User user) {
 		SearchResults<OrganismMGITypeDomain> results = new SearchResults<OrganismMGITypeDomain>();

@@ -39,7 +39,6 @@ import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.RunCommand;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -103,8 +102,6 @@ public class AssayService extends BaseService<AssayDomain> {
 	private SlimAssayTranslator slimtranslator = new SlimAssayTranslator();
 	private GenotypeTranslator genotypetranslator = new GenotypeTranslator();
 	private SummaryResultTranslator summaryresulttranslator = new SummaryResultTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	String mgiTypeKey = "8";
 	String mgiTypeName = "Assay";

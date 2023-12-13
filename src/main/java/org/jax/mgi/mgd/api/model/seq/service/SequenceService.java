@@ -10,7 +10,6 @@ import org.jax.mgi.mgd.api.model.seq.dao.SequenceDAO;
 import org.jax.mgi.mgd.api.model.seq.domain.SequenceDomain;
 import org.jax.mgi.mgd.api.model.seq.domain.SummarySeqDomain;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -28,8 +27,7 @@ public class SequenceService extends BaseService<SequenceDomain> {
 	private SequenceDAO sequenceDAO;
 
 	//private SequenceTranslator translator = new SequenceTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<SequenceDomain> create(SequenceDomain object, User user) {
 		SearchResults<SequenceDomain> results = new SearchResults<SequenceDomain>();

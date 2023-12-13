@@ -21,7 +21,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -48,8 +47,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 	private NoteService noteService;
 	
 	private HTSampleTranslator translator = new HTSampleTranslator();
-
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<HTSampleDomain> create(HTSampleDomain domain, User user) {

@@ -15,7 +15,6 @@ import org.jax.mgi.mgd.api.model.img.entities.ImagePane;
 import org.jax.mgi.mgd.api.model.img.translator.ImagePaneTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -32,8 +31,7 @@ public class ImagePaneService extends BaseService<ImagePaneDomain> {
 	private ImagePaneDAO imagePaneDAO;
 	
 	private ImagePaneTranslator translator = new ImagePaneTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ImagePaneDomain> create(ImagePaneDomain domain, User user) {
 		SearchResults<ImagePaneDomain> results = new SearchResults<ImagePaneDomain>();

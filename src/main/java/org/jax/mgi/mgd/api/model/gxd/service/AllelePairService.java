@@ -19,7 +19,6 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.RunCommand;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -46,8 +45,7 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 	private TermDAO termDAO;
 	
 	private AllelePairTranslator translator = new AllelePairTranslator();	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<AllelePairDomain> create(AllelePairDomain domain, User user) {
 		SearchResults<AllelePairDomain> results = new SearchResults<AllelePairDomain>();

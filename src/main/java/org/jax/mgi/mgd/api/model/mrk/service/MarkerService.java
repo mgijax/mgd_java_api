@@ -31,7 +31,6 @@ import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.RunCommand;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -70,8 +69,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 
 	private MarkerTranslator translator = new MarkerTranslator();
 	private SlimMarkerTranslator slimtranslator = new SlimMarkerTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	String mgiTypeKey = "2";
 	String mgiTypeName = "Marker";
 	

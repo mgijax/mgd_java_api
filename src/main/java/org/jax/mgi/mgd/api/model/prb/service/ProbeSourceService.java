@@ -20,7 +20,6 @@ import org.jax.mgi.mgd.api.model.prb.translator.ProbeSourceTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeSourceTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -51,8 +50,7 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 	
 	private ProbeSourceTranslator translator = new ProbeSourceTranslator();
 	private SlimProbeSourceTranslator slimtranslator = new SlimProbeSourceTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	String mgiTypeName = "Source";
 	
 	@Transactional

@@ -24,7 +24,6 @@ import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeSummaryTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -62,9 +61,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	private SlimProbeTranslator slimtranslator = new SlimProbeTranslator();
 	private SlimProbeSummaryTranslator slimsummarytranslator = new SlimProbeSummaryTranslator();
 	private AccessionTranslator acctranslator = new AccessionTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	private String mgiTypeKey = "3";
 	
 	@Transactional

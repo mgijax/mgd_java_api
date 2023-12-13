@@ -17,7 +17,6 @@ import org.jax.mgi.mgd.api.model.mrk.entities.MarkerHistory;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerHistoryTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -41,8 +40,7 @@ public class MarkerHistoryService extends BaseService<MarkerHistoryDomain> {
 	private MarkerDAO markerDAO;
 
 	private MarkerHistoryTranslator translator = new MarkerHistoryTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<MarkerHistoryDomain> create(MarkerHistoryDomain domain, User user) {
 		SearchResults<MarkerHistoryDomain> results = new SearchResults<MarkerHistoryDomain>();

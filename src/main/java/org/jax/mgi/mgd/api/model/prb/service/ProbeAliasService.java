@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.prb.domain.ProbeAliasDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeAlias;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeAliasTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -29,8 +28,7 @@ public class ProbeAliasService extends BaseService<ProbeAliasDomain> {
 	private ProbeAliasDAO aliasDAO;
 
 	private ProbeAliasTranslator translator = new ProbeAliasTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ProbeAliasDomain> create(ProbeAliasDomain domain, User user) {
 		SearchResults<ProbeAliasDomain> results = new SearchResults<ProbeAliasDomain>();

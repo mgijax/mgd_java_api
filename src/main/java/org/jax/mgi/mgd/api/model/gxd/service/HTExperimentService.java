@@ -21,7 +21,6 @@ import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -33,7 +32,7 @@ import jakarta.transaction.Transactional;
 public class HTExperimentService extends BaseService<HTDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-	private SQLExecutor sqlExecutor = new SQLExecutor();
+	
 	private HTExperimentTranslator translator = new HTExperimentTranslator();
 
 	@Inject

@@ -21,7 +21,6 @@ import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -49,8 +48,6 @@ public class CellLineService extends BaseService<CellLineDomain> {
 	
 	private CellLineTranslator translator = new CellLineTranslator();	
 	private SlimCellLineTranslator slimtranslator = new SlimCellLineTranslator();
-	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 	
 	//private String mgiTypeKey = "28";
 	private String mgiTypeName = "ES Cell Line";

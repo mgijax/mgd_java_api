@@ -13,7 +13,6 @@ import org.jax.mgi.mgd.api.model.gxd.entities.HTRawSample;
 import org.jax.mgi.mgd.api.model.gxd.translator.HTRawSampleTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -26,7 +25,6 @@ import jakarta.transaction.Transactional;
 public class HTRawSampleService extends BaseService<HTRawSampleDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Inject
 	private HTRawSampleDAO htRawSampleDAO;

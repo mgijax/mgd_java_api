@@ -29,7 +29,6 @@ import org.jax.mgi.mgd.api.model.voc.domain.EvidencePropertyDomain;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.RunCommand;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -56,8 +55,7 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	private MarkerAnnotTranslator translator = new MarkerAnnotTranslator();
 	
 	private SlimMarkerAnnotTranslator slimtranslator = new SlimMarkerAnnotTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	private String mgiTypeKey = "2";
 
 	@Transactional

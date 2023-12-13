@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.acc.translator.MGITypeTranslator;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimMGITypeTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -30,7 +29,6 @@ public class MGITypeService extends BaseService<MGITypeDomain> {
 	
 	private MGITypeTranslator translator = new MGITypeTranslator();	
 	private SlimMGITypeTranslator slimtranslator = new SlimMGITypeTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<MGITypeDomain> create(MGITypeDomain object, User user) {

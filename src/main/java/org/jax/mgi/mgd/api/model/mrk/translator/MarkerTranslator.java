@@ -285,7 +285,7 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// biotypes 
 		if (entity.getBiotypes() != null && !entity.getBiotypes().isEmpty()) {
-			log.info("size of entity.getBiotypes:" + entity.getBiotypes().size());
+			log.debug("size of entity.getBiotypes:" + entity.getBiotypes().size());
 			Iterable<SeqMarkerBiotypeDomain> bio = biotypeTranslator.translateEntities(entity.getBiotypes());
 			domain.setBiotypes(IteratorUtils.toList(bio.iterator()));
 			domain.getBiotypes().sort(Comparator.comparing(SeqMarkerBiotypeDomain::getRawbiotype, String.CASE_INSENSITIVE_ORDER));

@@ -23,7 +23,6 @@ import jakarta.transaction.Transactional;
 public class HTExperimentVariableService extends BaseService<HTExperimentVariableDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-	//private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Inject
 	private HTExperimentVariableDAO htExperimentVariableDAO;

@@ -17,7 +17,6 @@ import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -38,8 +37,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 	private OrganismDAO organismDAO;
 	
 	private LogicalDbTranslator translator = new LogicalDbTranslator();	
-
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<LogicalDbDomain> create(LogicalDbDomain domain, User user) {

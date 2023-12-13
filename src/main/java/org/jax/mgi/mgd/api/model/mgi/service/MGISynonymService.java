@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGISynonymTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -36,7 +35,6 @@ public class MGISynonymService extends BaseService<MGISynonymDomain> {
 	private ReferenceCitationCacheDAO referenceDAO;
 
 	private MGISynonymTranslator translator = new MGISynonymTranslator();				
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<MGISynonymDomain> create(MGISynonymDomain object, User user) {

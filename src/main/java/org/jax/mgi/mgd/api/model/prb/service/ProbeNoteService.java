@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.prb.domain.ProbeNoteDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeNote;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeNoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -29,8 +28,7 @@ public class ProbeNoteService extends BaseService<ProbeNoteDomain> {
 	private ProbeNoteDAO noteDAO;
 
 	private ProbeNoteTranslator translator = new ProbeNoteTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ProbeNoteDomain> create(ProbeNoteDomain domain, User user) {
 		SearchResults<ProbeNoteDomain> results = new SearchResults<ProbeNoteDomain>();

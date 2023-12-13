@@ -13,7 +13,6 @@ import org.jax.mgi.mgd.api.model.acc.translator.AccessionTranslator;
 import org.jax.mgi.mgd.api.model.acc.translator.SlimAccessionTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -32,7 +31,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 
 	private AccessionTranslator translator = new AccessionTranslator();
 	private SlimAccessionTranslator slimtranslator = new SlimAccessionTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<AccessionDomain> create(AccessionDomain object, User user) {

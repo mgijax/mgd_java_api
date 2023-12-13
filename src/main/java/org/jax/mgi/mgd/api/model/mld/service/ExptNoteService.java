@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.mld.domain.ExptNoteDomain;
 import org.jax.mgi.mgd.api.model.mld.entities.ExptNote;
 import org.jax.mgi.mgd.api.model.mld.translator.ExptNoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -29,8 +28,7 @@ public class ExptNoteService extends BaseService<ExptNoteDomain> {
 	private ExptNoteDAO noteDAO;
 
 	private ExptNoteTranslator translator = new ExptNoteTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ExptNoteDomain> create(ExptNoteDomain domain, User user) {
 		SearchResults<ExptNoteDomain> results = new SearchResults<ExptNoteDomain>();

@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.translator.OrganismTranslator;
 import org.jax.mgi.mgd.api.model.mgi.translator.SlimOrganismTranslator;
 import org.jax.mgi.mgd.api.model.mrk.service.ChromosomeService;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -36,7 +35,6 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	
 	private OrganismTranslator translator = new OrganismTranslator();
 	private SlimOrganismTranslator slimtranslator = new SlimOrganismTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
 
 	@Transactional
 	public SearchResults<OrganismDomain> create(OrganismDomain domain, User user) {	

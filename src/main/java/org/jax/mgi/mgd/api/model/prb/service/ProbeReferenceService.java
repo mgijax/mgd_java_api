@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.prb.domain.ProbeReferenceDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeReference;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeReferenceTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -37,8 +36,7 @@ public class ProbeReferenceService extends BaseService<ProbeReferenceDomain> {
 	private ProbeAliasService aliasService;
 
 	private ProbeReferenceTranslator translator = new ProbeReferenceTranslator();						
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	private String mgiTypeName = "Segment";
 	
 	@Transactional

@@ -14,7 +14,6 @@ import org.jax.mgi.mgd.api.model.prb.entities.ProbeTissue;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeTissueTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -31,8 +30,7 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 	ProbeTissueDAO probeTissueDAO;
 	
 	private ProbeTissueTranslator translator = new ProbeTissueTranslator();	
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<ProbeTissueDomain> create(ProbeTissueDomain domain, User user) {
 		SearchResults<ProbeTissueDomain> results = new SearchResults<ProbeTissueDomain>();		

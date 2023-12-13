@@ -10,7 +10,6 @@ import org.jax.mgi.mgd.api.model.mrk.dao.MarkerTypeDAO;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerTypeDomain;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerTypeTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
-import org.jax.mgi.mgd.api.util.SQLExecutor;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -27,8 +26,7 @@ public class MarkerTypeService extends BaseService<MarkerTypeDomain> {
 	private MarkerTypeDAO markerTypeDAO;
 
 	private MarkerTypeTranslator translator = new MarkerTypeTranslator();
-	private SQLExecutor sqlExecutor = new SQLExecutor();
-	
+
 	@Transactional
 	public SearchResults<MarkerTypeDomain> create(MarkerTypeDomain object, User user) {
 		SearchResults<MarkerTypeDomain> results = new SearchResults<MarkerTypeDomain>();

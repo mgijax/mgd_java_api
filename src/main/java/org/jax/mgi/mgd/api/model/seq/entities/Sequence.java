@@ -21,7 +21,7 @@ public class Sequence extends BaseEntity {
 	@Id
 	private int _sequence_key;
 	private int _sequencetype_key;
-	private int _sequencequaliy_key;
+	private int _sequencequality_key;
 	private int _sequencestatus_key;
 	private int _sequenceprovider_key;
 	private int _organism_key;
@@ -32,7 +32,7 @@ public class Sequence extends BaseEntity {
 	private String division;
 	@Column(columnDefinition = "int2")
 	private int virtual;
-	private int numerOfOrganisms;
+	private int numberOfOrganisms;
 	private Date seqrecord_date;
 	private Date sequence_date;
 	private int _createdby_key;

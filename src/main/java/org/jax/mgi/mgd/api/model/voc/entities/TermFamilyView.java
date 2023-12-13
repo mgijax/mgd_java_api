@@ -29,7 +29,7 @@ public class TermFamilyView extends BaseEntity {
 	private Integer sequenceNum;
 	@Column(columnDefinition = "int2")
 	private Integer isObsolete;
-	private int _creatdby_key;
+	private int _createdby_key;
 	private int _modifiedby_key;
 	private Date creation_date;
 	private Date modification_date;

@@ -45,7 +45,7 @@ import jakarta.ws.rs.core.Response;
 public class MarkerService extends BaseService<MarkerDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-
+	
 	@Inject
 	private MarkerDAO markerDAO;
 	@Inject
@@ -1484,13 +1484,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		// when we replace pgdbutilities/bin/ei/markerWithdrawal.py
 		// with java version, then we will use "User user".
-		
-		// these swarm variables are in 'app.properties'
-    	String eiUtilitiesScript = System.getProperty("swarm.ds.eiUtilities");
-    	String server = System.getProperty("swarm.ds.dbserver");
-        String db = System.getProperty("swarm.ds.dbname");
-        String username = System.getProperty("swarm.ds.username");
-        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
         
         // input:  searchForm parameters
 		Map<String, Object> params = searchForm.getSearchFields();
@@ -1503,7 +1496,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
         runCmd = runCmd + " -S" + server;
         runCmd = runCmd + " -D" + db;
         runCmd = runCmd + " -U" + username;
-        runCmd = runCmd + " -P" + pwd;
+        runCmd = runCmd + " -P" + passwordFile;
         runCmd = runCmd + " --eventKey=" + (String) params.get("eventKey");
         runCmd = runCmd + " --eventReasonKey=" + (String) params.get("eventReasonKey");
         runCmd = runCmd + " --oldKey=" + (String) params.get("oldKey");
@@ -1645,16 +1638,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional		
 	public Boolean mrklocationUtilities(String markerKey) throws IOException, InterruptedException {
 		// see mrkcacheload/mrklocation.py
-		
-		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.mrkLocationUtilities");
-        
+
         // input:  markerKey
 
         // output: true/false
         Boolean returnCode = false;
         
-		String runCmd = utilitiesScript;
+		String runCmd = mrkLocationUtilitiesScript;
         runCmd = runCmd + " " + markerKey;
 		
 		// run the runCmd
@@ -1677,24 +1667,17 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional		
 	public Boolean mrkmcvUtilities(String markerKey) throws IOException, InterruptedException {
 		// see mrkcacheload/mrkmcv.py
-		
-		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.mrkmcvUtilities");
-    	String server = System.getProperty("swarm.ds.dbserver");
-        String db = System.getProperty("swarm.ds.dbname");
-        String username = System.getProperty("swarm.ds.username");
-        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
         
         // input:  markerKey
 
         // output: true/false
         Boolean returnCode = false;
         
-		String runCmd = utilitiesScript;
+		String runCmd = mrkmcvUtilitiesScript;
         runCmd = runCmd + " -S" + server;
         runCmd = runCmd + " -D" + db;
         runCmd = runCmd + " -U" + username;
-        runCmd = runCmd + " -P" + pwd;             
+        runCmd = runCmd + " -P" + passwordFile;
 		runCmd = runCmd + " -K" + markerKey;
 		
 		// run the runCmd
@@ -1717,16 +1700,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional		
 	public Boolean mrkrefByMarkerUtilities(String markerKey) throws IOException, InterruptedException {
 		// see mrkcacheload/mrkrefByMarker.py
-		
-		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.mrkrefByMarkerUtilities");
-        
+
         // input:  markerKey
 
         // output: true/false
         Boolean returnCode = false;
         
-		String runCmd = utilitiesScript;
+		String runCmd = mrkrefByMarkerUtilitiesScript;
         runCmd = runCmd + " " + markerKey;
 		
 		// run the runCmd
@@ -1749,16 +1729,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 	@Transactional		
 	public Boolean mrkrefByReferenceUtilities(String refsKey) throws IOException, InterruptedException {
 		// see mrkcacheload/mrkrefByReference.py
-		
-		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.mrkrefByReferenceUtilities");
-        
+
         // input:  refsKey
 
         // output: true/false
         Boolean returnCode = false;
         
-		String runCmd = utilitiesScript;
+		String runCmd = mrkrefByReferenceUtilitiesScript;
         runCmd = runCmd + " " + refsKey;
 		
 		// run the runCmd

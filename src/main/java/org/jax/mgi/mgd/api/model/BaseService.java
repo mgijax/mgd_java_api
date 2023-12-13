@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.sql.ResultSet;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jax.mgi.mgd.api.exception.APIException;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.SQLExecutor;
@@ -23,6 +24,43 @@ public abstract class BaseService<D extends BaseDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
 
+	// these swarm variables are in 'application.properties'
+	@ConfigProperty(name = "mgi.scripts.eiUtilities")
+	protected String eiUtilitiesScript;
+	@ConfigProperty(name = "mgi.scripts.alleleCombinationUtilities")
+	protected String alleleCombinationUtilitiesScript;
+	@ConfigProperty(name = "mgi.scripts.mrkLocationUtilities")
+	protected String mrkLocationUtilitiesScript;
+	@ConfigProperty(name = "mgi.scripts.mrkrefByMarkerUtilities")
+	protected String mrkrefByMarkerUtilitiesScript;
+	@ConfigProperty(name = "mgi.scripts.mrkrefByReferenceUtilities")
+	protected String mrkrefByReferenceUtilitiesScript;
+	@ConfigProperty(name = "mgi.scripts.mrkmcvUtilities")
+	protected String mrkmcvUtilitiesScript;
+	@ConfigProperty(name = "mgi.scripts.gxdexpressionUtilities")
+	protected String gxdexpressionUtilitiesScript;
+	@ConfigProperty(name = "mgi.scripts.gorefsUtilities")
+	protected String gorefsUtilitiesScript;
+	@ConfigProperty(name = "mgi.scripts.jannovarUtilities")
+	protected String jannovarUtilitiesScript;
+	
+	@ConfigProperty(name = "quarkus.datasource.username")
+	protected String username;
+	@ConfigProperty(name = "quarkus.datasource.password")
+	protected String password;
+	
+	@ConfigProperty(name = "mgi.ds.dbserver")
+	protected String server;
+	@ConfigProperty(name = "mgi.ds.dbname")
+	protected String db;
+	@ConfigProperty(name = "mgi.ds.dbpasswordfile")
+	protected String passwordFile;
+	
+	@ConfigProperty(name = "mgi.pixeldb")
+	protected String pixeldb;
+	@ConfigProperty(name = "mgi.pixeldbCounter")
+	protected String pixeldbCounter;
+	
 	public interface TsvFormatter {
 	    public String format (ResultSet obj);
 	}

@@ -2,16 +2,13 @@ quarkus.http.host=0.0.0.0
 quarkus.http.limits.max-body-size=
 quarkus.http.root-path=/
 quarkus.http.non-application-root-path=/
-
 quarkus.http.cors=true
 quarkus.http.cors.origins=/.*/
-
 
 quarkus.swagger-ui.always-include=true
 quarkus.swagger-ui.doc-expansion=none
 
 quarkus.hibernate-orm.database.generation=validate
-
 
 quarkus.datasource.db-kind=postgresql
 quarkus.datasource.username=postgres
@@ -19,3 +16,22 @@ quarkus.datasource.password=postgres
 
 quarkus.datasource.jdbc.max-size=128
 quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/export?currentSchema=mgd
+
+mgi.api.access_token=myDefaultToken
+
+mgi.ds.dbserver=bhmgidb01
+mgi.ds.dbname=prod
+mgi.ds.dbpasswordfile=/usr/local/mgi/live/dbutils/pgdbutilities/.pgpass_1
+
+mgi.scripts.eiUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/dbutils/pgdbutilities/bin/ei/markerWithdrawal.py
+mgi.scripts.alleleCombinationUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/dbutils/allcacheload/allelecombinationByGenotype.py
+mgi.scripts.mrkLocationUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/dbutils/mrkcacheload/mrklocation.py
+mgi.scripts.mrkrefByMarkerUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/dbutils/mrkcacheload/mrkrefByMarker.py
+mgi.scripts.mrkrefByReferenceUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/dbutils/mrkcacheload/mrkrefByReference.py
+mgi.scripts.mrkmcvUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/dbutils/mrkcacheload/mrkmcv.py
+mgi.scripts.gxdexpressionUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/dbutils/mgicacheload/gxdexpression.py
+mgi.scripts.gorefsUtilities=/opt/python3.7/bin/python3 /usr/local/mgi/live/qcreports_db/pwi/GORefs.py
+mgi.scripts.jannovarUtilities=/usr/local/mgi/live/mgd_java_api/jannovar/runJannovar.sh
+
+mgi.pixeldb=/data/pixeldb
+mgi.pixeldbCounter=/data/pixeldb/accession/counter

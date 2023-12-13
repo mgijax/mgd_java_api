@@ -728,15 +728,12 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 	public List<SlimMarkerDomain> getGOReferenceReport(SlimMarkerDomain domain) throws IOException, InterruptedException {
 		// see pgdbutilities/bin/ei/GORefs.py
 		
-		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.gorefsUtilities");
-        
         // input:  markerKey
 
         // output: empty domain; because we have to return something
     	List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
         
-		String runCmd = utilitiesScript;
+		String runCmd = gorefsUtilitiesScript;
         runCmd = runCmd + " " + domain.getModifiedBy() + " " + domain.getMarkerKey();
 		
 		// run the runCmd

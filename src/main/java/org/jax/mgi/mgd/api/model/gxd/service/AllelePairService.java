@@ -31,7 +31,7 @@ import jakarta.transaction.Transactional;
 public class AllelePairService extends BaseService<AllelePairDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-
+	
 	@Inject
 	private AllelePairDAO allelePairDAO;
 	@Inject
@@ -423,24 +423,17 @@ public class AllelePairService extends BaseService<AllelePairDomain> {
 	@Transactional		
 	public Boolean alleleCombinationUtilities(String genotypeKey) throws IOException, InterruptedException {
 		// see allcacheload/allelecombinationByGenotype.py
-		
-		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.alleleCombinationUtilities");
-    	String server = System.getProperty("swarm.ds.dbserver");
-        String db = System.getProperty("swarm.ds.dbname");
-        String username = System.getProperty("swarm.ds.username");
-        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
         
         // input:  genotypeKey
 
         // output: true/false
         Boolean returnCode = false;
         
-		String runCmd = utilitiesScript;
+		String runCmd = alleleCombinationUtilitiesScript;
         runCmd = runCmd + " -S" + server;
         runCmd = runCmd + " -D" + db;
         runCmd = runCmd + " -U" + username;
-        runCmd = runCmd + " -P" + pwd;
+        runCmd = runCmd + " -P" + passwordFile;
         runCmd = runCmd + " -K" + genotypeKey;
 		
 		// run the runCmd

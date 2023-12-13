@@ -7,71 +7,77 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Properties;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 /**
- * The SQLExecutor class knows how to create connections
- * and execute queries against a given database.
+ * The SQLExecutor class knows how to create connections and execute queries
+ * against a given database.
  */
 public class SQLExecutor {
 
 	public Properties props = new Properties();
 	protected Connection conMGD = null;
-	private String user;
-	private String password;
-	private String mgdJDBCUrl;
 
 	private Date start;
 	private Date end;
 
 	protected Logger log = Logger.getLogger(getClass());
 
+	// pull connection parameters from app.properties
+	@ConfigProperty(name = "quarkus.datasource.username")
+	protected String username;
+	@ConfigProperty(name = "quarkus.datasource.password")
+	protected String password;
+	@ConfigProperty(name = "quarkus.datasource.jdbc.url")
+	protected String mgdJDBCUrl;
+
 	/**
-	 * The default constructor pulls in connection information from the property files.
+	 * The default constructor pulls in connection information from the property
+	 * files.
 	 * 
 	 * @param config
 	 */
 
-	public SQLExecutor () {
+	public SQLExecutor() {
 		try {
-
-			// pull connection parameters from app.properties
 			Class.forName("org.postgresql.Driver");
-			user       = System.getProperty("swarm.ds.username");
-			password   = System.getProperty("swarm.ds.password");
-			mgdJDBCUrl = System.getProperty("swarm.ds.connection.url");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		catch (Exception e) {e.printStackTrace();}
 	}
 
 	/**
 	 * Sets up the connection to the MGD Database.
+	 * 
 	 * @throws SQLException
 	 */
 
 	private void getMGDConnection() throws SQLException {
-		conMGD = DriverManager.getConnection(mgdJDBCUrl, user, password);
+		conMGD = DriverManager.getConnection(mgdJDBCUrl, username, password);
 		conMGD.setAutoCommit(false);
 	}
 
 	/**
 	 * Clean up the connections to the database, if they have been initialized.
+	 * 
 	 * @throws SQLException
 	 */
 
 	public void cleanup() throws SQLException {
 		if (conMGD != null) {
 			conMGD.close();
-                        conMGD = null;
+			conMGD = null;
 		}
 	}
 
 	/**
-	 * Execute a statement against MGD (where that statement has no rows
-	 * returned), setting up the connection if needed.
+	 * Execute a statement against MGD (where that statement has no rows returned),
+	 * setting up the connection if needed.
+	 * 
 	 * @param query
 	 */
-	public void executeUpdate (String cmd) {
+	public void executeUpdate(String cmd) {
 
 		try {
 			if (conMGD == null) {
@@ -89,12 +95,14 @@ public class SQLExecutor {
 			return;
 		}
 	}
+
 	/*
 	 * execute any SQL that does not return a result
 	 */
 	public void executeVoid(String sql) {
 		try {
-			if (conMGD == null)  getMGDConnection();
+			if (conMGD == null)
+				getMGDConnection();
 			java.sql.Statement stmt = conMGD.createStatement();
 			start = new Date();
 			stmt.execute(sql);
@@ -107,20 +115,22 @@ public class SQLExecutor {
 
 	/**
 	 * Execute a query against MGD, setting up the connection if needed.
+	 * 
 	 * @param query
 	 * @return
 	 */
-	public ResultSet executeProto (String query) {
+	public ResultSet executeProto(String query) {
 		return executeProto(query, 10000);
 	}
 
 	/**
-	 * Execute a query against MGD, setting up the connection if needed.  Use a cursor
-	 * to return 'cursorLimit' results at a time.
+	 * Execute a query against MGD, setting up the connection if needed. Use a
+	 * cursor to return 'cursorLimit' results at a time.
+	 * 
 	 * @param query
 	 * @return
 	 */
-	public ResultSet executeProto (String query, int cursorLimit) {
+	public ResultSet executeProto(String query, int cursorLimit) {
 
 		ResultSet set;
 
@@ -133,21 +143,22 @@ public class SQLExecutor {
 			if (cursorLimit > 0) {
 				stmt.setFetchSize(cursorLimit);
 			}
-			//start = new Date();
-			//log.info("start executeQuery:" + start);
+			// start = new Date();
+			// log.info("start executeQuery:" + start);
 			set = stmt.executeQuery(query);
-			//end = new Date();
-			//log.info("end executeQuery:" + end);			
+			// end = new Date();
+			// log.info("end executeQuery:" + end);
 			return set;
 		} catch (Exception e) {
 			e.printStackTrace();
-			//System.exit(1);
+			// System.exit(1);
 			return null;
 		}
 	}
 
 	/**
 	 * Return the timing of the last query.
+	 * 
 	 * @return
 	 */
 
@@ -155,8 +166,9 @@ public class SQLExecutor {
 		return end.getTime() - start.getTime();
 	}
 
-	/* returns a formatted timestamp as a string, showing the last query's
-	 * execution time in ms.  format:  "(n ms)"
+	/*
+	 * returns a formatted timestamp as a string, showing the last query's execution
+	 * time in ms. format: "(n ms)"
 	 */
 	public String getTimestamp() {
 		return getTiming() + " ms";
@@ -164,7 +176,7 @@ public class SQLExecutor {
 
 	@Override
 	public String toString() {
-		return "SQLExecutor[user="+user+",password="+password+",url="+mgdJDBCUrl+"]";
+		return "SQLExecutor[username=" + username + ",password=" + password + ",url=" + mgdJDBCUrl + "]";
 	}
 
 }

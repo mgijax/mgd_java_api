@@ -65,7 +65,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	//
 	
 	protected Logger log = Logger.getLogger(getClass());
-
+	
 	@Inject
 	private AssayDAO assayDAO;
 	@Inject
@@ -1190,24 +1190,17 @@ public class AssayService extends BaseService<AssayDomain> {
 	@Transactional		
 	public Boolean gxdexpressionUtilities(String assayKey) throws IOException, InterruptedException {
 		// see mgicacheload/gxdexpression.py
-		
-		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.gxdexpressionUtilities");
-    	String server = System.getProperty("swarm.ds.dbserver");
-        String db = System.getProperty("swarm.ds.dbname");
-        String username = System.getProperty("swarm.ds.username");
-        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
         
         // input:  assayKey
 
         // output: true/false
         Boolean returnCode = false;
         
-		String runCmd = utilitiesScript;
+		String runCmd = gxdexpressionUtilitiesScript;
         runCmd = runCmd + " -S" + server;
         runCmd = runCmd + " -D" + db;
         runCmd = runCmd + " -U" + username;
-        runCmd = runCmd + " -P" + pwd;             
+        runCmd = runCmd + " -P" + passwordFile;
 		runCmd = runCmd + " -K" + assayKey;
 		
 		// run the runCmd

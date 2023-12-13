@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -25,14 +26,16 @@ public abstract class BaseController<T extends BaseDomain> {
 	ObjectMapper mapper = new ObjectMapper();
 	
 	@Inject UserService userService;
-		
+	
+	@ConfigProperty(name = "mgi.api.access_token")
+	protected String apiAccessToken;
+	
 	/* if token is not defined in properties file, then do not require one.  
 	 * Otherwise, must be an exact match (case sensitive).
 	 */
-	protected boolean authenticateToken(String api_access_token) {
-		String expectedToken = System.getProperty("swarm.access_token");
-		if (expectedToken != null) {
-			return expectedToken.equals(api_access_token);
+	protected boolean authenticateToken(String incoming_api_access_token) {
+		if (apiAccessToken != null) {
+			return apiAccessToken.equals(incoming_api_access_token);
 		}
 		return true;
 	}

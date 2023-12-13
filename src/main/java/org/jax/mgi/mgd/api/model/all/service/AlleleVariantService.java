@@ -665,14 +665,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		// this method will call jannovarUtilities product
 		// input:  searchHGVS
 		// output:  return values from jannovarUtilities
-		
-		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.jannovarUtilities");
-        
+
     	// output: return results of jannovar query
     	List<String> results = new ArrayList<String>();
         
-		String runCmd = utilitiesScript;
+		String runCmd = jannovarUtilitiesScript;
         runCmd = runCmd + " '" + searchHGVS + "'";
         
 		// run the runCmd

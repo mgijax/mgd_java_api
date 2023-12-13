@@ -148,9 +148,6 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();		
 		Map<String, List<InputPart>> form = input.getFormDataMap();
 
-		String pixeldb = System.getProperty("swarm.ds.pixeldb");
-		String pixeldbCounter = System.getProperty("swarm.ds.pixeldbCounter");
-		
 		for (String key: form.keySet()) {
 
 			log.info("imageSubmission/submit/key: " + key);

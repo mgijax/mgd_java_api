@@ -219,19 +219,12 @@ public class NoteService extends BaseService<NoteDomain> {
 //
 //		this will update the genotypes Combination Type 1, 2, 3 with the proper values	
 //
-	
-		// these swarm variables are in 'app.properties'
-    	String utilitiesScript = System.getProperty("swarm.ds.alleleCombinationUtilities");
-    	String server = System.getProperty("swarm.ds.dbserver");
-        String db = System.getProperty("swarm.ds.dbname");
-        String user = System.getProperty("swarm.ds.username");
-        String pwd = System.getProperty("swarm.ds.dbpasswordfile");
-                
-		String runCmd = utilitiesScript;
+
+		String runCmd = alleleCombinationUtilitiesScript;
         runCmd = runCmd + " -S" + server;
         runCmd = runCmd + " -D" + db;
-        runCmd = runCmd + " -U" + user;
-        runCmd = runCmd + " -P" + pwd;
+        runCmd = runCmd + " -U" + username;
+        runCmd = runCmd + " -P" + passwordFile;
         runCmd = runCmd + " -K" + String.valueOf(genotypeKey);
 
 		Boolean modified = false;

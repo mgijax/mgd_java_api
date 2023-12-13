@@ -31,7 +31,6 @@ public class SQLExecutor {
 	 * The default constructor pulls in connection information from the property
 	 * files.
 	 * 
-	 * @param config
 	 */
 
 	public SQLExecutor(String mgdJDBCUrl, String username, String password) {
@@ -73,7 +72,6 @@ public class SQLExecutor {
 	 * Execute a statement against MGD (where that statement has no rows returned),
 	 * setting up the connection if needed.
 	 * 
-	 * @param query
 	 */
 	public void executeUpdate(String cmd) {
 

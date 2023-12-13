@@ -7,17 +7,16 @@ import org.jboss.logging.Logger;
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
 
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Id;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
 public abstract class PostgresSQLDAO<T> {
 
 	protected Class<T> myClass;
 
-	@PersistenceContext(unitName="primary")
-	protected EntityManager entityManager;
+	@Inject protected EntityManager entityManager;
 
 	protected Logger log = Logger.getLogger(getClass());
 	protected String idFieldName = null;

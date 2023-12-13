@@ -1,6 +1,6 @@
 package org.jax.mgi.mgd.api.model.all.controller;
 
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
 import org.jax.mgi.mgd.api.model.all.domain.AlleleMutationDomain;
 import org.jax.mgi.mgd.api.model.all.service.AlleleMutationService;
@@ -14,7 +14,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/allelemutation")
-@Schema(description = "Allele Mutation Endpoints")
+@Tag(name = "Allele Mutation Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AlleleMutationController extends BaseController<AlleleMutationDomain> {

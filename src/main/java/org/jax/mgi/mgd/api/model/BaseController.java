@@ -24,8 +24,7 @@ public abstract class BaseController<T extends BaseDomain> {
 	protected Logger log = Logger.getLogger(getClass());
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@Inject
-	private UserService userService;
+	@Inject UserService userService;
 		
 	/* if token is not defined in properties file, then do not require one.  
 	 * Otherwise, must be an exact match (case sensitive).

@@ -196,7 +196,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 	// get list of accession id domains by using sqlExecutor
 	//
 	
-	@Transactional
 	private List<AccessionDomain> getAccessionDomainList(String cmd) {
 		// execute accession cmd and return list of accession domains
 		// assumes the certain parameters are returned from cmd are return

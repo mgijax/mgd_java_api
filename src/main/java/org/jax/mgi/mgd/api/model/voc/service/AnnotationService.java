@@ -94,7 +94,6 @@ public class AnnotationService extends BaseService<AnnotationDomain> {
         return results;
     }
 
-	@Transactional
 	private List<AnnotationDomain> getAnnotationDomainList(String cmd) {
 		//
 		// get list of annotation domains by using sqlExecutor

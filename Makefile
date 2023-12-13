@@ -10,7 +10,7 @@ clean:
 	find /tmp -maxdepth 1 -name "*.jar" -exec rm -f {} \;
 
 run:
-	java -jar target/mgd_java_api-swarm.jar -Papp.properties
+	mvn compile quarkus:dev
 
 debug:
 	java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -jar target/mgd_java_api-swarm.jar -Papp.properties

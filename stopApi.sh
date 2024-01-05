@@ -18,7 +18,7 @@ echo "Stopping Java API"
 if [ -f ${MGI_LIVE}/mgd_java_api.pid ]
 then
         PID=`cat ${MGI_LIVE}/mgd_java_api.pid`
-        KILLPID=`pgrep -u ${USER} -f "target/mgd_java_api-swarm.jar" | grep ${PID}`
+        KILLPID=`pgrep -u ${USER} -f "target/mgd_java_api-runner" | grep ${PID}`
         if [ ! -z ${KILLPID} ]
         then
                 printf "Killing process with pid=${KILLPID}\n"

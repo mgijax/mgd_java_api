@@ -1,0 +1,32 @@
+quarkus.http.host=0.0.0.0
+quarkus.http.port=${JAVA_API_PORT}
+quarkus.http.limits.max-body-size=
+quarkus.http.root-path=/
+quarkus.http.non-application-root-path=/
+quarkus.http.cors=true
+quarkus.http.cors.origins=/.*/
+quarkus.swagger-ui.always-include=true
+quarkus.swagger-ui.doc-expansion=none
+quarkus.hibernate-orm.database.generation=validate
+quarkus.datasource.db-kind=postgresql
+quarkus.datasource.username=postgres
+quarkus.datasource.password=postgres
+quarkus.datasource.jdbc.max-size=128
+quarkus.datasource.jdbc.url=jdbc:postgresql://${PG_DBSERVER}.jax.org:5432/${PG_DBNAME}?currentSchema=mgd
+
+mgi.api.access_token=myDefaultToken
+mgi.ds.dbserver=${PG_DBSERVER}
+mgi.ds.dbname=${PG_DBNAME}
+mgi.ds.dbpasswordfile=${PG_1LINE_PASSFILE}
+mgi.scripts.eiUtilities=${PYTHON} ${PG_DBUTILS}/bin/ei/markerWithdrawal.py
+mgi.scripts.alleleCombinationUtilities=${PYTHON} ${DBUTILS}/allcacheload/allelecombinationByGenotype.py
+mgi.scripts.mrkLocationUtilities=${PYTHON} ${DBUTILS}/mrkcacheload/mrklocation.py
+mgi.scripts.mrkrefByMarkerUtilities=${PYTHON} ${DBUTILS}/mrkcacheload/mrkrefByMarker.py
+mgi.scripts.mrkrefByReferenceUtilities=${PYTHON} ${DBUTILS}/mrkcacheload/mrkrefByReference.py
+mgi.scripts.mrkmcvUtilities=${PYTHON} ${DBUTILS}/mrkcacheload/mrkmcv.py
+mgi.scripts.gxdexpressionUtilities=${PYTHON} ${DBUTILS}/mgicacheload/gxdexpression.py
+mgi.scripts.gorefsUtilities=${PYTHON} ${QCRPTS}/pwi/GORefs.py
+mgi.scripts.jannovarUtilities=${MGD_JAVA_API}/jannovar/runJannovar.sh
+mgi.pixeldb=/data/pixeldb
+mgi.pixeldbCounter=/data/pixeldb/accession/counter
+

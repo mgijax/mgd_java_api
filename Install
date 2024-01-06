@@ -14,6 +14,7 @@ cd `dirname $0`
 . Configuration
 
 mkdir -p ${LOG_DIR}
+mkdir -p ./src/main/resources
 
 TEMPL_FILE=./application.properties.template
 PROP_FILE=./src/main/resources/application.properties

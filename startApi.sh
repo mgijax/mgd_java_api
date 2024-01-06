@@ -18,16 +18,18 @@ else
     exit 1
 fi
 
-echo "Starting Java API"
-echo "log file: " ${LOG_FILE}
-rm -f ${LOG_FILE}
-touch ${LOG_FILE}
+if [ "$1" == "dev" ] ; then
+    echo "Starting Java API in dev mode"
+    mvn compile quarkus:dev
+else
+    echo "Starting Java API"
+    echo "log file: " ${LOG_FILE}
+    rm -f ${LOG_FILE}
+    touch ${LOG_FILE}
 
-# redirect stdout and stderr to ${LOG_FILE}
-#${JAVA} -jar target/mgd_java_api-runner.jar -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true &> ${LOG_FILE} &
-${JAVA} -jar target/mgd_java_api-runner.jar &> ${LOG_FILE} &
-echo $! > ${MGI_LIVE}/mgd_java_api.pid
-
-# takes about 20 secs to finish, then you know it is done
-sleep 20
+    # redirect stdout and stderr to ${LOG_FILE}
+    ${JAVA} -jar target/mgd_java_api-runner.jar &> ${LOG_FILE} &
+    echo $! > ${MGI_LIVE}/mgd_java_api.pid
+    sleep 5
+fi
 

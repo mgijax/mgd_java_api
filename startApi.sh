@@ -31,5 +31,7 @@ else
     ${JAVA} -jar target/mgd_java_api-runner.jar &> ${LOG_FILE} &
     echo $! > ${MGI_LIVE}/mgd_java_api.pid
     sleep 5
+    echo "Java API running. pid=" `cat ${MGI_LIVE}/mgd_java_api.pid`
+    echo "Listening on port " ${JAVA_API_PORT}
 fi
 

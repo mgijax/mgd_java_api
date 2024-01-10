@@ -18,6 +18,7 @@ mkdir -p ./src/main/resources
 
 TEMPL_FILE=./application.properties.template
 PROP_FILE=./src/main/resources/application.properties
+export MGD_DBPASSWORD=`cat ${PG_1LINE_PASSFILE}`
 cat ${TEMPL_FILE} | envsubst > ${PROP_FILE}
 
 mvn -T 8 clean package -Dquarkus.package.type=uber-jar -ntp

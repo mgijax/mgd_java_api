@@ -23,8 +23,12 @@ then
         then
                 printf "Killing process with pid=${KILLPID}\n"
                 kill -HUP ${KILLPID}
+        else
+                printf "No process with pid=${KILLPID}\n"
         fi
         rm -rf ${MGI_LIVE}/mgd_java_api.pid
+else
+        printf "No pid file.\n"
 fi
 
 # some time for log to flush before archiving

@@ -1,46 +1,70 @@
 
-1. login to server bhmgipwi01lt as mgiadmin
-2. setenv MGICONFIG /usr/local/mgi/test/mgiconfig;source ${MGICONFIG}/master.config.csh
-3. env | grep JAVA : to verify that JAVA_API_URL is correct
-        http://bhmgipwi01lt.jax.org:7099/api
+The pwi and mgi_java_api can be installed using mgiconfig and the manifest.
 
-4. stop the API/PWI that may be running
- cd /usr/local/mgi/test/mgd_java_api
- stopApi.sh
- cd /usr/local/mgi/test/pwi/admin
- stopserver.sh
+The following instructions are for a manual (dev) install. Paths and other values are specific for bluebob. Adjust to suit.
 
-5. remove the existing sym links
- cd /usr/local/mgi/test
- rm mgd_java_api pwi
+Installing/running the API:
 
-6. manually install mgd_java_api (do not use mgiconfig)
+mgi_java_api depends on Java 17, maven 3.9.5, and need to connect to an mgd-schema database.
+Make sure all the relevant variables are are in mgiconfig:
+    JAVA_HOME=/usr/java/jdk-17.0.8+7
+    MAVEN_HOME=/opt/apache-maven-3.9.5
+    PG_DBSERVER=bhmgidb06ld
+    PG_DBNAME=jer_prod
+    PG_DBUSER=mgd_dbo
+    PG_1LINE_PASSFILE=/home/jer/work/mgi/dbutils/pgdbutilities/.pgpass_1
 
- cd /usr/local/mgi/test
- git clone git@github.com:MGIJax/mgd_java_api
- cd mgd_java_api
- if using a branch: git checkout yourBranch
- cp Configuration.default Configuration
- change:  MGICONFIG=/usr/local/mgi/test/mgiconfig
- change:  LOG_DIR=/data/mgd_java_api-test/logs
- Install
- use Swagger to verify install was correct: http://bhmgipwi01lt.jax.org:7099
- tail -f /data/mgd_java_api-test/logs/java_api.log
+Clone the repo, cd to the top level directory, and checkout the desired branch.
+    git clone git@github.com:mgijax/mgd_java_api.git
+    cd mgd_java_api
+    git checkout someBranch
 
-7. manually install pwi (do not use mgiconfig)
+Copy the default config file and edit as needed. For dev, change LOG_DIR and/or LOG_FILE.
+    cp Configuration.default Configuration
+    vim Configuration
 
- cd /usr/local/mgi/test
- git clone git@github.com:MGIJax/pwi
- cd pwi
- if using a branch: git checkout yourBranch
- cp Configuration.default Configuration
- change:  MGICONFIG=/usr/local/mgi/test/mgiconfig
- change:  LOG_DIR=/data/pwi-test/logs/
- change:  SERVER_PORT=5001
- Install
- cd admin
- startserver.sh
- cat nohup.out to verify
+Run the install.
+    ./Install
+Hopefully you’ll see this: 
+    [INFO] BUILD SUCCESS
+Re-run after any config or code change.
 
-8. run pwi and login:  http://bhmgipwi01lt:5001/pwi/
+Start the API process.
+    ./startApi.sh
+Hopefully you’ll see something like this:
+    Starting Java API
+    log file:  /data/mgd_java_api/logs/java_api.log
+    Java API running. pid= 7781 # some pid
+    Listening on port  8089 # your port here
+
+At this point, you should see the api running using ps and connect to the swagger interface.
+Note that the swagger URL has changed slightly:
+    http://bhmgipwi01ld.jax.org:8089/swagger-ui
+ 
+To monitor the log:
+    tail -f /data/mgd_java_api/logs/java_api.log
+ 
+To stop the api:
+    ./stopApi.sh
+ 
+
+Installing/running the PWI:
+
+To manually install the pwi
+
+     cd /usr/local/mgi/test
+     git clone git@github.com:MGIJax/pwi
+     cd pwi
+     if using a branch: git checkout yourBranch
+     cp Configuration.default Configuration
+     change:  MGICONFIG=/usr/local/mgi/test/mgiconfig
+     change:  LOG_DIR=/data/pwi-test/logs/
+     change:  SERVER_PORT=5001
+     Install
+     cd admin
+     startserver.sh
+     cat nohup.out to verify
+
+Run pwi and login: 
+    http://bhmgipwi01ld:5001/pwi/
 

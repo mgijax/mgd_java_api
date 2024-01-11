@@ -5,6 +5,11 @@
 #                    are being downloaded from.
 
 
+TAG: mgd_java_api-6-0-23-1
+DATE: 01/11/2024
+STAFF: jer, olin
+fl2-627/fl2-627 Java 17 upgrade: Java API into Quarkus
+
 TAG: mgd_java_api-6-0-22-66
 DATE: 12/04/2023
 STAFF: lec

@@ -5,10 +5,6 @@
 # send standard out to the ${LOG_FILE}
 # the stop script will archive the log file
 #
-# you will see this in Jenkins:  don't remove it!
-#
-# BUILD_ID=dontKillMe
-#
 
 if [ -f ./Configuration ]
 then

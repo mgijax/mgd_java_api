@@ -22,6 +22,7 @@ Clone the repo, cd to the top level directory, and checkout the desired branch.
 Copy the default config file and edit as needed. For dev, change LOG_DIR and/or LOG_FILE.
     cp Configuration.default Configuration
     vim Configuration
+        LOG_DIR=/data/mgd_java_api/logs-jer
 
 Run the install.
     ./Install
@@ -33,7 +34,7 @@ Start the API process.
     ./startApi.sh
 Hopefully you’ll see something like this:
     Starting Java API
-    log file:  /data/mgd_java_api/logs/java_api.log
+    log file:  /data/mgd_java_api/logs-jer/java_api.log
     Java API running. pid= 7781 # some pid
     Listening on port  8089 # your port here
 
@@ -42,7 +43,7 @@ Note that the swagger URL has changed slightly:
     http://bhmgipwi01ld.jax.org:8089/swagger-ui
  
 To monitor the log:
-    tail -f /data/mgd_java_api/logs/java_api.log
+    tail -f /data/mgd_java_api/logs-jer/java_api.log
  
 To stop the api:
     ./stopApi.sh
@@ -52,14 +53,12 @@ Installing/running the PWI:
 
 To manually install the pwi
 
-     cd /usr/local/mgi/test
-     git clone git@github.com:MGIJax/pwi
+     git clone git@github.com:mgijax/pwi.git
      cd pwi
      if using a branch: git checkout yourBranch
      cp Configuration.default Configuration
-     change:  MGICONFIG=/usr/local/mgi/test/mgiconfig
-     change:  LOG_DIR=/data/pwi-test/logs/
-     change:  SERVER_PORT=5001
+     vim Configuration
+         SERVER_PORT=5079
      Install
      cd admin
      startserver.sh
@@ -67,4 +66,8 @@ To manually install the pwi
 
 Run pwi and login: 
     http://bhmgipwi01ld:5001/pwi/
+
+Stop the pwi:
+    cd pwi/admin
+    stopserver.sh
 

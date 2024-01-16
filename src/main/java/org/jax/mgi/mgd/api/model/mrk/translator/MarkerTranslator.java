@@ -88,8 +88,10 @@ public class MarkerTranslator extends BaseEntityDomainTranslator<Marker, MarkerD
 		
 		// at most one location cache
 		if (entity.getLocationCache() != null ) {
-			domain.setStartCoordinate(String.valueOf(entity.getLocationCache().getStartCoordinate().intValue()));
-			domain.setEndCoordinate(String.valueOf(entity.getLocationCache().getEndCoordinate().intValue()));
+                        Double sc = entity.getLocationCache().getStartCoordinate();
+                        Double ec = entity.getLocationCache().getEndCoordinate();
+			domain.setStartCoordinate(sc == null ? "null" : String.valueOf(sc.intValue()));
+			domain.setEndCoordinate  (ec == null ? "null" : String.valueOf(ec.intValue()));
 			domain.setStrand(String.valueOf(entity.getLocationCache().getStrand()));
 			domain.setMapUnits(entity.getLocationCache().getMapUnits());
 			domain.setProvider(entity.getLocationCache().getProvider());

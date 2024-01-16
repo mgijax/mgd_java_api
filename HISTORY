@@ -5,6 +5,11 @@
 #                    are being downloaded from.
 
 
+TAG: mgd_java_api-6-0-23-3
+DATE: 01/16/2024
+STAFF: jer
+fl2-627 Java 17 upgrade: fixes - handle null coordinates
+
 TAG: mgd_java_api-6-0-23-2
 DATE: 01/15/2024
 STAFF: jer

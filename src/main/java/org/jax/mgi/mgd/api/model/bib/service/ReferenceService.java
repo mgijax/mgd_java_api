@@ -2223,9 +2223,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	public String getRefByAlleleSQL(String accid, int offset, int limit, boolean returnCount) {
 		String cmd;
 		if (returnCount) {
-			cmd = "\nselect count(*) as total_count";
+			cmd = "\nselect count(distinct ar._refs_key) as total_count";
 		} else {
-			cmd = "\nselect a.accid, br._primary, r.*" ;
+			cmd = "\nselect distinct a.accid, br._primary, r.*" ;
 		}
 		cmd += "\nfrom mgi_reference_assoc ar, acc_accession a, bib_summary_view r  join bib_refs br on r._refs_key = br._refs_key" + 
 			"\nwhere a.accid = '" + accid + "'" + 

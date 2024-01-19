@@ -14,7 +14,7 @@ quarkus.datasource.password=${MGD_DBPASSWORD}
 quarkus.datasource.jdbc.max-size=128
 quarkus.datasource.jdbc.url=jdbc:postgresql://${PG_DBSERVER}.jax.org:5432/${PG_DBNAME}?currentSchema=mgd
 
-mgi.api.access_token=myDefaultToken
+mgi.api.access_token=${JAVA_API_TOKEN}
 mgi.ds.dbserver=${PG_DBSERVER}
 mgi.ds.dbname=${PG_DBNAME}
 mgi.ds.dbpasswordfile=${PG_1LINE_PASSFILE}

@@ -4,6 +4,11 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-23-7
+DATE: 01/31/2024
+STAFF: lec
+wts2-1393/fl2-714/Adding Strain Accession ID Cyagen
+"logicalDBKey": "232",
 
 TAG: mgd_java_api-6-0-23-6
 DATE: 01/24/2024

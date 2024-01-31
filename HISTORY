@@ -5,6 +5,12 @@
 #                    are being downloaded from.
 
 
+TAG: mgd_java_api-6-0-23-6
+DATE: 01/24/2024
+STAFF: lec
+git commit -m"wts2-485/fl2-708/Feature request Variant module: batch query (TR13246)" ; git push
+git commit -m"wts2-485/fl2-707/Feature request Variant module: batch query (TR13246)" ; git push
+
 TAG: mgd_java_api-6-0-23-5
 DATE: 01/19/2024
 STAFF: lec

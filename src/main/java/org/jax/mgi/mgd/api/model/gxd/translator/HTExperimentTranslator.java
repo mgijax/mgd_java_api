@@ -14,9 +14,12 @@ import org.jax.mgi.mgd.api.model.gxd.entities.HTExperimentVariable;
 import org.jax.mgi.mgd.api.model.gxd.entities.HTSample;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
+import org.jboss.logging.Logger;
 
 public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperiment, HTDomain> {
 	
+	protected Logger log = Logger.getLogger(getClass());
+
 	@Override
 	protected HTDomain entityToDomain(HTExperiment entity) {
 			
@@ -134,6 +137,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 					provider_contact_names.add(prop.getValue());
 				}
 				if (prop.getPropertyTerm().get_term_key() == 20475424) {
+					log.info("rawsamplecounts");
 					rawsamplecounts.add(prop.getValue());
 				}				
 			}

@@ -120,7 +120,6 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 
 			List<MGIProperty> properties = entity.getProperties();
 			for (MGIProperty prop : properties) {
-
 				if (prop.getPropertyTerm().get_term_key() == 20475430) {
 					pubmed_ids.add(prop.getValue());
 					pubmed_property_keys.add(prop.get_property_key().toString());

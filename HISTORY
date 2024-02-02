@@ -4,6 +4,12 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-23-?
+DATE: 02/02/2024
+STAFF: lec
+wts2-1389/fl2-723/PWI: Search allele PWI by associated marker sometimes returns no results.
+wts2-1368/fl2-724/HT index module: display raw sample count
+
 TAG: mgd_java_api-6-0-23-7
 DATE: 01/31/2024
 STAFF: lec

@@ -30,7 +30,7 @@ public class HTDomain extends BaseDomain {
 	private List<String> pubmed_property_keys;
 	private List<String> experiment_types;
 	private List<String> provider_contact_names;
-	private List<String> rawsamplecounts;
+	private List<String> raw_sample_counts;
 	private List<HTExperimentVariableDomain> experiment_variables;
 	private List<HTNoteDomain> notes;
 	private String newPubmedIds;

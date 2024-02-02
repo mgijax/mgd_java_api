@@ -119,7 +119,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 			List<String> experimental_factors = new ArrayList<String>(); 
 			List<String> experiment_types = new ArrayList<String>();
 			List<String> provider_contact_names = new ArrayList<String>();
-			List<String> rawsamplecounts = new ArrayList<String>();
+			List<String> raw_sample_counts = new ArrayList<String>();
 
 			List<MGIProperty> properties = entity.getProperties();
 			for (MGIProperty prop : properties) {
@@ -137,8 +137,7 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 					provider_contact_names.add(prop.getValue());
 				}
 				if (prop.getPropertyTerm().get_term_key() == 20475424) {
-					log.info("rawsamplecounts");
-					rawsamplecounts.add(prop.getValue());
+					raw_sample_counts.add(prop.getValue());
 				}				
 			}
 
@@ -155,6 +154,9 @@ public class HTExperimentTranslator extends BaseEntityDomainTranslator<HTExperim
 			}
 			if (provider_contact_names.size() > 0) {
 				domain.setProvider_contact_names(provider_contact_names);
+			}
+			if (raw_sample_counts.size() > 0) {
+				domain.setRaw_sample_counts(raw_sample_counts);
 			}
 
 		}

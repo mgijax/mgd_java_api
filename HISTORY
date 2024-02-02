@@ -4,7 +4,7 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
-TAG: mgd_java_api-6-0-23-?
+TAG: mgd_java_api-6-0-23-8
 DATE: 02/02/2024
 STAFF: lec
 wts2-1389/fl2-723/PWI: Search allele PWI by associated marker sometimes returns no results.

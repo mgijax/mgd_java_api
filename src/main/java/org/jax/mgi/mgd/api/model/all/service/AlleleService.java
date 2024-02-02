@@ -698,7 +698,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}
 		if (searchDomain.getDetailClip() != null) {
 			if (searchDomain.getDetailClip().getNote() != null && !searchDomain.getDetailClip().getNote().isEmpty()) {
-				where = where + "\nand notec.note ilike '" + searchDomain.getDetailClip().getNote() + "'" ;
+				value = searchDomain.getDetailClip().getNote().replaceAll("'", "''");
+				where = where + "\nand notec.note ilike '" + value + "'" ;
 				from_displayclip = true;
 			}
 		}

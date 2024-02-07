@@ -182,9 +182,7 @@ public class ExptsService extends BaseService<ExptsDomain> {
 	public List<SlimExptsDomain> search(ExptsDomain searchDomain) {
 
 		List<SlimExptsDomain> results = new ArrayList<SlimExptsDomain>();
-		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		 
 		String cmd = "";
 		String select = "select distinct e._expt_key, e.jnum, e.expttype, e.chromosome";
 		String from = "from mld_expt_view e";

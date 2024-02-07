@@ -180,9 +180,7 @@ public class TermService extends BaseService<TermDomain> {
 	public List<TermDomain> search(TermDomain searchDomain) {
 		// using searchDomain fields, generate SQL command
 		List<TermDomain> results = new ArrayList<TermDomain>();
-
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+ 
 		// Note that the initial from clause does not include voc_term. The from/voc_term needs
 		// to be at the end of the from clause due to the outer join to synonyms for cell type
 		String cmd = "";

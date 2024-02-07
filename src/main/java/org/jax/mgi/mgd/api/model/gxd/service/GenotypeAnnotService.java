@@ -513,15 +513,6 @@ public class GenotypeAnnotService extends BaseService<DenormGenotypeAnnotDomain>
 		// using domain fields, generate SQL command
 		
 		List<SlimGenotypeDomain> results = new ArrayList<SlimGenotypeDomain>();
-
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
-
-		// sc - 10/4/19 removed the 'order by description' as we can't do that using
-		// select "distinct on" because the description is arbitrary
-		//String select = "select distinct on (v._object_key) v._object_key, v.description";
-		// requirement changed/group description by _object_key
-		// saving this SQL in case it is needed again
 	
 		String cmd = "";
 		String select = "select distinct v._object_key, v.subtype, v.short_description";

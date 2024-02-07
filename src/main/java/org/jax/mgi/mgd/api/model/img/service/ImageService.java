@@ -307,8 +307,6 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		List<SlimImageDomain> results = new ArrayList<SlimImageDomain>();
 
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select distinct i._image_key, i.jnum, i.figureLabel, i.imageType"
 				+ ", concat(i.jnumID,'; ',i.imageType,'; ',i.figureLabel) as imageDisplay";
@@ -452,8 +450,6 @@ public class ImageService extends BaseService<ImageDomain> {
 			}			
 		}
 				
-		// use views to match the teleuse implementation
-
 		if (from_imagepane == true) {
 			from = from + ", img_imagepane p";
 			where = where + "\nand i._image_key = p._image_key";
@@ -517,8 +513,6 @@ public class ImageService extends BaseService<ImageDomain> {
 		
 		List<ImageSubmissionDomain> results = new ArrayList<ImageSubmissionDomain>();
 
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select distinct i._image_key, i.jnum, i.imageClass, i.imageType";
 		String from = "from img_image_view i";

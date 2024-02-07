@@ -40,7 +40,9 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 
 	@Transactional
 	public SearchResults<LogicalDbDomain> create(LogicalDbDomain domain, User user) {
+
 		log.info("LogicalDBService create");
+
 		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
 		LogicalDB entity = new LogicalDB();
 		
@@ -114,7 +116,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				adbEntity.setModification_date(new Date());
 				
 				// execute persist/insert/send to database
-				
 				actualDBDAO.persist(adbEntity);
 				
 				log.info("Service create persisted actualDB attributes: ");
@@ -125,24 +126,25 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				log.info("active: " + adbEntity.getActive());
 				log.info("multiple: " + adbEntity.getAllowsMultiple());
 				log.info("delimiter: "+ adbEntity.getDelimiter());
-			}
-			
+			}		
 		}
 		
 		log.info("Service calling translator.translate(entity)");
 		results.setItem(translator.translate(entity));
-		//logicalDBDAO.clear();
 
 		return results;
 	}
 
 	@Transactional
 	public SearchResults<LogicalDbDomain> update(LogicalDbDomain domain, User user) {
+
+		log.info("LogicalDB/update");
+
 		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>(); 
 		LogicalDB entity = logicalDBDAO.get(Integer.valueOf(domain.getLogicalDBKey()));
 		Boolean modified = false;
 		String logicalDBKey = domain.getLogicalDBKey();
-		log.info("LogicalDB/update");
+
 		if(!entity.getName().equals(domain.getName())) {
 			log.info("process name");
 			entity.setName(domain.getName());
@@ -183,8 +185,10 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
 			modified = true;
 		}
+		
 		// do we need a actualDB service with a process method? doing it this way for now
 		log.info("actualDBs: " + domain.getActualDBs());
+		
 		// if the adb list is neither null nor empty
 		if (domain.getActualDBs() != null && !domain.getActualDBs().isEmpty()) {
 			log.info("have actualDB domain");
@@ -333,21 +337,16 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 		results.setItem(translator.translate(entity));
 		
 		log.info("process Logical DB update returning results");
-		//logicalDBDAO.clear();
 		return results;
-
 	}
     
 	@Transactional
 	public SearchResults<LogicalDbDomain> delete(Integer key, User user) {
+		// returns the correct ldbKey from the adb.
 		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
-		
-		// this returns the correct ldbKey from the adb.
-		//log.info("LogicalDbService.delete actualDB.logicalDBKey: " + logicalDBDAO.get(key).getActualDBs().get(0).get_logicaldb_key());
 		LogicalDB entity = logicalDBDAO.get(key);
 		results.setItem(translator.translate(entity));
 		logicalDBDAO.remove(entity);
-		
 		return results;
 	}
 
@@ -397,12 +396,9 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 	@Transactional
 	public List<LogicalDbDomain> search(LogicalDbDomain searchDomain) {	
 					
-		//SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
 		List<LogicalDbDomain> results = new ArrayList<LogicalDbDomain>();
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+
 		String cmd = "";
-		
 		String select = "select distinct ldb.*";
 		String from = "from acc_logicaldb ldb";
 		String where = "where ldb._logicaldb_key is not null";
@@ -452,7 +448,6 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 			e.printStackTrace();
 		}
 		
-		//return results;
 		return results;
 	}
 

@@ -109,8 +109,6 @@ public class AntibodyAliasService extends BaseService<AntibodyAliasDomain> {
 
 		List<AntibodyAliasDomain> results = new ArrayList<AntibodyAliasDomain>();
 		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select a.*";
 		String from = "from gxd_antibodyalias a";

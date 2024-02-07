@@ -74,8 +74,6 @@ public class DagNodeService extends BaseService<DagNodeDomain> {
 		List<DagNodeDomain> results = new ArrayList<DagNodeDomain>();
 
 		// edit if search is needed
-//		// building SQL command : select + from + where + orderBy
-//		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 //		String cmd = "";
 //		String select = "select * from";
 //		String from = "from ";

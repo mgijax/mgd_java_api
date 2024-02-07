@@ -244,9 +244,6 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		
 		List<SlimAlleleFearDomain> results = new ArrayList<SlimAlleleFearDomain>();
 
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
-
 		String cmd = "";
 		String select = "select distinct a._allele_key, a.symbol";
 		String from = "from all_allele a, acc_accession aa";		

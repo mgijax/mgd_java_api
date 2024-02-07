@@ -105,8 +105,6 @@ public class AntibodyPrepService extends BaseService<AntibodyPrepDomain> {
 
 		List<AntibodyPrepDomain> results = new ArrayList<AntibodyPrepDomain>();
 		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select a.*";
 		String from = "from gxd_AntibodyPrep a";

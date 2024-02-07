@@ -422,9 +422,7 @@ public class AssayService extends BaseService<AssayDomain> {
 	public List<SlimAssayDomain> search(AssayDomain searchDomain) {
 
 		List<SlimAssayDomain> results = new ArrayList<SlimAssayDomain>();
-		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		 
 		String cmd = "";
 		String select = "select distinct a._assay_key, r._refs_key, r.jnumid, r.numericpart, t.assayType, m.symbol";
 		String from = "from gxd_assay a, gxd_assaytype t, bib_citation_cache r, mrk_marker m";

@@ -102,9 +102,7 @@ public class AntibodyMarkerService extends BaseService<AntibodyMarkerDomain> {
 	public List<AntibodyMarkerDomain> search(AntibodyMarkerDomain searchDomain) {
 
 		List<AntibodyMarkerDomain> results = new ArrayList<AntibodyMarkerDomain>();
-		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		 
 		String cmd = "";
 		String select = "select a.*";
 		String from = "from gxd_AntibodyMarker a";

@@ -105,8 +105,6 @@ public class ProbePrepService extends BaseService<ProbePrepDomain> {
 
 		List<ProbePrepDomain> results = new ArrayList<ProbePrepDomain>();
 		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select a.*";
 		String from = "from gxd_probePrep a";

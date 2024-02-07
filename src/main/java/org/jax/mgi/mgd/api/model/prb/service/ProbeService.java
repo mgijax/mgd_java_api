@@ -427,9 +427,7 @@ public class ProbeService extends BaseService<ProbeDomain> {
 	public List<SlimProbeDomain> search(ProbeDomain searchDomain) {
 
 		List<SlimProbeDomain> results = new ArrayList<SlimProbeDomain>();
-		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		 
 		String cmd = "";
 		String select = "select distinct p._probe_key, p.name";
 		String from = "from prb_probe p";

@@ -300,8 +300,6 @@ public class GenotypeService extends BaseService<GenotypeDomain> {
 		List<String> markerList = new ArrayList<String>();
 		List<String> allele1List = new ArrayList<String>();
 		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		
 		// search includes allele pair attribute

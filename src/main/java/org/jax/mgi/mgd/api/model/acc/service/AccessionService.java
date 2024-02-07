@@ -81,7 +81,6 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		List<AccessionDomain> results = new ArrayList<AccessionDomain>();
 
 		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "select _accession_key, accID"
 				+ "\nfrom acc_accession"
 				+ "\nwhere accID = '" + searchDomain.getAccID() + "'"

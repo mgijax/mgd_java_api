@@ -468,10 +468,6 @@ public class MarkerAnnotService extends BaseService<DenormMarkerAnnotDomain> {
 		
 		List<SlimMarkerAnnotDomain> results = new ArrayList<SlimMarkerAnnotDomain>();
 
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
-		// + "\nand m._marker_status_key = 1";
-
 		String cmd = "";
 		String select = "select distinct v._object_key, v.description";
 		String from = "from mrk_summary_view v, mrk_marker m";		

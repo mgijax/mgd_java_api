@@ -352,7 +352,7 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 			e.printStackTrace();
 		}
 		
-		return results;		
+		return results;
 	}
 	
 	@Transactional	
@@ -360,9 +360,6 @@ public class AlleleAnnotService extends BaseService<DenormAlleleAnnotDomain> {
 		// using searchDomain fields, generate SQL command
 		
 		List<SlimAlleleAnnotDomain> results = new ArrayList<SlimAlleleAnnotDomain>();
-
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 
 		String cmd = "";
 		String select = "select distinct v._object_key, v.description";

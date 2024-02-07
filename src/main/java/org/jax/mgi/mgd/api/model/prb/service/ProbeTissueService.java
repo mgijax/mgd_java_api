@@ -112,8 +112,6 @@ public class ProbeTissueService extends BaseService<ProbeTissueDomain> {
 
 		List<ProbeTissueDomain> results = new ArrayList<ProbeTissueDomain>();
 		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select a.*";
 		String from = "from prb_Tissue a";

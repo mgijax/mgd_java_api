@@ -204,8 +204,6 @@ public class AlleleCellLineDerivationService extends BaseService<AlleleCellLineD
 
 		List<AlleleCellLineDerivationDomain> results = new ArrayList<AlleleCellLineDerivationDomain>();
 		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select distinct a._derivation_key, a.name";
 		String from = "from all_cellline_derivation_view a";

@@ -307,8 +307,6 @@ public class ProbeSourceService extends BaseService<ProbeSourceDomain> {
 
 		List<ProbeSourceDomain> results = new ArrayList<ProbeSourceDomain>();
 		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select s._source_key";
 		String from = "from prb_source s";

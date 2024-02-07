@@ -599,9 +599,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 	public List<SlimAlleleDomain> search(AlleleDomain searchDomain) {
 
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
-		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+		 
 		String cmd = "";
 		String select = "select distinct a._allele_key, a.symbol, v1.sequenceNum";
 		String from = "from all_allele a, voc_term v1";
@@ -1010,8 +1008,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 
 		List<SlimAlleleRefAssocDomain> results = new ArrayList<SlimAlleleRefAssocDomain>();
 		
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
 		String cmd = "";
 		String select = "select distinct a._allele_key, a.symbol";
 		String from = "from all_allele a, voc_term v1, all_variant av";

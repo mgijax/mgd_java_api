@@ -142,9 +142,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		// returns SlimVocabularyDomain results if vocabulary does exist
 			
 		SearchResults<SlimVocabularyTermDomain> results = new SearchResults<SlimVocabularyTermDomain>();
-
-		// building SQL command : select + from + where + orderBy
-		// use teleuse sql logic (ei/csrc/mgdsql.c/mgisql.c) 
+ 
 		String cmd = "";
 		String select = "select v.*, t._term_key, t.term, t.abbreviation";
 		String from = "from voc_term t, voc_vocab v";

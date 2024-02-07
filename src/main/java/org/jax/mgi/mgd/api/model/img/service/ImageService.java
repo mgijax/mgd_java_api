@@ -312,8 +312,7 @@ public class ImageService extends BaseService<ImageDomain> {
 				+ ", concat(i.jnumID,'; ',i.imageType,'; ',i.figureLabel) as imageDisplay";
 		String from = "from img_image_view i";
 		String where = "where i.figureLabel is not null";
-		// smart alphanumeric sort
-		// put into utility method so others can use this
+		// smart alphanumeric sort; put into utility method so others can use this
 		String orderBy = "order by i.jnum, substring(i.figureLabel from '([0-9]+)')::BIGINT ASC, i.figureLabel, i.imageType";
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;

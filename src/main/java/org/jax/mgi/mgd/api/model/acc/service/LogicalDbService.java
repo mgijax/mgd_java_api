@@ -342,7 +342,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
     
 	@Transactional
 	public SearchResults<LogicalDbDomain> delete(Integer key, User user) {
-		// returns the correct ldbKey from the adb.
+		// get the entity object and delete
 		SearchResults<LogicalDbDomain> results = new SearchResults<LogicalDbDomain>();
 		LogicalDB entity = logicalDBDAO.get(key);
 		results.setItem(translator.translate(entity));

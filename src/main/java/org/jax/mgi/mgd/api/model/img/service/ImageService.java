@@ -481,7 +481,7 @@ public class ImageService extends BaseService<ImageDomain> {
 		}
 		
 		// make this easy to copy/paste for troubleshooting
-		// for smart alphnumeric sort, must use WITH if using "select distinct"
+		// for smart alphanumeric sort, must use WITH if using "select distinct"
 		cmd = "\nWITH pcounts as (select _image_key, count(*) as n from img_imagepane group by _image_key), i AS (" + select + "\n" + from + "\n" + where + 
 					"\n)\nselect i.*, p.n as numPanes from i join pcounts p on i._image_key = p._image_key \n" + orderBy + "\n" + limit;
 		log.info(cmd);

@@ -387,7 +387,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 
 		String cmd = "";
-		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol";
+		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol, left(m.symbol, 1), substring(m.symbol, '\\d+')::int";
 		String from = "from mrk_marker m";
 		String where = "where m._organism_key";
 		String orderBy = "order by m._marker_type_key, left(m.symbol, 1), substring(m.symbol, '\\d+')::int NULLS FIRST, m.symbol";

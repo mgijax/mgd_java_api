@@ -327,11 +327,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 
 		// building SQL command : select + from + where + orderBy
 		String cmd = "";		
-		String select = "select distinct v._variant_key, a._allele_key, a.symbol";
+		String select = "select distinct v._variant_key, a._allele_key, a.symbol, left(a.symbol, 1), substring(a.symbol, '\\\\d+')::int";
 		String from = "from all_variant v, all_allele a";
 		String where = "where v._sourcevariant_key is not null"
 				+ "\nand v._allele_key = a._allele_key";
-		String orderBy = "order by a.symbol";
+		String orderBy = "order by left(a.symbol, 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;	
 		Boolean from_strain = false;

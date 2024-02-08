@@ -2,6 +2,7 @@ package org.jax.mgi.mgd.api.model.all.service;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
 import org.jax.mgi.mgd.api.model.mrk.service.MarkerNoteService;
 import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
+import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
 import org.jax.mgi.mgd.api.model.voc.service.AnnotationService;
@@ -605,7 +607,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		String from = "from all_allele a, voc_term v1";
 		String where = "where a._allele_status_key = v1._term_key";
 		String orderBy = "order by v1.sequenceNum, left(a.symbol, 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";
-		//String orderBy = "order by v1.sequenceNum, a.symbol";
 		String value;
 		Boolean from_marker = false;
 		Boolean from_accession = false;
@@ -989,6 +990,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		
 		try {
 			ResultSet rs = sqlExecutor.executeProto(cmd);
+			
 			while (rs.next()) {
 				SlimAlleleDomain domain = new SlimAlleleDomain();
 				domain = slimtranslator.translate(alleleDAO.get(rs.getInt("_allele_key")));				
@@ -1000,7 +1002,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return results;
 	}
 
@@ -1010,11 +1012,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		List<SlimAlleleRefAssocDomain> results = new ArrayList<SlimAlleleRefAssocDomain>();
 		
 		String cmd = "";
-		String select = "select distinct a._allele_key, a.symbol";
+		String select = "select distinct a._allele_key, a.symbol, left(a.symbol, 1), substring(a.symbol, '\\d+')::int";
 		String from = "from all_allele a, voc_term v1, all_variant av";
 		String where = "where a._allele_type_key = v1._term_key"
 				+ "\nand a._allele_key = av._allele_key \nand av._sourcevariant_key is not null";
-		String orderBy = "order by a.symbol";
+		String orderBy = "order by left(a.symbol, 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_marker = false;

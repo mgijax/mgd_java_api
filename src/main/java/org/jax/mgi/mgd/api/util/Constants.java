@@ -24,7 +24,7 @@ public class Constants {
 	public static String PROCESS_NOTDIRTY = "x";
 
 	// default search limit
-	public static String SEARCH_RETURN_LIMIT = "limit 1000";
+	public static String SEARCH_RETURN_LIMIT = "limit 5000";
 
 	// API logging using Logger.info()
 	public static String LOG_MGI_API = "LOG_MGI_API|";

@@ -391,7 +391,6 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		String from = "from mrk_marker m";
 		String where = "where m._organism_key";
 		String orderBy = "order by m._marker_type_key, left(m.symbol, 1), substring(m.symbol, '\\d+')::int NULLS FIRST, m.symbol";
-		//String orderBy = "order by m._marker_type_key, m.symbol";
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_editorNote = false;

@@ -601,7 +601,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		 
 		String cmd = "";
-		String select = "select distinct a._allele_key, a.symbol, v1.sequenceNum, left(a.symbol, 1), substring(a.symbol, '\\\\d+')::int";
+		String select = "select distinct a._allele_key, a.symbol, v1.sequenceNum, left(a.symbol, 1), substring(a.symbol, '\\d+')::int";
 		String from = "from all_allele a, voc_term v1";
 		String where = "where a._allele_status_key = v1._term_key";
 		String orderBy = "order by v1.sequenceNum, left(a.symbol, 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";

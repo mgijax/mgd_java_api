@@ -152,7 +152,7 @@ public class Marker extends BaseEntity {
 	// non-editable accession ids for non-mouse
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,114,117,118)")
+	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,114,117,118,233)")
 	@OrderBy(clause ="accid")
 	private List<Accession> nonEditAccessionIdsNonMouse;
 	

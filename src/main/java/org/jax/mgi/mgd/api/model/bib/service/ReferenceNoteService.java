@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.bib.entities.ReferenceNote;
 import org.jax.mgi.mgd.api.model.bib.translator.ReferenceNoteTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -114,7 +115,7 @@ public class ReferenceNoteService extends BaseService<ReferenceNoteDomain> {
 			log.info("processReferenceNote create");
 			ReferenceNote entity = new ReferenceNote();
 			entity.set_refs_key(Integer.valueOf(parentKey));
-			entity.setNote(domain.getNote());
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));			
 			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());
 			noteDAO.persist(entity);				
@@ -130,7 +131,7 @@ public class ReferenceNoteService extends BaseService<ReferenceNoteDomain> {
 			log.info("processReferenceNote update");								
 			ReferenceNote entity = noteDAO.get(Integer.valueOf(parentKey));				
 			entity.set_refs_key(Integer.valueOf(parentKey));
-			entity.setNote(domain.getNote());
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));			
 			entity.setModification_date(new Date());
 			noteDAO.update(entity);
 			modified = true;

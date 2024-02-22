@@ -45,7 +45,7 @@ public class AssayController extends BaseController<AssayDomain> {
 		results = assayService.create(domain, user);
 		
 		// to update the mgicacheload/gxdexpression table		
-		if (results.items.get(0).getSpecimens() == null || results.items.get(0).getSpecimens().size() <= 100) {
+		if (results.items.get(0).getSpecimens() == null || results.items.get(0).getSpecimens().size() <= 50) {
 			try {
 				log.info("processAssay/gxdexpressionUtilities");
 				assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());
@@ -65,7 +65,7 @@ public class AssayController extends BaseController<AssayDomain> {
 		results = assayService.update(domain, user);
 		
 		// to update the mgicacheload/gxdexpression table				
-		if (results.items.get(0).getSpecimens() == null || results.items.get(0).getSpecimens().size() <= 100) {
+		if (results.items.get(0).getSpecimens() == null || results.items.get(0).getSpecimens().size() <= 50) {
 			try {
 				log.info("processAssay/gxdexpressionUtilities");
 				assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());

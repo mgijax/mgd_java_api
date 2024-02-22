@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.mld.domain.ExptNoteDomain;
 import org.jax.mgi.mgd.api.model.mld.entities.ExptNote;
 import org.jax.mgi.mgd.api.model.mld.translator.ExptNoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -114,8 +115,7 @@ public class ExptNoteService extends BaseService<ExptNoteDomain> {
 			log.info("processExptNote create");
 			ExptNote entity = new ExptNote();
 			entity.set_expt_key(Integer.valueOf(parentKey));
-			entity.setNote(domain.getNote());
-			entity.setCreation_date(new Date());				
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());
 			noteDAO.persist(entity);				
 			modified = true;
@@ -129,8 +129,7 @@ public class ExptNoteService extends BaseService<ExptNoteDomain> {
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processExptNote update");								
 			ExptNote entity = noteDAO.get(Integer.valueOf(parentKey));				
-			entity.setNote(domain.getNote());
-			entity.setModification_date(new Date());
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));			entity.setModification_date(new Date());
 			noteDAO.update(entity);
 			modified = true;
 			log.info("processExptNote/changes processed: " + domain.getExptKey());

@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.mld.domain.MappingNoteDomain;
 import org.jax.mgi.mgd.api.model.mld.entities.MappingNote;
 import org.jax.mgi.mgd.api.model.mld.translator.MappingNoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -114,8 +115,7 @@ public class MappingNoteService extends BaseService<MappingNoteDomain> {
 			log.info("processMappingNote create");
 			MappingNote entity = new MappingNote();
 			entity.set_refs_key(Integer.valueOf(parentKey));
-			entity.setNote(domain.getNote());
-			entity.setCreation_date(new Date());				
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());
 			noteDAO.persist(entity);				
 			modified = true;
@@ -129,8 +129,7 @@ public class MappingNoteService extends BaseService<MappingNoteDomain> {
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processMappingNote update");				
 			MappingNote entity = noteDAO.get(Integer.valueOf(parentKey));				
-			entity.setNote(domain.getNote());
-			entity.setModification_date(new Date());
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));			entity.setModification_date(new Date());
 			noteDAO.update(entity);
 			modified = true;
 			log.info("processMappingNote/changes processed: " + domain.getRefsKey());

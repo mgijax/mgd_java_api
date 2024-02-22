@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.mrk.domain.MarkerNoteDomain;
 import org.jax.mgi.mgd.api.model.mrk.entities.MarkerNote;
 import org.jax.mgi.mgd.api.model.mrk.translator.MarkerNoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -114,7 +115,7 @@ public class MarkerNoteService extends BaseService<MarkerNoteDomain> {
 			log.info("processMarkerNote create");
 			MarkerNote entity = new MarkerNote();
 			entity.set_marker_key(Integer.valueOf(domain.getMarkerKey()));
-			entity.setNote(domain.getNote());
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));
 			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());
 			noteDAO.persist(entity);				
@@ -129,7 +130,7 @@ public class MarkerNoteService extends BaseService<MarkerNoteDomain> {
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processMarkerNote update");								
 			MarkerNote entity = noteDAO.get(Integer.valueOf(domain.getMarkerKey()));				
-			entity.setNote(domain.getNote());
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));
 			entity.setModification_date(new Date());
 			noteDAO.update(entity);
 			modified = true;

@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.prb.domain.ProbeNoteDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeNote;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeNoteTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -114,7 +115,7 @@ public class ProbeNoteService extends BaseService<ProbeNoteDomain> {
 			log.info("processProbeNote create");
 			ProbeNote entity = new ProbeNote();
 			entity.set_probe_key(Integer.valueOf(parentKey));
-			entity.setNote(domain.getNote());
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));
 			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());
 			noteDAO.persist(entity);				
@@ -129,7 +130,7 @@ public class ProbeNoteService extends BaseService<ProbeNoteDomain> {
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processProbeNote update");								
 			ProbeNote entity = noteDAO.get(Integer.valueOf(domain.getNoteKey()));				
-			entity.setNote(domain.getNote());
+			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));
 			entity.setModification_date(new Date());
 			noteDAO.update(entity);
 			modified = true;

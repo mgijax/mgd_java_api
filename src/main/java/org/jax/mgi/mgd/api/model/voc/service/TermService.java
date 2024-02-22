@@ -24,6 +24,7 @@ import org.jax.mgi.mgd.api.model.voc.translator.SlimTermTranslator;
 import org.jax.mgi.mgd.api.model.voc.translator.TermTranslator;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -51,19 +52,13 @@ public class TermService extends BaseService<TermDomain> {
 		Term entity = new Term();	
 		String vocabKey = domain.getVocabKey();
 		
-		log.info("vocabKey: " + vocabKey );
 		entity.set_vocab_key(Integer.valueOf(vocabKey));
-		
-		log.info("term: " + domain.getTerm());
 		entity.setTerm(domain.getTerm());
 		entity.setAbbreviation(domain.getAbbreviation());
-		entity.setNote(domain.getNote());
+		entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));
 		
-		log.info("seqNum: " + domain.getSequenceNum());
 		if (vocabKey.equals("18")) { // cell line vocab
-			log.info("cell line vocab");
 			String seqNum = getNextSequenceNum(vocabKey);		
-			log.info("next cell line seqnum: " + seqNum);
 			entity.setSequenceNum(Integer.valueOf(seqNum));
 		}
 		else if (domain.getSequenceNum() == null || domain.getSequenceNum().isEmpty()) {
@@ -72,9 +67,7 @@ public class TermService extends BaseService<TermDomain> {
 		else {
 			entity.setSequenceNum(Integer.valueOf(domain.getSequenceNum()));
 		}
-		log.info("seqNum after calculating: " + domain.getSequenceNum());
 		
-		log.info("isObsolete: " +  domain.getIsObsolete());
 		if (domain.getIsObsolete() == null || domain.getIsObsolete().isEmpty() ) {
 			entity.setIsObsolete(0); // default
 		}
@@ -397,17 +390,13 @@ public class TermService extends BaseService<TermDomain> {
 				}
 				
 				Term entity = new Term();	
-				log.info("vocabKey: " + vocabKey );
 				entity.set_vocab_key(Integer.valueOf(vocabKey));
-				log.info("term: " + domain.get(i).getTerm());
 				entity.setTerm(domain.get(i).getTerm());
 				entity.setAbbreviation(domain.get(i).getAbbreviation());
-				entity.setNote(domain.get(i).getNote());
-				log.info("seqNum: " + domain.get(i).getSequenceNum());
+				entity.setNote(DecodeString.setDecodeToLatin9(domain.get(i).getNote()));
+
 				if (domain.get(i).getVocabKey().equals("18")) { // cell line vocab
-					log.info("cell line vocab");
 					String seqNum = getNextSequenceNum(domain.get(i).getVocabKey());
-					log.info("next cell line seqnum: " + seqNum);
 					entity.setSequenceNum(Integer.valueOf(seqNum));
 				}
 				else if (domain.get(i).getSequenceNum() == null || domain.get(0).getSequenceNum().isEmpty()) {
@@ -416,9 +405,7 @@ public class TermService extends BaseService<TermDomain> {
 				else {
 					entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
 				}
-				log.info("seqNum after calculating: " + domain.get(i).getSequenceNum());
 				
-				log.info("isObsolete: " +  domain.get(i).getIsObsolete());
 				if (domain.get(i).getIsObsolete() == null || domain.get(i).getIsObsolete().isEmpty() ) {
 					entity.setIsObsolete(0); // default
 				}
@@ -459,7 +446,7 @@ public class TermService extends BaseService<TermDomain> {
 				
 				entity.setTerm(domain.get(i).getTerm());
 				entity.setAbbreviation(domain.get(i).getAbbreviation());
-				entity.setNote(domain.get(i).getNote());
+				entity.setNote(DecodeString.setDecodeToLatin9(domain.get(i).getNote()));
 				entity.setSequenceNum(Integer.valueOf(domain.get(i).getSequenceNum()));
 				entity.setIsObsolete(Integer.valueOf(domain.get(i).getIsObsolete()));			
 				entity.setModification_date(new Date());

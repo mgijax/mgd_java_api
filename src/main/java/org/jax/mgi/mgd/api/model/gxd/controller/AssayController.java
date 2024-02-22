@@ -44,13 +44,15 @@ public class AssayController extends BaseController<AssayDomain> {
 		SearchResults<AssayDomain> results = new SearchResults<AssayDomain>();
 		results = assayService.create(domain, user);
 		
-		// to update the mgicacheload/gxdexpression table				
-		try {
-			log.info("processAssay/gxdexpressionUtilities");
-			assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());
-		}
-		catch (Exception e) {
-			e.printStackTrace();
+		// to update the mgicacheload/gxdexpression table		
+		if (results.items.get(0).getSpecimens().size() <= 100) {
+			try {
+				log.info("processAssay/gxdexpressionUtilities");
+				assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 				
 		results = assayService.getResults(Integer.valueOf(results.items.get(0).getAssayKey()));
@@ -63,12 +65,14 @@ public class AssayController extends BaseController<AssayDomain> {
 		results = assayService.update(domain, user);
 		
 		// to update the mgicacheload/gxdexpression table				
-		try {
-			log.info("processAssay/gxdexpressionUtilities");
-			assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());
-		}
-		catch (Exception e) {
-			e.printStackTrace();
+		if (results.items.get(0).getSpecimens().size() <= 100) {
+			try {
+				log.info("processAssay/gxdexpressionUtilities");
+				assayService.gxdexpressionUtilities(results.items.get(0).getAssayKey());
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		results = assayService.getResults(Integer.valueOf(results.items.get(0).getAssayKey()));

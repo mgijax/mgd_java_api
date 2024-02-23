@@ -1185,10 +1185,9 @@ public class AssayService extends BaseService<AssayDomain> {
 	@Transactional		
 	public Boolean gxdexpressionUtilities(String assayKey) throws IOException, InterruptedException {
 		// see mgicacheload/gxdexpression.py
-        
         // input:  assayKey
-
         // output: true/false
+		
         Boolean returnCode = false;
         
         if (assayKey.length() == 0) {

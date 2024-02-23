@@ -1191,6 +1191,10 @@ public class AssayService extends BaseService<AssayDomain> {
         // output: true/false
         Boolean returnCode = false;
         
+        if (assayKey.length() == 0) {
+        	return true;
+        }
+        
 		String runCmd = gxdexpressionUtilitiesScript;
         runCmd = runCmd + " -S" + server;
         runCmd = runCmd + " -D" + db;

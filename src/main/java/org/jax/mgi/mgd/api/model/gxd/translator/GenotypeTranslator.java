@@ -59,13 +59,27 @@ public class GenotypeTranslator extends BaseEntityDomainTranslator<Genotype, Gen
 		// at most one generalNote
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
-			domain.setGeneralNote(note.iterator().next());
+			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
+			String allNotes = "";
+			// merge all notes into the first note
+			for (int i = 0; i < noteDomain.size(); i++) {
+				allNotes += noteDomain.get(i).getNoteChunk() + " ";
+			}
+			domain.setGeneralNote(note.iterator().next());			
+			domain.getGeneralNote().setNoteChunk(allNotes);			
 		}
 		
 		// at most one privateCuratorialNote
 		if (entity.getPrivateCuratorialNote() != null && !entity.getPrivateCuratorialNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getPrivateCuratorialNote());
-			domain.setPrivateCuratorialNote(note.iterator().next());
+			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
+			String allNotes = "";
+			// merge all notes into the first note
+			for (int i = 0; i < noteDomain.size(); i++) {
+				allNotes += noteDomain.get(i).getNoteChunk() + " ";
+			}
+			domain.setPrivateCuratorialNote(note.iterator().next());			
+			domain.getPrivateCuratorialNote().setNoteChunk(allNotes);	
 		}
 				
 		// mgi accession ids only

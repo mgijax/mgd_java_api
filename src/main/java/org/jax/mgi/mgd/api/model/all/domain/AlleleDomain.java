@@ -65,6 +65,8 @@ public class AlleleDomain extends BaseDomain {
 	private String modification_date;
 	private String approval_date;
 	
+	private String orderBy = "1";
+	
 	// molecular reference needed for driverGenes
 	private String molRefKey;
 	

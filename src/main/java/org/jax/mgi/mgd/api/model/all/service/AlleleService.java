@@ -604,7 +604,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		String select = "select distinct a._allele_key, a.symbol, v1.sequenceNum, left(a.symbol, 1), substring(a.symbol, '\\d+')::int";
 		String from = "from all_allele a, voc_term v1";
 		String where = "where a._allele_status_key = v1._term_key";
-		String orderBy = "order by v1.sequenceNum, left(a.symbol, 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";
+		String orderBy;
 		String value;
 		Boolean from_marker = false;
 		Boolean from_accession = false;
@@ -625,6 +625,13 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_drivergene = false;
 		Boolean from_imagepane = false;
 				
+		if (searchDomain.getOrderBy().equals("1")) {
+			orderBy = "order by v1.sequenceNum, a.symbol";
+		}
+		else {
+			orderBy = "order by v1.sequenceNum, left(a.symbol, 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";	
+		}
+		
 		// if parameter exists, then add to where-clause
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {

@@ -991,7 +991,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}		
 		
 		// make this easy to copy/paste for troubleshooting
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + "limit 10000\n";
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
 		log.info(cmd);
 		
 		try {

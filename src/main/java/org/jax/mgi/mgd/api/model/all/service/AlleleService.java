@@ -627,6 +627,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				
 		if (searchDomain.getOrderBy().equals("1")) {
 			orderBy = "order by v1.sequenceNum, a.symbol";
+			
 		}
 		else {
 			orderBy = "order by v1.sequenceNum, split_part(a.symbol, '<', 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";	
@@ -990,7 +991,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		}		
 		
 		// make this easy to copy/paste for troubleshooting
-		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n";
+		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + "limit 10000\n";
 		log.info(cmd);
 		
 		try {

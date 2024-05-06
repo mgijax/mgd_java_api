@@ -630,7 +630,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			
 		}
 		else {
-			orderBy = "order by v1.sequenceNum, split_part(a.symbol, '<', 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";	
+			orderBy = "order by v1.sequenceNum, substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";	
 		}
 		
 		// if parameter exists, then add to where-clause

@@ -34,6 +34,7 @@ public class ProbeStrainMarkerTranslator extends BaseEntityDomainTranslator<Prob
 		if (entity.getAllele() != null) {
 			domain.setAlleleKey(String.valueOf(entity.getAllele().get_allele_key()));
 			domain.setAlleleSymbol(entity.getAllele().getSymbol());
+			domain.setAlleleAccID(entity.getAllele().getMgiAccessionIds().get(0).getAccID());
 			domain.setStrainOfOrigin(entity.getAllele().getStrain().getStrain());			
 		}
 				

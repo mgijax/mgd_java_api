@@ -17,6 +17,7 @@ public class ProbeStrainMarkerDomain extends BaseDomain {
     private String markerAccID;	
 	private String alleleKey;
 	private String alleleSymbol;
+	private String alleleAccID;
 	private String strainOfOrigin;
 	private String qualifierKey;
 	private String qualifierTerm;

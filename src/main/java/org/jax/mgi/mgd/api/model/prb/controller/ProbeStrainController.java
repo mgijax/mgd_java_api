@@ -86,7 +86,7 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	
 	@POST
 	@Operation(description = "Search/returns slim probe strain tool domain")
-	@Path("/search")
+	@Path("/searchStrainTool")
 	public List<SlimProbeStrainToolDomain> searchStrainTool(SlimProbeStrainToolDomain searchDomain) {
 	
 		List<SlimProbeStrainToolDomain> results = new ArrayList<SlimProbeStrainToolDomain>();

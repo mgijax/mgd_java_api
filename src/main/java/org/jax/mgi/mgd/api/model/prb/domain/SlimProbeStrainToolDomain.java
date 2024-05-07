@@ -15,4 +15,5 @@ public class SlimProbeStrainToolDomain extends BaseDomain {
 	private String isPrivate;
 	private String isPrivateString;
 	private List<ProbeStrainMarkerDomain> markers;
+	private String alleleString;
 }

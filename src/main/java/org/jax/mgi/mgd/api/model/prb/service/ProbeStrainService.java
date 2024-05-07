@@ -746,7 +746,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 
 		List<SlimProbeStrainToolDomain> results = new ArrayList<SlimProbeStrainToolDomain>();
 		
-		String cmd = "select distinct p._strain_key, p.strain" +
+		String cmd = "\nselect distinct p._strain_key, p.strain" +
 				"\nfrom prb_strain p, acc_accession a" +
 				"\nwhere p._strain_key = a._object_key" +
 				"\nand a._mgitype_key = 10" +

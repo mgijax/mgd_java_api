@@ -1,6 +1,7 @@
 package org.jax.mgi.mgd.api.model.prb.translator;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
@@ -32,9 +33,15 @@ public class SlimProbeStrainToolTranslator extends BaseEntityDomainTranslator<Pr
 		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
 			Iterable<ProbeStrainMarkerDomain> t = markerTranslator.translateEntities(entity.getMarkers());
 			domain.setMarkers(IteratorUtils.toList(t.iterator()));
-			domain.getMarkers().sort(Comparator.comparing(ProbeStrainMarkerDomain::getQualifierTerm));
 		}
 
+		List<String> alleleList = new ArrayList<String>();
+		for (int p = 0; p < domain.getMarkers().size(); p++) {
+			alleleList.add(domain.getMarkers().get(p).getAlleleSymbol());
+		}
+		String alleleString = String.join(",", alleleList);
+		domain.setAlleleString(alleleString);
+		
 		return domain;
 	}
 

@@ -87,12 +87,12 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	@POST
 	@Operation(description = "Search/returns slim probe strain tool domain")
 	@Path("/searchStrainTool")
-	public List<SlimProbeStrainToolDomain> searchStrainTool(String accID) {
+	public List<SlimProbeStrainToolDomain> searchStrainTool(SlimProbeStrainToolDomain searchDomain) {
 	
 		List<SlimProbeStrainToolDomain> results = new ArrayList<SlimProbeStrainToolDomain>();
 
 		try {
-			results = probeStrainService.searchStrainTool(accID);
+			results = probeStrainService.searchStrainTool(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

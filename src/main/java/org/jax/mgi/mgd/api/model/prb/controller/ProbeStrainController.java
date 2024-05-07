@@ -11,6 +11,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainMergeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainToolDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeStrainService;
 import org.jax.mgi.mgd.api.util.Constants;
@@ -76,6 +77,22 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 
 		try {
 			results = probeStrainService.search(searchDomain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@POST
+	@Operation(description = "Search/returns slim probe strain tool domain")
+	@Path("/search")
+	public List<SlimProbeStrainToolDomain> searchStrainTool(SlimProbeStrainToolDomain searchDomain) {
+	
+		List<SlimProbeStrainToolDomain> results = new ArrayList<SlimProbeStrainToolDomain>();
+
+		try {
+			results = probeStrainService.searchStrainTool(searchDomain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

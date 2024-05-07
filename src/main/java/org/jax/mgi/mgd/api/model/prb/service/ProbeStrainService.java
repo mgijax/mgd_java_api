@@ -18,9 +18,11 @@ import org.jax.mgi.mgd.api.model.prb.dao.ProbeStrainDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeStrainMergeDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.SlimProbeStrainToolDomain;
 import org.jax.mgi.mgd.api.model.prb.domain.StrainDataSetDomain;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
 import org.jax.mgi.mgd.api.model.prb.translator.ProbeStrainTranslator;
+import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainToolTranslator;
 import org.jax.mgi.mgd.api.model.prb.translator.SlimProbeStrainTranslator;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.model.voc.domain.AnnotationDomain;
@@ -60,6 +62,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	
 	private ProbeStrainTranslator translator = new ProbeStrainTranslator();
 	private SlimProbeStrainTranslator slimtranslator = new SlimProbeStrainTranslator();
+	private SlimProbeStrainToolTranslator slimtooltranslator = new SlimProbeStrainToolTranslator();
 
 	private String mgiTypeKey = "10";
 	private String mgiTypeName = "Strain";
@@ -726,6 +729,36 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 			while (rs.next()) {
 				SlimProbeStrainDomain domain = new SlimProbeStrainDomain();
 				domain = slimtranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
+				probeStrainDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return results;
+	}
+	
+	@Transactional
+	public List<SlimProbeStrainToolDomain> searchStrainTool(SlimProbeStrainToolDomain searchDomain) {
+
+		List<SlimProbeStrainToolDomain> results = new ArrayList<SlimProbeStrainToolDomain>();
+		
+		String cmd = "select distinct p._strain_key, p.strain" +
+				"\nfrom prb_strain p, acc_accession a" +
+				"\nwhere p._strain_key = a._object_key" +
+				"\nand a._mgitype_key = 10" +
+				"\nand lower(a.accid) = '" + searchDomain.getAccID().toLowerCase() + "'";
+		
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				SlimProbeStrainToolDomain domain = new SlimProbeStrainToolDomain();
+				domain = slimtooltranslator.translate(probeStrainDAO.get(rs.getInt("_strain_key")));				
 				probeStrainDAO.clear();
 				results.add(domain);
 			}

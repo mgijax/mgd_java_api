@@ -10,11 +10,12 @@ import lombok.Setter;
 @Getter @Setter
 public class SlimProbeStrainToolDomain extends BaseDomain {
 
+	private String searchAccID;
 	private String accID;
 	private String strainKey;
 	private String strain;
 	private String isPrivate;
 	private String isPrivateString;
-	private List<ProbeStrainMarkerDomain> markers;
 	private String alleleString;
+	private List<ProbeStrainMarkerDomain> markers;
 }

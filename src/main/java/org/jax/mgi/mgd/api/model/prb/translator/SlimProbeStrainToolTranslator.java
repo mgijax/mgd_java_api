@@ -29,6 +29,11 @@ public class SlimProbeStrainToolTranslator extends BaseEntityDomainTranslator<Pr
 			domain.setIsPrivateString("No");
 		}
 		
+		// mgi accession ids only
+		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
+			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
+		}
+		
 		// markers
 		if (entity.getMarkers() != null && !entity.getMarkers().isEmpty()) {
 			Iterable<ProbeStrainMarkerDomain> t = markerTranslator.translateEntities(entity.getMarkers());

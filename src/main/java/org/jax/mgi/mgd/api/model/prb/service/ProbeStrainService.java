@@ -742,7 +742,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	}
 	
 	@Transactional
-	public List<SlimProbeStrainToolDomain> searchStrainTool(SlimProbeStrainToolDomain searchDomain) {
+	public List<SlimProbeStrainToolDomain> searchStrainTool(String accID) {
 
 		List<SlimProbeStrainToolDomain> results = new ArrayList<SlimProbeStrainToolDomain>();
 		
@@ -750,7 +750,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				"\nfrom prb_strain p, acc_accession a" +
 				"\nwhere p._strain_key = a._object_key" +
 				"\nand a._mgitype_key = 10" +
-				"\nand lower(a.accid) = '" + searchDomain.getAccID().toLowerCase() + "'";
+				"\nand lower(a.accid) = '" + accID.toLowerCase() + "'";
 		
 		log.info(cmd);
 		

@@ -4,6 +4,12 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-23-20
+DATE: 05/09/2024
+STAFF: lec
+wts2-1471/fl2-854/Assay error message: API ERROR:AssayUdateAPI.update
+fixed RunCommand.java
+
 TAG: mgd_java_api-6-0-23-19
 TAG: mgd_java_api-6-0-23-18
 TAG: mgd_java_api-6-0-23-17

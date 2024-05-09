@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Is a Unix shell command to be run in a Bourne shell (by default).
@@ -238,9 +239,6 @@ public class RunCommand
             // execute 'cmdArr' in a new process
             Process process = Runtime.getRuntime().exec(cmdArr, this.envp);
             
-	        // wait until that process has finished
-            process.waitFor();
-
             // read & save input stream
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));                    
             while ((line = inputReader.readLine()) != null)
@@ -250,6 +248,9 @@ public class RunCommand
             BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));                    
 	        while ((line = errorReader.readLine()) != null)
 	            this.stdout = this.stdout + line + "\n";
+	        
+	        // wait until that process has finished
+            process.waitFor();
 
 	        // save exitValue()
             this.exitcode = process.exitValue();

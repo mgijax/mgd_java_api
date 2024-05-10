@@ -41,7 +41,9 @@ public class SlimProbeStrainToolTranslator extends BaseEntityDomainTranslator<Pr
 
 			List<String> alleleList = new ArrayList<String>();
 			for (int p = 0; p < domain.getMarkers().size(); p++) {
-				alleleList.add(domain.getMarkers().get(p).getAlleleSymbol());
+				if (domain.getMarkers().get(p).getAlleleSymbol() != null && !domain.getMarkers().get(p).getAlleleSymbol().isEmpty()) {
+					alleleList.add(domain.getMarkers().get(p).getAlleleSymbol());
+				}
 			}
 			String alleleString = String.join(",", alleleList);
 			domain.setAlleleString(alleleString);

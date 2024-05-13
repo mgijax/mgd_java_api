@@ -11,9 +11,9 @@ import lombok.Setter;
 public class SlimProbeStrainToolDomain extends BaseDomain {
 
 	private String searchAccID;
+	private String searchLogicaldbKey;
+	private String searchLogicaldb;
 	private String accID;
-	private String logicaldbKey;
-	private String logicaldb;
 	private String strainKey;
 	private String strain;
 	private String isPrivate;

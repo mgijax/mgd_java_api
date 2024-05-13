@@ -32,6 +32,8 @@ public class SlimProbeStrainToolTranslator extends BaseEntityDomainTranslator<Pr
 		// mgi accession ids only
 		if (entity.getMgiAccessionIds() != null && !entity.getMgiAccessionIds().isEmpty()) {
 			domain.setAccID(entity.getMgiAccessionIds().get(0).getAccID());
+			domain.setLogicaldb(entity.getMgiAccessionIds().get(0).getLogicaldb().getName());
+			domain.setLogicaldbKey(String.valueOf(entity.getMgiAccessionIds().get(0).getLogicaldb().get_logicaldb_key()));
 		}
 		
 		// markers

@@ -12,6 +12,8 @@ public class SlimProbeStrainToolDomain extends BaseDomain {
 
 	private String searchAccID;
 	private String accID;
+	private String logicaldbKey;
+	private String logicaldb;
 	private String strainKey;
 	private String strain;
 	private String isPrivate;

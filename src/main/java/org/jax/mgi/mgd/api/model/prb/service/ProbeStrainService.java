@@ -750,6 +750,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				"\nfrom prb_strain p, acc_accession a" +
 				"\nwhere p._strain_key = a._object_key" +
 				"\nand a._mgitype_key = 10" +
+				"\nand a._logicaldb_key = " + searchDomain.getLogicaldbKey() +
 				"\nand a.accid = '" + searchDomain.getSearchAccID() + "'";
 		
 		log.info(cmd);

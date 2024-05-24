@@ -376,6 +376,17 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				"\nselect v._term_key as termKey, v.term as term, v.abbreviation, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
 					"\nand v.term != 'Not Specified'" + 
 				"\norder by orderBy, term\n";
+		}	
+		else if (vocabKey.equals("163")) {
+			cmd = "select v._term_key as termKey, v.term as term, v.abbreviation, 1 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term = 'Not Specified'" + 
+				"\nunion" + 
+				"select v._term_key as termKey, v.term as term, v.abbreviation, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term = 'Present'" + 
+				"\nunion" +					
+				"\nselect v._term_key as termKey, v.term as term, v.abbreviation, 3 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term not in ('Not Specified', 'Present')" + 
+				"\norder by orderBy, term\n";
 		}		
 		else {
 			cmd = "select _term_key as termKey, term as term, 1 as orderBy from voc_term where _vocab_key = " + vocabKey +

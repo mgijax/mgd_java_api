@@ -382,10 +382,13 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					"\nand v.term = 'Present'" + 
 				"\nunion" + 
 				"\nselect v._term_key as termKey, v.term as term, v.abbreviation, 2 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term = 'Absent'" + 					
+				"\nunion" + 
+				"\nselect v._term_key as termKey, v.term as term, v.abbreviation, 3 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
 					"\nand v.term = 'Not Specified'" + 
 				"\nunion" +					
-				"\nselect v._term_key as termKey, v.term as term, v.abbreviation, 3 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
-					"\nand v.term not in ('Not Specified', 'Present')" + 
+				"\nselect v._term_key as termKey, v.term as term, v.abbreviation, 4 as orderBy from voc_term v where v._vocab_key = " + vocabKey +
+					"\nand v.term not in ('Not Specified', 'Present', 'Absent')" + 
 				"\norder by orderBy, term\n";
 		}		
 		else {

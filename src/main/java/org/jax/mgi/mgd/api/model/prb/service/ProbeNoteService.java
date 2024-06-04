@@ -101,7 +101,8 @@ public class ProbeNoteService extends BaseService<ProbeNoteDomain> {
 		// process probe notes (create, delete, update)
 		
 		Boolean modified = false;
-		
+		String note = "";
+			
 		log.info("processProbeNote");
 		
 		if (!domain.getProcessStatus().equals(Constants.PROCESS_DELETE)) {
@@ -110,12 +111,16 @@ public class ProbeNoteService extends BaseService<ProbeNoteDomain> {
 				return modified;
 			}
 		}
-										
+			
+		log.info("processProbeNote/decodedToISO8859: " + domain.getNote());
+		note = DecodeString.setDecodeToLatin9(domain.getNote());
+		note = note.replace("''", "'");
+		
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {				
 			log.info("processProbeNote create");
 			ProbeNote entity = new ProbeNote();
 			entity.set_probe_key(Integer.valueOf(parentKey));
-			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));
+			entity.setNote(note);
 			entity.setCreation_date(new Date());				
 			entity.setModification_date(new Date());
 			noteDAO.persist(entity);				
@@ -130,7 +135,7 @@ public class ProbeNoteService extends BaseService<ProbeNoteDomain> {
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processProbeNote update");								
 			ProbeNote entity = noteDAO.get(Integer.valueOf(domain.getNoteKey()));				
-			entity.setNote(DecodeString.setDecodeToLatin9(domain.getNote()));
+			entity.setNote(note);
 			entity.setModification_date(new Date());
 			noteDAO.update(entity);
 			modified = true;

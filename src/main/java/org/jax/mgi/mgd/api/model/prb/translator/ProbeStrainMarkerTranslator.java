@@ -18,10 +18,7 @@ public class ProbeStrainMarkerTranslator extends BaseEntityDomainTranslator<Prob
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setStrainMarkerKey(String.valueOf(entity.get_strainmarker_key()));		
 		domain.setStrainKey(String.valueOf(entity.get_strain_key()));
-		domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
-		domain.setMarkerSymbol(entity.getMarker().getSymbol());
 		domain.setChromosome(entity.getMarker().getChromosome());
-		domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());
 		domain.setQualifierKey(String.valueOf(entity.getQualifier().get_term_key()));
 		domain.setQualifierTerm(entity.getQualifier().getTerm());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
@@ -30,6 +27,12 @@ public class ProbeStrainMarkerTranslator extends BaseEntityDomainTranslator<Prob
 		domain.setModifiedBy(entity.getModifiedBy().getLogin());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));	
+		
+		if (entity.getMarker() != null) {
+			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
+			domain.setMarkerSymbol(entity.getMarker().getSymbol());
+			domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());			
+		}
 		
 		if (entity.getAllele() != null) {
 			domain.setAlleleKey(String.valueOf(entity.getAllele().get_allele_key()));

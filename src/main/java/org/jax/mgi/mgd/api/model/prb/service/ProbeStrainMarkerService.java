@@ -94,7 +94,10 @@ public class ProbeStrainMarkerService extends BaseService<ProbeStrainMarkerDomai
 		
 		for (int i = 0; i < domain.size(); i++) {
 		
-        	if (domain.get(i).getMarkerKey() == null || domain.get(i).getMarkerKey().isEmpty()) {
+			// if both marker & allele are null/empty, then skip
+        	if ((domain.get(i).getMarkerKey() == null || domain.get(i).getMarkerKey().isEmpty()) 
+        			&& (domain.get(i).getAlleleKey() == null || domain.get(i).getAlleleKey().isEmpty())) {
+        		
         		return modified;
         	}
         			

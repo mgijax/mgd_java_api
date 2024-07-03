@@ -18,7 +18,6 @@ public class ProbeStrainMarkerTranslator extends BaseEntityDomainTranslator<Prob
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setStrainMarkerKey(String.valueOf(entity.get_strainmarker_key()));		
 		domain.setStrainKey(String.valueOf(entity.get_strain_key()));
-		domain.setChromosome(entity.getMarker().getChromosome());
 		domain.setQualifierKey(String.valueOf(entity.getQualifier().get_term_key()));
 		domain.setQualifierTerm(entity.getQualifier().getTerm());
 		domain.setCreatedByKey(entity.getCreatedBy().get_user_key().toString());
@@ -29,9 +28,13 @@ public class ProbeStrainMarkerTranslator extends BaseEntityDomainTranslator<Prob
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));	
 		
 		if (entity.getMarker() != null) {
+			domain.setChromosome(entity.getMarker().getChromosome());
 			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 			domain.setMarkerSymbol(entity.getMarker().getSymbol());
 			domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());			
+		}
+		else {
+			domain.setChromosome("UN");
 		}
 		
 		if (entity.getAllele() != null) {

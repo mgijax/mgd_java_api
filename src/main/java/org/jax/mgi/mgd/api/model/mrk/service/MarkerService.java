@@ -144,6 +144,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				}
 			}
 			
+			// process all notes
+			noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, user);
+			noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, user);
+			noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, user);
+			noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, user);
+			noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, user);
+			
 			// process marker synonym
 			if (domain.getSynonyms() != null) {
 				synonymService.process(String.valueOf(entity.get_marker_key()), domain.getSynonyms(), mgiTypeKey, user);

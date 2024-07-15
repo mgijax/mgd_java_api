@@ -4,6 +4,11 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-24-2
+DATE: 07/15/2024
+STAFF: lec
+wts2-1522/fl2-926/marker module/add Note processing to create()
+
 TAG: mgd_java_api-6-0-24-1
 DATE: 07/03/2024
 STAFF: lec

@@ -144,12 +144,13 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				}
 			}
 			
+			
 			// process all notes
-			noteService.process(domain.getMarkerKey(), domain.getEditorNote(), mgiTypeKey, user);
-			noteService.process(domain.getMarkerKey(), domain.getSequenceNote(), mgiTypeKey, user);
-			noteService.process(domain.getMarkerKey(), domain.getRevisionNote(), mgiTypeKey, user);
-			noteService.process(domain.getMarkerKey(), domain.getStrainNote(), mgiTypeKey, user);
-			noteService.process(domain.getMarkerKey(), domain.getLocationNote(), mgiTypeKey, user);
+			noteService.process(String.valueOf(entity.get_marker_key()), domain.getEditorNote(), mgiTypeKey, user);
+			noteService.process(String.valueOf(entity.get_marker_key()), domain.getSequenceNote(), mgiTypeKey, user);
+			noteService.process(String.valueOf(entity.get_marker_key()), domain.getRevisionNote(), mgiTypeKey, user);
+			noteService.process(String.valueOf(entity.get_marker_key()), domain.getStrainNote(), mgiTypeKey, user);
+			noteService.process(String.valueOf(entity.get_marker_key()), domain.getLocationNote(), mgiTypeKey, user);
 			
 			// process marker synonym
 			if (domain.getSynonyms() != null) {
@@ -174,7 +175,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 			log.info("cmd: " + cmd);
 			Query query = markerDAO.createNativeQuery(cmd);
 			query.getResultList();
-
+			
 			// to update the mrk_location_cache table				
 			try {
 				log.info("processMarker/mrkLocationUtilities");

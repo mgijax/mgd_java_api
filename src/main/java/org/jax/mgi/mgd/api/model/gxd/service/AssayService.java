@@ -1369,6 +1369,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				{"Assay Type",     "assaytype"},
 				{"Reference J#",   "jnumid"},
 				{"Short Citation", "short_citation"},
+				{"Assay Note",     "assaynote" },
 			};
 			return formatTsvHelper(obj, cols);
 		}
@@ -1378,8 +1379,9 @@ public class AssayService extends BaseService<AssayDomain> {
 		
 		String cmd ;
 		String with = "";
-		String select = "\nselect distinct a._assay_key, ea.accid as assayid, ma.accid as markerid, m.symbol as markersymbol, at.assaytype, at.sequenceNum, r.jnumid, r.short_citation " ;
-		String from = "\nfrom gxd_assay a, acc_accession ea, mrk_marker m,  acc_accession ma, gxd_assaytype at, bib_citation_cache r " ;
+		String select = "\nselect distinct a._assay_key, ea.accid as assayid, ma.accid as markerid, m.symbol as markersymbol, at.assaytype, at.sequenceNum, r.jnumid, r.short_citation, n.assaynote " ;
+		String from = "\nfrom gxd_assay a left join gxd_assaynote n on a._assay_Key = n._assay_key , " +
+			"\nacc_accession ea, mrk_marker m,  acc_accession ma, gxd_assaytype at, bib_citation_cache r " ;
 		String where = "\nwhere a._assay_key = ea._object_key " +
 			"\nand ea._mgitype_key = 8 " +
 			"\nand ea._logicaldb_key = 1 " +

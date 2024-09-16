@@ -4,10 +4,14 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
-TAG: mgd_java_api-6-0-24-3
+TAG: mgd_java_api-6-0-24-4
 DATE: 09/16/2024
 STAFF: lec
 wts2-1549/fl2-968/adding sequence ontology term 36 matrix_attachment_site to Feature Type menu in Marker module
+
+TAG: mgd_java_api-6-0-24-3
+DATE: 07/23/2024
+STAFF: jer
 
 TAG: mgd_java_api-6-0-24-2
 DATE: 07/15/2024

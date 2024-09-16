@@ -1376,6 +1376,7 @@ public class MarkerService extends BaseService<MarkerDomain> {
 				//                103059163 | insulator binding site
 				//				  113728573	| origin of replication
 				//				  113728574	| transcriptional cis regulatory region
+				//				  114770353	| matrix attachment site
 				
 				else if (!markerTypeKey.equals("9")
 						&& (termKey.equals("6238178")
@@ -1403,7 +1404,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
                             || termKey.equals("103059162")                 												
                             || termKey.equals("103059163")
                             || termKey.equals("113728573")                          
-                            || termKey.equals("113728574")                                                      
+                            || termKey.equals("113728574") 
+                            || termKey.equals("114770353")                                                                                 
 							)) {
 					validation = false;
 				}
@@ -1434,7 +1436,8 @@ public class MarkerService extends BaseService<MarkerDomain> {
                          && !termKey.equals("103059162")
                          && !termKey.equals("103059163")
                          && !termKey.equals("113728573")                          
-                         && !termKey.equals("113728574")                          
+                         && !termKey.equals("113728574") 
+                         && !termKey.equals("114770353")                          
 						 ) {
 					validation = false;
 				}					

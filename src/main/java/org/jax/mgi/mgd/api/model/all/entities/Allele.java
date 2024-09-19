@@ -213,7 +213,7 @@ public class Allele extends BaseEntity {
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_annottype_key` = 1021")
 	private List<Annotation> doAnnots;
-
+	
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)

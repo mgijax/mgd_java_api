@@ -13,7 +13,7 @@ import org.jax.mgi.mgd.api.model.all.entities.Allele;
 import org.jax.mgi.mgd.api.model.all.translator.AlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.all.translator.SlimAlleleFearTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearByAlleleDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
@@ -258,7 +258,7 @@ public class AlleleFearService extends BaseService<AlleleFearDomain> {
 		Boolean from_ec = false;
 		Boolean from_dc = false;
 		
-		RelationshipFearDomain relationshipDomain;
+		RelationshipFearByAlleleDomain relationshipDomain;
 
 		// if parameter exists, then add to where-clause
 		

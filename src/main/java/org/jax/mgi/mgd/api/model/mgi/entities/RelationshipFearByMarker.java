@@ -20,19 +20,19 @@ import lombok.Setter;
 @Getter @Setter
 @Entity
 @Immutable
-@Schema(description = "Relationship Fear (Allele/Marker)")
-@Table(name="mgi_relationship_fear_view")
-public class RelationshipFear extends BaseEntity {
+@Schema(description = "Relationship Fear (Marker/Marker)")
+@Table(name="mgi_relationship_fearbymarker_view")
+public class RelationshipFearByMarker extends BaseEntity {
 	
 	@Id	
 	private int _relationship_key;
 	private int _category_key;
 	private String categoryTerm;
 	private int _object_key_1;
-	private String alleleSymbol;
+	private String markerSymbol1;
 	private int _object_key_2;
-	private String markerSymbol;
-	private String markerAccID;
+	private String markerSymbol2;
+	private String markerAccID2;
 	private int _organism_key;
 	private String organism;
 	private int _relationshipTerm_key;

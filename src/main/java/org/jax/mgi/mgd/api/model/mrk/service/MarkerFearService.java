@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearByAlleleDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
@@ -181,7 +181,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		
 		Boolean from_cm = false;
 		
-		RelationshipFearDomain relationshipDomain;
+		RelationshipFearByAlleleDomain relationshipDomain;
 
 		// if parameter exists, then add to where-clause
 		

@@ -14,7 +14,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipAlleleDriverGene;
-import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFear;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFearByAllele;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.entities.Marker;
 import org.jax.mgi.mgd.api.model.prb.entities.ProbeStrain;
@@ -218,17 +218,17 @@ public class Allele extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_category_key` in (1003)")
-	private List<RelationshipFear> mutationInvolves;	
+	private List<RelationshipFearByAllele> mutationInvolves;	
 
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_category_key` in (1004)")
-	private List<RelationshipFear> expressesComponents;	
+	private List<RelationshipFearByAllele> expressesComponents;	
 	
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
 	@Where(clause="`_category_key` in (1006)")
-	private List<RelationshipFear> driverComponents;		
+	private List<RelationshipFearByAllele> driverComponents;		
 }

@@ -2,25 +2,25 @@ package org.jax.mgi.mgd.api.model.mgi.translator;
 
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;
 import org.jax.mgi.mgd.api.model.mgi.domain.NoteDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearDomain;
-import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFear;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearByMarkerDomain;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFearByMarker;
 import org.jax.mgi.mgd.api.util.Constants;
 
-public class RelationshipFearTranslator extends BaseEntityDomainTranslator<RelationshipFear, RelationshipFearDomain> {
+public class RelationshipFearByMarkerTranslator extends BaseEntityDomainTranslator<RelationshipFearByMarker, RelationshipFearByMarkerDomain> {
 		
 	@Override
-	protected RelationshipFearDomain entityToDomain(RelationshipFear entity) {	
-		RelationshipFearDomain domain = new RelationshipFearDomain();
+	protected RelationshipFearByMarkerDomain entityToDomain(RelationshipFearByMarker entity) {	
+		RelationshipFearByMarkerDomain domain = new RelationshipFearByMarkerDomain();
 
 		domain.setProcessStatus(Constants.PROCESS_NOTDIRTY);
 		domain.setRelationshipKey(String.valueOf(entity.get_relationship_key()));
 		domain.setCategoryKey(String.valueOf(entity.get_category_key()));
 		domain.setCategoryTerm(entity.getCategoryTerm());
-		domain.setAlleleKey(String.valueOf(entity.get_object_key_1()));
-		domain.setAlleleSymbol(entity.getAlleleSymbol());
-		domain.setMarkerKey(String.valueOf(entity.get_object_key_2()));
-		domain.setMarkerSymbol(entity.getMarkerSymbol());
-		domain.setMarkerAccID(entity.getMarkerAccID());
+		domain.setMarkerKey1(String.valueOf(entity.get_object_key_1()));
+		domain.setMarkerSymbol1(entity.getMarkerSymbol1());
+		domain.setMarkerKey2(String.valueOf(entity.get_object_key_2()));
+		domain.setMarkerSymbol2(entity.getMarkerSymbol2());
+		domain.setMarkerAccID2(entity.getMarkerAccID2());
 		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
 		domain.setOrganism(entity.getOrganism());
 		domain.setRelationshipTermKey(String.valueOf(entity.get_relationshipTerm_key()));

@@ -6,21 +6,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class RelationshipFearDomain extends BaseDomain {
+public class RelationshipFearByMarkerDomain extends BaseDomain {
 	// similar to RelationshipDomain
 	// except...
-	// 			objectKey1 = alleleKey, alleleSymbol
-	// 			objectKey2 = markerKey, markerSymbol
+	// 			objectKey1 = markerKey1, markerSymbol1
+	// 			objectKey2 = markerKey2, markerSymbol2
 	
 	private String processStatus;
 	private String relationshipKey;
 	private String categoryKey;
 	private String categoryTerm;
-	private String alleleKey;
-	private String alleleSymbol;
-	private String markerKey;
-	private String markerSymbol;
-	private String markerAccID;
+	private String markerKey1;
+	private String markerSymbol1;
+	private String markerKey2;
+	private String markerSymbol2;
+	private String markerAccID2;
 	private String organismKey;
 	private String organism;
 	private String relationshipTermKey;

@@ -12,7 +12,8 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
-import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFear;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFearByAllele;
+import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFearByMarker;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerQTLCandidate;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerQTLInteraction;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerTSS;
@@ -227,6 +228,6 @@ public class Marker extends BaseEntity {
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
 	@Where(clause="`_category_key` in (1002)")
-	private List<RelationshipFear> clusterHasMember;
+	private List<RelationshipFearByMarker> clusterHasMember;
 	
 }

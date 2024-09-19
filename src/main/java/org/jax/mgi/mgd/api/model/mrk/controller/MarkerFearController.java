@@ -6,7 +6,6 @@ import java.util.List;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jax.mgi.mgd.api.model.BaseController;
-import org.jax.mgi.mgd.api.model.all.domain.SlimAlleleFearDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mrk.domain.MarkerFearDomain;
 import org.jax.mgi.mgd.api.model.mrk.domain.SlimMarkerFearDomain;
@@ -74,7 +73,7 @@ public class MarkerFearController extends BaseController<MarkerFearDomain> {
 	}
 		
 	@POST
-	@Operation(description = "Search/returns slim allele fear domain")
+	@Operation(description = "Search/returns slim marker fear domain")
 	@Path("/search")
 	public List<SlimMarkerFearDomain> search(MarkerFearDomain searchDomain) {
 	

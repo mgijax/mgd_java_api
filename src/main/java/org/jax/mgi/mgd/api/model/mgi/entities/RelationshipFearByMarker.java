@@ -29,10 +29,12 @@ public class RelationshipFearByMarker extends BaseEntity {
 	private int _category_key;
 	private String categoryTerm;
 	private int _object_key_1;
-	private String markerSymbol1;
+	private String alleleSymbol;
 	private int _object_key_2;
-	private String markerSymbol2;
-	private String markerAccID2;
+	private String markerSymbol;
+	private String markerAccID;
+//	private String markerSymbol1;
+//	private String markerSymbol2;
 	private int _organism_key;
 	private String organism;
 	private int _relationshipTerm_key;

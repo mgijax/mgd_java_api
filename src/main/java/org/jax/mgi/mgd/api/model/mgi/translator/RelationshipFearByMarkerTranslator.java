@@ -17,10 +17,10 @@ public class RelationshipFearByMarkerTranslator extends BaseEntityDomainTranslat
 		domain.setCategoryKey(String.valueOf(entity.get_category_key()));
 		domain.setCategoryTerm(entity.getCategoryTerm());
 		domain.setMarkerKey1(String.valueOf(entity.get_object_key_1()));
-		domain.setMarkerSymbol1(entity.getMarkerSymbol1());
+		domain.setMarkerSymbol1(entity.getAlleleSymbol());
 		domain.setMarkerKey2(String.valueOf(entity.get_object_key_2()));
-		domain.setMarkerSymbol2(entity.getMarkerSymbol2());
-		domain.setMarkerAccID2(entity.getMarkerAccID2());
+		domain.setMarkerSymbol2(entity.getMarkerSymbol());
+		domain.setMarkerAccID2(entity.getMarkerAccID());
 		domain.setOrganismKey(String.valueOf(entity.get_organism_key()));
 		domain.setOrganism(entity.getOrganism());
 		domain.setRelationshipTermKey(String.valueOf(entity.get_relationshipTerm_key()));

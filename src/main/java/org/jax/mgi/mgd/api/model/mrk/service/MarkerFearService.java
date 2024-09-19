@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipDomain;
-import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearByAlleleDomain;
+import org.jax.mgi.mgd.api.model.mgi.domain.RelationshipFearByMarkerDomain;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.RelationshipService;
 import org.jax.mgi.mgd.api.model.mrk.dao.MarkerDAO;
@@ -49,7 +49,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 	
 	@Transactional
 	public SearchResults<MarkerFearDomain> update(MarkerFearDomain domain, User user) {
-		// translate pwi/incoming AlleleFearDomain json domain to list of RelationshipDomain
+		// translate pwi/incoming MarkerFearDomain json domain to list of RelationshipDomain
 		// use this list of domain to process hibernate entities
 		
 		log.info("Marker FearService.update");
@@ -60,7 +60,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		Boolean modified = false;
 
 		if (domain.getClusterHasMember() != null) {
-	    	// Iterate thru incoming allele fear relationship domain
+	    	// Iterate thru incoming marker fear relationship domain
 			for (int i = 0; i < domain.getClusterHasMember().size(); i++) {
 				
 				// if processStatus == "x", then continue; no need to create domain/process anything
@@ -69,7 +69,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 				}
 				
 				// if no marker, continue
-				if (domain.getClusterHasMember().get(i).getMarkerKey().isEmpty()) {
+				if (domain.getClusterHasMember().get(i).getMarkerKey2().isEmpty()) {
 					continue;
 				}
 				
@@ -77,8 +77,8 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 			
 				rdomain.setProcessStatus(domain.getClusterHasMember().get(i).getProcessStatus());
 				rdomain.setRelationshipKey(domain.getClusterHasMember().get(i).getRelationshipKey());
-				rdomain.setObjectKey1(domain.getClusterHasMember().get(i).getAlleleKey());
-				rdomain.setObjectKey2(domain.getClusterHasMember().get(i).getMarkerKey());
+				rdomain.setObjectKey1(domain.getClusterHasMember().get(i).getMarkerKey1());
+				rdomain.setObjectKey2(domain.getClusterHasMember().get(i).getMarkerKey2());
 				rdomain.setCategoryKey(domain.getClusterHasMember().get(i).getCategoryKey());
 				rdomain.setRelationshipTermKey(domain.getClusterHasMember().get(i).getRelationshipTermKey());
 				rdomain.setQualifierKey(domain.getClusterHasMember().get(i).getQualifierKey());
@@ -181,7 +181,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		
 		Boolean from_cm = false;
 		
-		RelationshipFearByAlleleDomain relationshipDomain;
+		RelationshipFearByMarkerDomain relationshipDomain;
 
 		// if parameter exists, then add to where-clause
 		
@@ -224,13 +224,13 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 				}
 			}
 			
-			value = relationshipDomain.getMarkerKey();
+			value = relationshipDomain.getMarkerKey2();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v1._object_key_2 = " + value;
 				from_cm = true;			
 			}
 				
-			value = relationshipDomain.getMarkerSymbol();
+			value = relationshipDomain.getMarkerSymbol2();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v1.markersymbol ilike '" + value + "'";
 				from_cm = true;			

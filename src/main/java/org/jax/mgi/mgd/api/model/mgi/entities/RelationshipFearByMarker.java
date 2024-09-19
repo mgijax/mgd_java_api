@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @Immutable
 @Schema(description = "Relationship Fear (Marker/Marker)")
-@Table(name="mgi_relationship_fearbymarker_view")
+@Table(name="mgi_relationship_fear_view")
 public class RelationshipFearByMarker extends BaseEntity {
 	
 	@Id	

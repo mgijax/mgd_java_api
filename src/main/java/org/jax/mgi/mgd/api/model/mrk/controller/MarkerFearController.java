@@ -66,7 +66,7 @@ public class MarkerFearController extends BaseController<MarkerFearDomain> {
 	}
 
 	@GET
-	@Operation(description = "Get the object count from mgi_relationship_Fear_view")
+	@Operation(description = "Get the object count from mgi_relationship_fearbymarker_view")
 	@Path("/getObjectCount")
 	public SearchResults<MarkerFearDomain> getObjectCount() {
 		return markerFearService.getObjectCount();

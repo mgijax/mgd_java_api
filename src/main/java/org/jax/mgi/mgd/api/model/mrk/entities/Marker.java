@@ -12,7 +12,6 @@ import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGISynonym;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
-import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFearByAllele;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipFearByMarker;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerQTLCandidate;
 import org.jax.mgi.mgd.api.model.mgi.entities.RelationshipMarkerQTLInteraction;

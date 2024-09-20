@@ -104,10 +104,10 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		}
 		
 		if (modified) {
-			log.info("processAlleleFear/changes processed: " + domain.getMarkerKey());
+			log.info("processMarkerFear/changes processed: " + domain.getMarkerKey());
 		}
 		else {
-			log.info("processAlleleFear/no changes processed: " + domain.getMarkerKey());
+			log.info("processMarkerFear/no changes processed: " + domain.getMarkerKey());
 		}
 				
 		log.info("repackage incoming domain as results");		
@@ -170,9 +170,9 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		List<SlimMarkerFearDomain> results = new ArrayList<SlimMarkerFearDomain>();
 
 		String cmd = "";
-		String select = "select distinct a._marker_key, a.symbol";
-		String from = "from mrk_marker a, acc_accession aa";		
-		String where = "where a._marker_key = aa._object_key and aa._mgitype_key = 11";
+		String select = "select distinct m._marker_key, m.symbol";
+		String from = "from mrk_marker m, acc_accession aa";		
+		String where = "where m._marker_key = aa._object_key and aa._mgitype_key = 2";
 		String orderBy = "order by symbol";
 		
 		String value;
@@ -187,12 +187,12 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		
 		value = searchDomain.getMarkerKey();
 		if (value != null && !value.isEmpty()) {
-			where = where + "\nand a._allele_key in (" + value + ")";
+			where = where + "\nand m._marker_key in (" + value + ")";
 		}
 		
 		value = searchDomain.getMarkerSymbol();
 		if (value != null && !value.isEmpty()) {
-			where = where + "\nand a.symbol ilike '" + value + "'";
+			where = where + "\nand m.symbol ilike '" + value + "'";
 		}
 		
 		// accession id
@@ -268,8 +268,8 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 			}
 			
 			if (from_cm == true) {
-				from = from + ",mgi_relationship_fear_view v1";						
-				where = where + "\nand a._allele_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey();			
+				from = from + ",mgi_relationship_fearbymarker_view v1";						
+				where = where + "\nand m._marker_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey();			
 			}			
 		}
 		

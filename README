@@ -40,7 +40,7 @@ Hopefully you’ll see something like this:
 
 At this point, you should see the api running using ps and connect to the swagger interface.
 Note that the swagger URL has changed slightly:
-    http://bhmgipwi01ld.jax.org:8089/swagger-ui
+    http://bhmgiapp01.jax.org:8099/swagger-ui
  
 To monitor the log:
     tail -f /data/mgd_java_api/logs-jer/java_api.log
@@ -65,7 +65,7 @@ To manually install the pwi
      cat nohup.out to verify
 
 Run pwi and login: 
-    http://bhmgipwi01ld:5001/pwi/
+    http://bhmgiapp01:5001/pwi/
 
 Stop the pwi:
     cd pwi/admin

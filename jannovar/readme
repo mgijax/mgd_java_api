@@ -1,4 +1,4 @@
-Install Jannovar on PWI server (bhmgipwi01ld, bhmgipwi01lt, bhmgipwi01lp)
+Install Jannovar on PWI server
 These server have maven (see mgiconfig)
 
 MAVEN_HOME=/opt/apache-maven-3.5.4

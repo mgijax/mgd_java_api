@@ -458,7 +458,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 		}	
 		else if (vocabName.equals("clusterHasMember")) {		
 			cmd = "select _term_key as termKey, term from voc_term where _vocab_key = " + vocabKey
-					+ "\nand _term_key in (12438344)"
+					+ "\nand _term_key in (12438344, 12438347)"
 					+ "\norder by term";
 		}	
 		else if (vocabName.equals("properties")) {		

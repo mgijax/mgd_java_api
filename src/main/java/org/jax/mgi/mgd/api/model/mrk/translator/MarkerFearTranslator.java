@@ -18,7 +18,8 @@ public class MarkerFearTranslator extends BaseEntityDomainTranslator<Marker, Mar
 	protected MarkerFearDomain entityToDomain(Marker entity) {
 		
 		MarkerFearDomain domain = new MarkerFearDomain();
-		
+		RelationshipFearByMarkerTranslator fearTranslator = new RelationshipFearByMarkerTranslator();	
+
 		domain.setMarkerKey(String.valueOf(entity.get_marker_key()));
 		domain.setMarkerSymbol(entity.getSymbol());
 		
@@ -29,10 +30,16 @@ public class MarkerFearTranslator extends BaseEntityDomainTranslator<Marker, Mar
 		
 		// relationship domain by marker/cluster_has_member
 		if (entity.getClusterHasMember() != null && !entity.getClusterHasMember().isEmpty()) {
-			RelationshipFearByMarkerTranslator fearTranslator = new RelationshipFearByMarkerTranslator();	
 			Iterable<RelationshipFearByMarkerDomain> t = fearTranslator.translateEntities(entity.getClusterHasMember());			
 			domain.setClusterHasMember(IteratorUtils.toList(t.iterator()));
 			domain.getClusterHasMember().sort(Comparator.comparing(RelationshipFearByMarkerDomain::getMarkerSymbol1, String.CASE_INSENSITIVE_ORDER));	
+		}
+		
+		// relationship domain by marker/regulates_exrepssion
+		if (entity.getRegulatesExpression() != null && !entity.getRegulatesExpression().isEmpty()) {
+			Iterable<RelationshipFearByMarkerDomain> t = fearTranslator.translateEntities(entity.getRegulatesExpression());			
+			domain.setRegulatesExpression(IteratorUtils.toList(t.iterator()));
+			domain.getRegulatesExpression().sort(Comparator.comparing(RelationshipFearByMarkerDomain::getMarkerSymbol1, String.CASE_INSENSITIVE_ORDER));	
 		}
 		
 		return domain;

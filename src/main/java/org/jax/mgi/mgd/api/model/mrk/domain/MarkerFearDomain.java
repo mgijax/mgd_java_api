@@ -15,5 +15,6 @@ public class MarkerFearDomain extends BaseDomain {
 	private String markerSymbol;
 	private String accID;
 	private List<RelationshipFearByMarkerDomain> clusterHasMember;
-	
-}
+	private List<RelationshipFearByMarkerDomain> regulatesExpression;
+
+} 

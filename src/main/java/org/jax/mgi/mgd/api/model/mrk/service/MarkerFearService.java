@@ -172,7 +172,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		String cmd = "";
 		String select = "select distinct m._marker_key, m.symbol";
 		String from = "from mrk_marker m, acc_accession aa";		
-		String where = "where m._marker_key = aa._object_key and aa._mgitype_key = 2";
+		String where = "where m._organism_key = 1 and m._marker_key = aa._object_key and aa._mgitype_key = 2";
 		String orderBy = "order by symbol";
 		
 		String value;

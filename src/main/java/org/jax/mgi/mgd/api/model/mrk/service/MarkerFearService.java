@@ -268,7 +268,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 				
 			value = relationshipDomain.getMarkerSymbol2();
 			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v1.markersymbol ilike '" + value + "'";
+				where = where + "\nand v1.markersymbol2 ilike '" + value + "'";
 				from_cm = true;			
 			}
 	

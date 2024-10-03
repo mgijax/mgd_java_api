@@ -309,6 +309,74 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 			}			
 		}
 		
+		// regulates_expression
+		if (searchDomain.getRegulatesExpression() != null) {
+
+			relationshipDomain = searchDomain.getRegulatesExpression().get(0);
+			
+			cmResults = DateSQLQuery.queryByCreationModification("v1", 
+				relationshipDomain.getCreatedBy(), 
+				relationshipDomain.getModifiedBy(), 
+				relationshipDomain.getCreation_date(), 
+				relationshipDomain.getModification_date());
+		
+			if (cmResults.length > 0) {
+				if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
+					from = from + cmResults[0];
+					where = where + cmResults[1];
+					from_cm = true;			
+				}
+			}
+			
+			value = relationshipDomain.getMarkerKey2();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v1._object_key_2 = " + value;
+				from_cm = true;			
+			}
+				
+			value = relationshipDomain.getMarkerSymbol2();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v1.markersymbol2 ilike '" + value + "'";
+				from_cm = true;			
+			}
+	
+			value = relationshipDomain.getRelationshipTermKey();
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v1._relationshipterm_key = " + value;
+				from_cm = true;			
+			}
+										
+			value = relationshipDomain.getRefsKey();
+			jnumid = relationshipDomain.getJnumid();		
+			if (value != null && !value.isEmpty()) {
+				where = where + "\nand v1._Refs_key = " + value;
+				from_cm = true;									
+			}
+				else if (jnumid != null && !jnumid.isEmpty()) {
+					jnumid = jnumid.toUpperCase();
+					if (!jnumid.contains("J:")) {
+							jnumid = "J:" + jnumid;
+					}
+					where = where + "\nand v1.jnumid = '" + jnumid + "'";
+					from_cm = true;									
+			}
+			
+			value = relationshipDomain.getNote().getNoteChunk();
+			if (value != null && !value.isEmpty()) {
+				from = from + ",mgi_note n1";
+				where = where + "\nand v1._relationship_key = n1._object_key"
+						+ "\nand n1._mgitype_key = 40"
+						+ "\nand n1._notetype_key = 1042"
+						+ "\nand n1.note ilike '" + value + "'";
+				from_cm = true;	
+			}
+			
+			if (from_cm == true) {
+				from = from + ",mgi_relationship_fearbymarker_view v1";						
+				where = where + "\nand m._marker_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey();			
+			}			
+		}
+		
 		cmd = select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);
 

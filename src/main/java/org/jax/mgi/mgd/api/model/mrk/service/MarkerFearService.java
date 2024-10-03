@@ -95,6 +95,42 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 			}
 		}
 		
+		if (domain.getRegulatesExpression() != null) {
+	    	// Iterate thru incoming marker fear relationship domain
+			for (int i = 0; i < domain.getRegulatesExpression().size(); i++) {
+				
+				// if processStatus == "x", then continue; no need to create domain/process anything
+				if (domain.getRegulatesExpression().get(i).getProcessStatus().equals(Constants.PROCESS_NOTDIRTY)) {
+					continue;
+				}
+				
+				// if no marker, continue
+				if (domain.getRegulatesExpression().get(i).getMarkerKey2().isEmpty()) {
+					continue;
+				}
+				
+				RelationshipDomain rdomain = new RelationshipDomain();
+			
+				rdomain.setProcessStatus(domain.getRegulatesExpression().get(i).getProcessStatus());
+				rdomain.setRelationshipKey(domain.getRegulatesExpression().get(i).getRelationshipKey());
+				rdomain.setObjectKey1(domain.getRegulatesExpression().get(i).getMarkerKey1());
+				rdomain.setObjectKey2(domain.getRegulatesExpression().get(i).getMarkerKey2());
+				rdomain.setCategoryKey(domain.getRegulatesExpression().get(i).getCategoryKey());
+				rdomain.setRelationshipTermKey(domain.getRegulatesExpression().get(i).getRelationshipTermKey());
+				rdomain.setQualifierKey(domain.getRegulatesExpression().get(i).getQualifierKey());
+				rdomain.setEvidenceKey(domain.getRegulatesExpression().get(i).getEvidenceKey());
+				rdomain.setRefsKey(domain.getRegulatesExpression().get(i).getRefsKey());
+				rdomain.setCreatedByKey(domain.getRegulatesExpression().get(i).getCreatedByKey());
+				rdomain.setModifiedByKey(domain.getRegulatesExpression().get(i).getModifiedByKey());
+				
+				// add notes to this relationship
+				rdomain.setNote(domain.getRegulatesExpression().get(i).getNote());
+				
+				// add relationshipDomain to relationshipList
+				relationshipDomain.add(rdomain);         
+			}
+		}
+		
 		// process relationships
 		if (relationshipDomain.size() > 0) {
 			log.info("send json normalized domain to services");			

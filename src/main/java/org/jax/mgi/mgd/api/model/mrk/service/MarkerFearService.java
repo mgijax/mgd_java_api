@@ -310,7 +310,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		}
 		
 		// regulates_expression
-		else if (searchDomain.getRegulatesExpression() != null) {
+		else {
 
 			relationshipDomain = searchDomain.getRegulatesExpression().get(0);
 			

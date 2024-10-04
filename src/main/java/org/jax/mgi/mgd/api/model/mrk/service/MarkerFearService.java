@@ -210,7 +210,8 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		String from = "from mrk_marker m, acc_accession aa";		
 		String where = "where m._organism_key = 1 and m._marker_key = aa._object_key and aa._mgitype_key = 2 and aa._logicaldb_key = 1 and aa.preferred = 1";
 		String orderBy = "order by symbol";
-		
+		//String orderBy = "order by left(m.symbol, 1), substring(m.symbol, '\\d+')::int NULLS FIRST, m.symbol";
+
 		String value;
 		String cmResults[];
 		String jnumid;
@@ -341,13 +342,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 				where = where + "\nand v1.markersymbol2 ilike '" + value + "'";
 				from_re = true;			
 			}
-	
-			value = relationshipDomain.getRelationshipTermKey();
-			if (value != null && !value.isEmpty()) {
-				where = where + "\nand v1._relationshipterm_key = " + value;
-				from_re = true;			
-			}
-										
+							
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
@@ -375,6 +370,8 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 			
 			if (from_re == true) {
 				from = from + ",mgi_relationship_fearbymarker_view v1";						
+				value = relationshipDomain.getRelationshipTermKey();
+				where = where + "\nand v1._relationshipterm_key = " + value;
 				where = where + "\nand m._marker_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey();			
 			}			
 		}

@@ -208,7 +208,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		String cmd = "";
 		String select = "select distinct m._marker_key, m.symbol";
 		String from = "from mrk_marker m, acc_accession aa";		
-		String where = "where m._organism_key = 1 and m._marker_key = aa._object_key and aa._mgitype_key = 2";
+		String where = "where m._organism_key = 1 and m._marker_key = aa._object_key and aa._mgitype_key = 2 and aa._logicaldb_key = 1 and aa.preferred = 1";
 		String orderBy = "order by symbol";
 		
 		String value;
@@ -291,7 +291,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 				if (!jnumid.contains("J:")) {
 					jnumid = "J:" + jnumid;
 				}
-				where = where + "\nand v1.jnumid = '" + jnumid + "'";
+				where = where + "\nand v1.jnumid ilike '" + jnumid + "'";
 				from_cm = true;									
 			}
 			
@@ -359,7 +359,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 				if (!jnumid.contains("J:")) {
 					jnumid = "J:" + jnumid;
 				}
-				where = where + "\nand v1.jnumid = '" + jnumid + "'";
+				where = where + "\nand v1.jnumid ilike '" + jnumid + "'";
 				from_re = true;									
 			}
 			

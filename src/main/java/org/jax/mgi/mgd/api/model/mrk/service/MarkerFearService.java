@@ -243,7 +243,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		}
 
 		// clusater_has_member
-		if (searchDomain.getClusterHasMember() != null) {
+		if (searchDomain.getClusterHasMember().get(0).getRelationshipTermKey() != null) {
 
 			relationshipDomain = searchDomain.getClusterHasMember().get(0);
 			

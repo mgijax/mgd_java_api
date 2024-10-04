@@ -216,6 +216,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		String jnumid;
 		
 		Boolean from_cm = false;
+		Boolean from_re = false;
 		
 		RelationshipFearByMarkerDomain relationshipDomain;
 
@@ -324,33 +325,33 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 				if (cmResults[0].length() > 0 || cmResults[1].length() > 0) {
 					from = from + cmResults[0];
 					where = where + cmResults[1];
-					from_cm = true;			
+					from_re = true;			
 				}
 			}
 			
 			value = relationshipDomain.getMarkerKey2();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v1._object_key_2 = " + value;
-				from_cm = true;			
+				from_re = true;			
 			}
 				
 			value = relationshipDomain.getMarkerSymbol2();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v1.markersymbol2 ilike '" + value + "'";
-				from_cm = true;			
+				from_re = true;			
 			}
 	
 			value = relationshipDomain.getRelationshipTermKey();
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v1._relationshipterm_key = " + value;
-				from_cm = true;			
+				from_re = true;			
 			}
 										
 			value = relationshipDomain.getRefsKey();
 			jnumid = relationshipDomain.getJnumid();		
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand v1._Refs_key = " + value;
-				from_cm = true;									
+				from_re = true;									
 			}
 			else if (jnumid != null && !jnumid.isEmpty()) {
 				jnumid = jnumid.toUpperCase();
@@ -358,7 +359,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 					jnumid = "J:" + jnumid;
 				}
 				where = where + "\nand v1.jnumid = '" + jnumid + "'";
-				from_cm = true;									
+				from_re = true;									
 			}
 			
 			value = relationshipDomain.getNote().getNoteChunk();
@@ -368,10 +369,10 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 						+ "\nand n1._mgitype_key = 40"
 						+ "\nand n1._notetype_key = 1042"
 						+ "\nand n1.note ilike '" + value + "'";
-				from_cm = true;	
+				from_re = true;	
 			}
 			
-			if (from_cm == true) {
+			if (from_re == true) {
 				from = from + ",mgi_relationship_fearbymarker_view v1";						
 				where = where + "\nand m._marker_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey();			
 			}			

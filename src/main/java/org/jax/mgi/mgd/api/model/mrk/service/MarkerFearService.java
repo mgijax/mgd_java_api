@@ -210,6 +210,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		String from = "from mrk_marker m, acc_accession aa";		
 		String where = "where m._organism_key = 1 and m._marker_key = aa._object_key and aa._mgitype_key = 2 and aa._logicaldb_key = 1 and aa.preferred = 1";
 		String orderBy = "order by symbol";
+		String limit = Constants.SEARCH_RETURN_LIMIT;
 		//String orderBy = "order by left(m.symbol, 1), substring(m.symbol, '\\d+')::int NULLS FIRST, m.symbol";
 
 		String value;
@@ -376,7 +377,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 			}			
 		}
 		
-		cmd = select + "\n" + from + "\n" + where + "\n" + orderBy;
+		cmd = select + "\n" + from + "\n" + where + "\n" + orderBy + "\n" + limit;
 		log.info(cmd);
 
 		try {

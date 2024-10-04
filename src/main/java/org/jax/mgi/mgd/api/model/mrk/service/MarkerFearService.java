@@ -284,13 +284,13 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 				where = where + "\nand v1._Refs_key = " + value;
 				from_cm = true;									
 			}
-				else if (jnumid != null && !jnumid.isEmpty()) {
-					jnumid = jnumid.toUpperCase();
-					if (!jnumid.contains("J:")) {
-							jnumid = "J:" + jnumid;
-					}
-					where = where + "\nand v1.jnumid = '" + jnumid + "'";
-					from_cm = true;									
+			else if (jnumid != null && !jnumid.isEmpty()) {
+				jnumid = jnumid.toUpperCase();
+				if (!jnumid.contains("J:")) {
+					jnumid = "J:" + jnumid;
+				}
+				where = where + "\nand v1.jnumid = '" + jnumid + "'";
+				from_cm = true;									
 			}
 			
 			value = relationshipDomain.getNote().getNoteChunk();
@@ -352,13 +352,13 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 				where = where + "\nand v1._Refs_key = " + value;
 				from_cm = true;									
 			}
-				else if (jnumid != null && !jnumid.isEmpty()) {
-					jnumid = jnumid.toUpperCase();
-					if (!jnumid.contains("J:")) {
-							jnumid = "J:" + jnumid;
-					}
-					where = where + "\nand v1.jnumid = '" + jnumid + "'";
-					from_cm = true;									
+			else if (jnumid != null && !jnumid.isEmpty()) {
+				jnumid = jnumid.toUpperCase();
+				if (!jnumid.contains("J:")) {
+					jnumid = "J:" + jnumid;
+				}
+				where = where + "\nand v1.jnumid = '" + jnumid + "'";
+				from_cm = true;									
 			}
 			
 			value = relationshipDomain.getNote().getNoteChunk();

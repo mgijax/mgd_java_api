@@ -307,7 +307,7 @@ public class MarkerFearService extends BaseService<MarkerFearDomain> {
 		if (from_cm == true) {
 			from = from + ",mgi_relationship_fearbymarker_view v1";						
 			where = where + "\nand m._marker_key = v1._object_key_1 and v1._category_key = " + relationshipDomain.getCategoryKey();			
-		}			
+		}
 		
 		// regulates_expression
 		if (from_cm == false) {

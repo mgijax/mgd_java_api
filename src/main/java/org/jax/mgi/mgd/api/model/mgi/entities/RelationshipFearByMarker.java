@@ -1,5 +1,6 @@
 package org.jax.mgi.mgd.api.model.mgi.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
@@ -8,7 +9,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.annotations.Where;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -49,10 +49,12 @@ public class RelationshipFearByMarker extends BaseEntity {
 	private String createdBy;	
 	private Integer _modifiedby_key;
 	private String modifiedBy;
-	@Column(columnDefinition = "timestamp")
-	private String creation_date;
-	@Column(columnDefinition = "timestamp")
-	private String modification_date; 
+	private Date creation_date;
+	private Date modification_date;	
+//	@Column(columnDefinition = "timestamp")
+//	private String creation_date;
+//	@Column(columnDefinition = "timestamp")
+//	private String modification_date; 
 
 	//  1042 | Relationship
 	@OneToMany()

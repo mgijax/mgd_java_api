@@ -39,8 +39,6 @@ public class RelationshipFearByMarkerTranslator extends BaseEntityDomainTranslat
 		domain.setModifiedBy(entity.getModifiedBy());
 		domain.setCreation_date(dateFormatNoTime.format(entity.getCreation_date()));
 		domain.setModification_date(dateFormatNoTime.format(entity.getModification_date()));
-//		domain.setCreation_date(entity.getCreation_date());
-//		domain.setModification_date(entity.getModification_date()); 
 		
 		// at most one note
 		if (entity.getNote() != null && !entity.getNote().isEmpty()) {

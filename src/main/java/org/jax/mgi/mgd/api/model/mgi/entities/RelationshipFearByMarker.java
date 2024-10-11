@@ -51,10 +51,6 @@ public class RelationshipFearByMarker extends BaseEntity {
 	private String modifiedBy;
 	private Date creation_date;
 	private Date modification_date;	
-//	@Column(columnDefinition = "timestamp")
-//	private String creation_date;
-//	@Column(columnDefinition = "timestamp")
-//	private String modification_date; 
 
 	//  1042 | Relationship
 	@OneToMany()

@@ -21,6 +21,7 @@ public class ReferenceAssociatedData extends BaseEntity {
 	private int has_antibodies;
 	private int has_genotype;
 	private int has_go;
+	private int has_gxdht;
 	private int has_gxdindex;
 	private int has_gxdimages;
 	private int has_gxdspecimens;

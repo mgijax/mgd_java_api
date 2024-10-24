@@ -197,6 +197,7 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 			if (flags.getHas_antibodies() != 0) { assocDomain.add("Antibodies"); }
 			if (flags.getHas_genotype() != 0) { assocDomain.add("Genotypes"); }			
 			if (flags.getHas_go() != 0) { assocDomain.add("GO"); }
+			if (flags.getHas_gxdht() != 0) { assocDomain.add("GXDHT"); }			
 			if (flags.getHas_gxdindex() != 0) { assocDomain.add("GXD Index"); }
 			if (flags.getHas_gxdimages() != 0) { assocDomain.add("GXD/CRE Images"); }
 			if (flags.getHas_gxdspecimens() != 0) { assocDomain.add("GXD/CRE Specimens"); }

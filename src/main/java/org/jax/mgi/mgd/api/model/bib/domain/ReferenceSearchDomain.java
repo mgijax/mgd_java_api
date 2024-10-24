@@ -88,12 +88,13 @@ public class ReferenceSearchDomain extends BaseDomain {
 	private String workflow_tag3;
 	private String workflow_tag4;
 	private String workflow_tag5;
+
 	private Boolean not_workflow_tag1;
 	private Boolean not_workflow_tag2;
 	private Boolean not_workflow_tag3;
 	private Boolean not_workflow_tag4;
 	private Boolean not_workflow_tag5;
-	
+
 	private Integer status_AP_New;
 	private Integer status_AP_Not_Routed;
 	private Integer status_AP_Routed;
@@ -117,6 +118,14 @@ public class ReferenceSearchDomain extends BaseDomain {
 	private Integer status_GXD_Indexed;
 	private Integer status_GXD_Full_coded;
 	private Integer status_GXD_Rejected;	
+	
+	private Integer status_GXDHT_New;
+	private Integer status_GXDHT_Not_Routed;
+	private Integer status_GXDHT_Routed;
+	private Integer status_GXDHT_Chosen;
+	private Integer status_GXDHT_Indexed;
+	private Integer status_GXDHT_Full_coded;
+	private Integer status_GXDHT_Rejected;	
 	
 	private Integer status_PRO_New;
 	private Integer status_PRO_Not_Routed;

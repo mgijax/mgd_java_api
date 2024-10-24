@@ -64,6 +64,8 @@ public class ReferenceDomain extends BaseDomain {
 	private String go_statusKey;	
 	private String gxd_status;
 	private String gxd_statusKey;
+	private String gxdht_status;
+	private String gxdht_statusKey;
 	private String pro_status;
 	private String pro_statusKey;
 	private String qtl_status;

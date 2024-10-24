@@ -30,6 +30,7 @@ public class SlimReferenceDomain extends BaseDomain {
 	public String ap_status;
 	public String go_status;
 	public String gxd_status;
+	public String gxdht_status;
 	public String pro_status;
 	public String qtl_status;
 	public String tumor_status;

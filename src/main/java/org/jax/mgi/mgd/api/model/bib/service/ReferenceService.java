@@ -90,6 +90,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 	// reference workflow group abbreviations
 	private String WG_GO = "GO";
 	private String WG_GXD = "GXD";
+	private String WG_GXDHT = "GXDHT";
 	private String WG_AP = "AP";
 	private String WG_TUMOR = "Tumor";
 	private String WG_PRO = "PRO";
@@ -324,7 +325,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		
 		String select = "select distinct c.*, r.title"
 				+ "\n, wkfd.haspdf"
-				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status"
+				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status, gxdhtt.term as gxdht_status"
 				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort.term as tumor_status";
 		
 		String from = "from bib_citation_cache c, bib_refs r"
@@ -332,6 +333,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				+ "\n, bib_workflow_status ap, voc_term apt"
 				+ "\n, bib_workflow_status go, voc_term got"
 				+ "\n, bib_workflow_status gxd, voc_term gxdt"
+				+ "\n, bib_workflow_status gxdht, voc_term gxdhtt"
 				+ "\n, bib_workflow_status pro, voc_term prot"
 				+ "\n, bib_workflow_status qtl, voc_term qtlt"
 				+ "\n, bib_workflow_status tumor, voc_term tumort";
@@ -341,6 +343,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				+ "\nand c._refs_key = ap._refs_key and ap.isCurrent = 1 and ap._group_key = 31576664 and ap._status_key = apt._term_key"
 				+ "\nand c._refs_key = go._refs_key and go.isCurrent = 1 and go._group_key = 31576666 and go._status_key = got._term_key"
 				+ "\nand c._refs_key = gxd._refs_key and gxd.isCurrent = 1 and gxd._group_key = 31576665 and gxd._status_key = gxdt._term_key"
+				+ "\nand c._refs_key = gxdht._refs_key and gxdht.isCurrent = 1 and gxdht._group_key = 114000000 and gxdht._status_key = gxdhtt._term_key"				
 				+ "\nand c._refs_key = pro._refs_key and pro.isCurrent = 1 and pro._group_key = 78678148 and pro._status_key = prot._term_key"
 				+ "\nand c._refs_key = qtl._refs_key and qtl.isCurrent = 1 and qtl._group_key = 31576668 and qtl._status_key = qtlt._term_key"	
 				+ "\nand c._refs_key = tumor._refs_key and tumor.isCurrent = 1 and tumor._group_key = 31576667 and tumor._status_key = tumort._term_key";
@@ -721,6 +724,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					" and ss.isCurrent = 1 and ss._group_key = 31576666" + " and ss._status_key = ";		
 			String statusWhereGXD = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 					" and ss.isCurrent = 1 and ss._group_key = 31576665" + " and ss._status_key = ";
+			String statusWhereGXDHT = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
+					" and ss.isCurrent = 1 and ss._group_key = 114000000" + " and ss._status_key = ";
 			String statusWherePRO = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
 					" and ss.isCurrent = 1 and ss._group_key = 78678148" + " and ss._status_key = ";
 			String statusWhereQTL = status_operator + " exists (select 1 from bib_workflow_status ss where r._refs_key = ss._refs_key" +
@@ -792,6 +797,28 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 			}
 			if (searchDomain.getStatus_GXD_Routed() != null && searchDomain.getStatus_GXD_Routed() == 1) {	
 				addToWhere = addToWhere + statusWhereGXD + "31576670" + ")\n";
+			}
+			
+			if (searchDomain.getStatus_GXDHT_Chosen() != null && searchDomain.getStatus_GXDHT_Chosen() == 1) {
+				addToWhere = addToWhere + statusWhereGXDHT + "31576671" + ")\n";
+			}
+			if (searchDomain.getStatus_GXDHT_Full_coded() != null && searchDomain.getStatus_GXDHT_Full_coded() == 1) {	
+				addToWhere = addToWhere + statusWhereGXDHT + "31576674" + ")\n";
+			}
+			if (searchDomain.getStatus_GXDHT_Indexed() != null && searchDomain.getStatus_GXDHT_Indexed() == 1) {	
+				addToWhere = addToWhere + statusWhereGXDHT + "31576673" + ")\n";
+			}
+			if (searchDomain.getStatus_GXDHT_New() != null && searchDomain.getStatus_GXDHT_New() == 1) {	
+				addToWhere = addToWhere + statusWhereGXDHT + "71027551" + ")\n";
+			}		
+			if (searchDomain.getStatus_GXDHT_Not_Routed()!= null && searchDomain.getStatus_GXDHT_Not_Routed() == 1) {
+				addToWhere = addToWhere + statusWhereGXDHT + "31576669" + ")\n";
+			}
+			if (searchDomain.getStatus_GXDHT_Rejected() != null && searchDomain.getStatus_GXDHT_Rejected() == 1) {	
+				addToWhere = addToWhere + statusWhereGXDHT + "31576672" + ")\n";
+			}
+			if (searchDomain.getStatus_GXDHT_Routed() != null && searchDomain.getStatus_GXDHT_Routed() == 1) {	
+				addToWhere = addToWhere + statusWhereGXDHT + "31576670" + ")\n";
 			}
 			
 			if (searchDomain.getStatus_PRO_Chosen() != null && searchDomain.getStatus_PRO_Chosen() == 1) {
@@ -952,6 +979,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setAp_status(rs.getString("ap_status"));
 				domain.setGo_status(rs.getString("go_status"));
 				domain.setGxd_status(rs.getString("gxd_status"));
+				domain.setGxdht_status(rs.getString("gxdht_status"));				
 				domain.setPro_status(rs.getString("pro_status"));
 				domain.setQtl_status(rs.getString("qtl_status"));
 				domain.setTumor_status(rs.getString("tumor_status"));
@@ -1421,6 +1449,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				ref.setGo_status(status);
 			} else if (group.equalsIgnoreCase("GXD")) {
 				ref.setGxd_status(status);
+			} else if (group.equalsIgnoreCase("GXDHT")) {
+				ref.setGxdht_status(status);				
 			} else if (group.equalsIgnoreCase("PRO")) {
 				ref.setPro_status(status);
 			} else if (group.equalsIgnoreCase("QTL")) {
@@ -1438,9 +1468,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				ref.setEditRelevance("keep");
 			}
 			
-			log.info("ref.getRefsKey():" + ref.getRefsKey());
-			log.info("ref.getGo_status():" + ref.getGo_status());
-			log.info("ref.getEditRelevance();" + ref.getEditRelevance());
+//			log.info("ref.getRefsKey():" + ref.getRefsKey());
+//			log.info("ref.getGo_status():" + ref.getGo_status());
+//			log.info("ref.getEditRelevance();" + ref.getEditRelevance());
 			
 			SearchResults<ReferenceDomain>	updateResults = new SearchResults<ReferenceDomain> ();
 			updateResults = update(ref, user);
@@ -1617,6 +1647,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		boolean anyChanges = updateWorkflowStatus(entity, WG_AP, domain.getAp_status(), user);
 		anyChanges = updateWorkflowStatus(entity, WG_GO, domain.getGo_status(), user) || anyChanges;
 		anyChanges = updateWorkflowStatus(entity, WG_GXD, domain.getGxd_status(), user) || anyChanges;
+		anyChanges = updateWorkflowStatus(entity, WG_GXDHT, domain.getGxdht_status(), user) || anyChanges;		
 		anyChanges = updateWorkflowStatus(entity, WG_PRO, domain.getPro_status(), user) || anyChanges;
 		anyChanges = updateWorkflowStatus(entity, WG_QTL, domain.getQtl_status(), user) || anyChanges;
 		anyChanges = updateWorkflowStatus(entity, WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
@@ -1645,6 +1676,10 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					|| domain.getGxd_status().equals(WS_INDEXED)
 					|| domain.getGxd_status().equals(WS_FULLCODED)
 				
+					|| domain.getGxdht_status().equals(WS_CHOSEN)
+					|| domain.getGxdht_status().equals(WS_INDEXED)
+					|| domain.getGxdht_status().equals(WS_FULLCODED)
+					
 					|| domain.getPro_status().equals(WS_CHOSEN)
 					|| domain.getPro_status().equals(WS_INDEXED)
 					|| domain.getPro_status().equals(WS_FULLCODED)
@@ -1698,6 +1733,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 //		  31576664 | AP
 //		  31576665 | GXD
+//		  114000000| GXDHT
 //		  31576666 | GO
 //		  78678148 | PRO
 //		  31576668 | QTL
@@ -1710,6 +1746,9 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		else if (groupAbbrev.equals(WG_GXD)) {
 			groupTermKey = 31576665;
 		}
+		else if (groupAbbrev.equals(WG_GXDHT)) {
+			groupTermKey = 114000000;
+		}		
 		else if (groupAbbrev.equals(WG_GO)) {
 			groupTermKey = 31576666;
 		}

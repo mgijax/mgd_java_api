@@ -21,6 +21,7 @@ public class HTSampleDomain extends BaseDomain {
 	private Integer _emapa_key;			// also in emapas_object; duplicated due to pwi
 	private Integer _genotype_key;	   // also in genotype_object; duplicated due to pwi
 	private Integer _celltype_term_key;
+	private Integer _rnaseqtype_key;
 	private String name;	
 	private String age;
 	private String ageunit;

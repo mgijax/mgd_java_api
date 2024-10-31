@@ -52,6 +52,10 @@ public class HTSample extends BaseEntity {
 	private Term relevance;
 	
 	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_rnaseqtype_key", referencedColumnName="_term_key")
+	private Term rnaseqtype;
+	
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_organism_key")
 	private Organism organism;
 

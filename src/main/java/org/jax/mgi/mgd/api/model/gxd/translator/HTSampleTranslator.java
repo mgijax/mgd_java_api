@@ -44,6 +44,10 @@ public class HTSampleTranslator extends BaseEntityDomainTranslator<HTSample, HTS
 			sampleDomain.set_relevance_key(entity.getRelevance().get_term_key());
 		}
 		
+		if (entity.getRnaseqtype()!= null) {
+			sampleDomain.set_rnaseqtype_key(entity.getRnaseqtype().get_term_key());
+		}
+		
 		if (entity.getSex() != null) {
 			sampleDomain.set_sex_key(entity.getSex().get_term_key());
 		}

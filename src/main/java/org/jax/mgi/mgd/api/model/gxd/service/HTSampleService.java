@@ -135,32 +135,24 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				}
 				
 				if (domain.get(i).get_rnaseqtype_key() == null) {
-					log.info("processHTSample get_rnasetype_key is null");
-					log.info("processHTSample experimenttype: " + experimentTypeKey);
-
 					// if Experiment Type = transcription profiling by array : RNA-Seq Type = Not Applicable
 					if (experimentTypeKey == TRANSBYARRAY) {
-						log.info("processHTSample set NA: " + NA);
 						entity.setRnaseqtype(termDAO.get(NA));
 					}
 					// else if Experiment Type = Not Resolved : Not Specified				
 					else if (experimentTypeKey == NOTRESOLVED) {
-						log.info("processHTSample set NS: " + NS);
 						entity.setRnaseqtype(termDAO.get(NS));
 					}
 					// else if Experiment Type = RNA-Seq and Yes : Not Specified
 					else if (domain.get(i).get_relevance_key() == RELYES) {
-						log.info("processHTSample set NS: " + NS);						
 						entity.setRnaseqtype(termDAO.get(NS));
 					}
 					// else if Experiment Type = RNA-Seq and !Yes : Not Applicable
 					else {
-						log.info("processHTSample set NA: " + NA);
 						entity.setRnaseqtype(termDAO.get(NA));
 					}
 				}
 				else {
-					log.info("processHTSample get_rnasetype_key is NOT null");
 					entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));
 				}
 				

@@ -218,6 +218,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.set_experiment_key(parentKey);
 				entity.setOrganism(organismDAO.get(domain.get(i).get_organism_key()));
 				entity.setRelevance(termDAO.get(domain.get(i).get_relevance_key()));
+				entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));			
 				entity.setSex(termDAO.get(domain.get(i).get_sex_key()));
 				entity.setGenotype(genotypeDAO.get(domain.get(i).getGenotype_object().get_genotype_key()));
 				entity.setName(domain.get(i).getName());
@@ -228,28 +229,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				}
 				else {
 					entity.setCellTypeTerm(termDAO.get(domain.get(i).get_celltype_term_key()));					
-				}
-				
-//				if Experiment Type = transcription profiling by array : RNA-Seq Type = Not Applicable
-//				else if Experiment Type = RNA-Seq and Yes : Not Specified
-//				else if Experiment Type = RNA-Seq and !Yes : Not Applicable
-//				else if Experiment Type = Not Resolved : Not Specified					
-				if (domain.get(i).get_rnaseqtype_key() == null) {
-					if (experimentTypeKey == TRANSBYARRAY) {
-						entity.setRnaseqtype(termDAO.get(NA));
-					}
-					else if (experimentTypeKey == NOTRESOLVED) {
-						entity.setRnaseqtype(termDAO.get(NS));
-					}
-					else if (entity.getRelevance().get_term_key() == RELYES) {
-						entity.setRnaseqtype(termDAO.get(NS));
-					}
-					else {
-						entity.setRnaseqtype(termDAO.get(NA));
-					}
-				}
-				else {
-					entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));
 				}
 				
 				if (domain.get(i).getAge() == null || domain.get(i).getAge().isEmpty()) {

@@ -140,6 +140,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 
 					// if Experiment Type = transcription profiling by array : RNA-Seq Type = Not Applicable
 					if (experimentTypeKey == TRANSBYARRAY) {
+						log.info("processHTSample set NA: " + NA);
 						entity.setRnaseqtype(termDAO.get(NA));
 					}
 					// else if Experiment Type = Not Resolved : Not Specified				

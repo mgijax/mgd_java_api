@@ -135,6 +135,9 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				}
 				
 				if (domain.get(i).get_rnaseqtype_key() == null) {
+					log.info("processHTSample get_rnasetype_key is null");
+					log.info("processHTSample experimenttype: " + experimentTypeKey);
+
 					// if Experiment Type = transcription profiling by array : RNA-Seq Type = Not Applicable
 					if (experimentTypeKey == TRANSBYARRAY) {
 						entity.setRnaseqtype(termDAO.get(NA));
@@ -153,6 +156,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 					}
 				}
 				else {
+					log.info("processHTSample get_rnasetype_key is NOT null");
 					entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));
 				}
 				
@@ -222,7 +226,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.setSex(termDAO.get(domain.get(i).get_sex_key()));
 				entity.setGenotype(genotypeDAO.get(domain.get(i).getGenotype_object().get_genotype_key()));
 				entity.setName(domain.get(i).getName());
-				entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));					
 
 				if (domain.get(i).get_celltype_term_key() == null) {
 					entity.setCellTypeTerm(null);

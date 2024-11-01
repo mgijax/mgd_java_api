@@ -118,7 +118,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.set_experiment_key(parentKey);
 				entity.setOrganism(organismDAO.get(domain.get(i).get_organism_key()));
 				entity.setRelevance(termDAO.get(domain.get(i).get_relevance_key()));
-				entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));
 				entity.setSex(termDAO.get(domain.get(i).get_sex_key()));
 				entity.setGenotype(genotypeDAO.get(domain.get(i).getGenotype_object().get_genotype_key()));
 				entity.setName(domain.get(i).getName());
@@ -128,6 +127,21 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				}
 				else {
 					entity.setCellTypeTerm(termDAO.get(domain.get(i).get_celltype_term_key()));					
+				}
+				
+				if (domain.get(i).get_rnaseqtype_key() == null) {
+					// if relevance == Yes
+					if (entity.getRelevance().get_term_key() == 20475450) {
+						// not specified
+						entity.setRnaseqtype(termDAO.get(114866227));
+					}
+					else {
+						// not applicable
+						entity.setRnaseqtype(termDAO.get(114866228));
+					}
+				}
+				else {
+					entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));
 				}
 				
 				if (domain.get(i).getAge() == null || domain.get(i).getAge().isEmpty()) {
@@ -192,16 +206,31 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.set_experiment_key(parentKey);
 				entity.setOrganism(organismDAO.get(domain.get(i).get_organism_key()));
 				entity.setRelevance(termDAO.get(domain.get(i).get_relevance_key()));
-				entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));				
 				entity.setSex(termDAO.get(domain.get(i).get_sex_key()));
 				entity.setGenotype(genotypeDAO.get(domain.get(i).getGenotype_object().get_genotype_key()));
 				entity.setName(domain.get(i).getName());
+				entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));					
 
 				if (domain.get(i).get_celltype_term_key() == null) {
 					entity.setCellTypeTerm(null);
 				}
 				else {
 					entity.setCellTypeTerm(termDAO.get(domain.get(i).get_celltype_term_key()));					
+				}
+				
+				if (domain.get(i).get_rnaseqtype_key() == null) {
+					// if relevance == Yes
+					if (entity.getRelevance().get_term_key() == 20475450) {
+						// not specified
+						entity.setRnaseqtype(termDAO.get(114866227));
+					}
+					else {
+						// not applicable
+						entity.setRnaseqtype(termDAO.get(114866228));
+					}
+				}
+				else {
+					entity.setRnaseqtype(termDAO.get(domain.get(i).get_rnaseqtype_key()));
 				}
 				
 				if (domain.get(i).getAge() == null || domain.get(i).getAge().isEmpty()) {

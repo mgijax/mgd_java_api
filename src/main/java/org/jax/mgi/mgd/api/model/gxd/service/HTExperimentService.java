@@ -156,7 +156,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 
 		// process ht samples
 		if (domain.getSamples() != null) {
-			htSampleService.process(domain.get_experiment_key(), domain.getSamples(), user);
+			htSampleService.process(domain.get_experiment_key(), domain.get_experimenttype_key(), domain.getSamples(), user);
 		}
 		
 		// experiment variables

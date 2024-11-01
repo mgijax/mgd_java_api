@@ -90,10 +90,15 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
     } 
 
 	@Transactional
-	public Boolean process(Integer parentKey, List<HTSampleDomain> domain, User user) {
+	public Boolean process(Integer parentKey, Integer experimentTypeKey, List<HTSampleDomain> domain, User user) {
 		// process ht sample (create, delete, update)
 		
 		Boolean modified = false;
+		Integer NS = 114866227;
+		Integer NA = 114866228;
+		Integer TRANSBYARRAY = 20475436;
+		Integer NOTRESOLVED = 20475438;
+		Integer RELYES = 20475450;
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processHTSample/nothing to process");
@@ -129,15 +134,25 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 					entity.setCellTypeTerm(termDAO.get(domain.get(i).get_celltype_term_key()));					
 				}
 				
+//				if Experiment Type = transcription profiling by array : RNA-Seq Type = Not Applicable
+//						else if Experiment Type = RNA-Seq and Yes : Not Specified
+//						else if Experiment Type = RNA-Seq and !Yes : Not Applicable
+//						else if Experiment Type = Not Resolved : Not Specified				
 				if (domain.get(i).get_rnaseqtype_key() == null) {
-					// if relevance == Yes
-					if (entity.getRelevance().get_term_key() == 20475450) {
-						// not specified
-						entity.setRnaseqtype(termDAO.get(114866227));
+					if (experimentTypeKey == TRANSBYARRAY) {
+						entity.setRnaseqtype(termDAO.get(NA));
+					}
+					else if (experimentTypeKey == NOTRESOLVED) {
+						entity.setRnaseqtype(termDAO.get(NS));
 					}
 					else {
-						// not applicable
-						entity.setRnaseqtype(termDAO.get(114866228));
+						// if relevance == Yes
+						if (entity.getRelevance().get_term_key() == RELYES) {
+							entity.setRnaseqtype(termDAO.get(NS));
+						}
+						else {
+							entity.setRnaseqtype(termDAO.get(NA));
+						}
 					}
 				}
 				else {
@@ -218,15 +233,25 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 					entity.setCellTypeTerm(termDAO.get(domain.get(i).get_celltype_term_key()));					
 				}
 				
+//				if Experiment Type = transcription profiling by array : RNA-Seq Type = Not Applicable
+//				else if Experiment Type = RNA-Seq and Yes : Not Specified
+//				else if Experiment Type = RNA-Seq and !Yes : Not Applicable
+//				else if Experiment Type = Not Resolved : Not Specified				
 				if (domain.get(i).get_rnaseqtype_key() == null) {
-					// if relevance == Yes
-					if (entity.getRelevance().get_term_key() == 20475450) {
-						// not specified
-						entity.setRnaseqtype(termDAO.get(114866227));
+					if (experimentTypeKey == TRANSBYARRAY) {
+						entity.setRnaseqtype(termDAO.get(NA));
+					}
+					else if (experimentTypeKey == NOTRESOLVED) {
+						entity.setRnaseqtype(termDAO.get(NS));
 					}
 					else {
-						// not applicable
-						entity.setRnaseqtype(termDAO.get(114866228));
+						// if relevance == Yes
+						if (entity.getRelevance().get_term_key() == RELYES) {
+							entity.setRnaseqtype(termDAO.get(NS));
+						}
+						else {
+							entity.setRnaseqtype(termDAO.get(NA));
+						}
 					}
 				}
 				else {

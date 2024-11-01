@@ -94,10 +94,10 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		// process ht sample (create, delete, update)
 		
 		Boolean modified = false;
-		Integer NS = 114866227;
-		Integer NA = 114866228;
-		Integer TRANSBYARRAY = 20475436;
-		Integer NOTRESOLVED = 20475438;
+		int NS = 114866227;
+		int NA = 114866228;
+		int TRANSBYARRAY = 20475436;
+		int NOTRESOLVED = 20475438;
 		Integer RELYES = 20475450;
 		
 		if (domain == null || domain.isEmpty()) {
@@ -145,14 +145,17 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 					}
 					// else if Experiment Type = Not Resolved : Not Specified				
 					else if (experimentTypeKey == NOTRESOLVED) {
+						log.info("processHTSample set NS: " + NS);
 						entity.setRnaseqtype(termDAO.get(NS));
 					}
 					// else if Experiment Type = RNA-Seq and Yes : Not Specified
-					else if (entity.getRelevance().get_term_key() == RELYES) {
+					else if (domain.get(i).get_relevance_key() == RELYES) {
+						log.info("processHTSample set NS: " + NS);						
 						entity.setRnaseqtype(termDAO.get(NS));
 					}
 					// else if Experiment Type = RNA-Seq and !Yes : Not Applicable
 					else {
+						log.info("processHTSample set NA: " + NA);
 						entity.setRnaseqtype(termDAO.get(NA));
 					}
 				}

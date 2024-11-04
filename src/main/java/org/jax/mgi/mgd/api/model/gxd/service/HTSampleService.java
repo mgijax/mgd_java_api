@@ -98,7 +98,7 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 		int NA = 114866228;
 		int TRANSBYARRAY = 20475436;
 		int NOTRESOLVED = 20475438;
-		Integer RELYES = 20475450;
+		int RELYES = 20475450;
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processHTSample/nothing to process");

@@ -198,6 +198,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getName().equals("GXD HT Experiment Type")
 					|| searchDomain.getName().equals("GXD HT Experiment Variables")
 					|| searchDomain.getName().equals("GXD HT Relevance")
+					|| searchDomain.getName().equals("GXD HT RNA-Seq Type")					
 					|| searchDomain.getName().equals("GXD HT Sample")
 					|| searchDomain.getName().equals("GXD Index Assay")
 					|| searchDomain.getName().equals("GXD Index Stages")

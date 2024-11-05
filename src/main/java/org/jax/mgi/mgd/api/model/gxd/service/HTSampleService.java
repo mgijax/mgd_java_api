@@ -183,8 +183,6 @@ public class HTSampleService extends BaseService<HTSampleDomain> {
 				entity.setCreatedBy(user);				
 				entity.setModification_date(new Date());
 				entity.setModifiedBy(user);
-				log.info("processHTSample/ updating entity");					
-				//htSampleDAO.update(entity);
 				htSampleDAO.persist(entity);
 				log.info("processHTSample/create processed: " + entity.get_sample_key());					
 

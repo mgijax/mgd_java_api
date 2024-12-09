@@ -2,10 +2,16 @@
 
 if [ "${MGICONFIG}" = "" ]
 then
-    MGICONFIG=/usr/local/mgi/live/mgiconfig
+    MGICONFIG=/home/lec/mgi/mgiconfig
     export MGICONFIG
 fi
 . ${MGICONFIG}/master.config.sh
 
-export LOG_DIR=/data/mgd_java_api/logs
+if [ "${JAVA_API_LOGDIR}" = "" ]
+then
+    LOG_DIR=/data/mgd_java_api/logs-lec
+else
+    LOG_DIR=${JAVA_API_LOGDIR}
+fi
+export LOG_DIR
 export LOG_FILE=${LOG_DIR}/java_api.log

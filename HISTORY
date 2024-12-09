@@ -4,7 +4,7 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
-TAG: mgd_java_api-6-0-24- no tag
+TAG: mgd_java_api-6-0-24-14
 DATE: 12/09/2024
 STAFF: lec
 JAVA_API_LOGDIR	/data/mgd_java_api/logs

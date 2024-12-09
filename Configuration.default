@@ -9,7 +9,7 @@ fi
 
 if [ "${JAVA_API_LOGDIR}" = "" ]
 then
-    LOG_DIR=/data/mgd_java_api/logs-lec
+    LOG_DIR=/data/mgd_java_api/logs
 else
     LOG_DIR=${JAVA_API_LOGDIR}
 fi

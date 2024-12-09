@@ -14,20 +14,15 @@ else
     exit 1
 fi
 
-if [ "$1" == "dev" ] ; then
-    echo "Starting Java API in dev mode"
-    mvn compile quarkus:dev
-else
-    echo "Starting Java API"
-    echo "log file: " ${LOG_FILE}
-    rm -f ${LOG_FILE}
-    touch ${LOG_FILE}
+echo "Starting Java API"
+echo "log file: " ${LOG_FILE}
+rm -f ${LOG_FILE}
+touch ${LOG_FILE}
 
-    # redirect stdout and stderr to ${LOG_FILE}
-    ${JAVA} -jar target/mgd_java_api-runner.jar &> ${LOG_FILE} &
-    echo $! > ${MGI_LIVE}/mgd_java_api.pid
-    sleep 5
-    echo "Java API running. pid=" `cat ${MGI_LIVE}/mgd_java_api.pid`
-    echo "Listening on port " ${JAVA_API_PORT}
-fi
+# redirect stdout and stderr to ${LOG_FILE}
+${JAVA} -jar target/mgd_java_api-runner.jar &> ${LOG_FILE} &
+echo $! > ${MGI_LIVE}/mgd_java_api.pid
+sleep 5
+echo "Java API running. pid=" `cat ${MGI_LIVE}/mgd_java_api.pid`
+echo "Listening on port " ${JAVA_API_PORT}
 

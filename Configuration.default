@@ -2,7 +2,7 @@
 
 if [ "${MGICONFIG}" = "" ]
 then
-    MGICONFIG=/home/lec/mgi/mgiconfig
+    MGICONFIG=/usr/local/mgi/live/mgiconfig
     export MGICONFIG
 fi
 . ${MGICONFIG}/master.config.sh

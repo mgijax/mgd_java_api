@@ -607,7 +607,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				from_specimen = true;
 			}
 			
-			value = searchDomain.getSpecimens().get(0).getAgeNote();
+			value = searchDomain.getSpecimens().get(0).getAgeNote().replaceAll("'","''");
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.ageNote ilike '" + value + "'";				
 				from_specimen = true;
@@ -632,7 +632,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand s.hybridization ilike '" + value + "'";				
 				from_specimen = true;
 			}			
-			value = searchDomain.getSpecimens().get(0).getSpecimenNote();
+			value = searchDomain.getSpecimens().get(0).getSpecimenNote().replaceAll("'","''");
 			if (value != null && !value.isEmpty()) {
 				value = value.replace("\\", "\\\\");
 				where = where + "\nand s.specimenNote ilike '" + value + "'";				
@@ -656,7 +656,7 @@ public class AssayService extends BaseService<AssayDomain> {
 					from_isresults = true;
 				}
 				
-				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getResultNote();
+				value = searchDomain.getSpecimens().get(0).getSresults().get(0).getResultNote().replaceAll("'","''");
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand isresults.resultnote ilike '" + value + "'";							
 					from_specimen = true;
@@ -697,7 +697,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				from_gellane = true;
 			}
 			
-			value = searchDomain.getGelLanes().get(0).getAgeNote();
+			value = searchDomain.getGelLanes().get(0).getAgeNote().replaceAll("'","''");
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.ageNote ilike '" + value + "'";				
 				from_gellane = true;
@@ -722,7 +722,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand s.sampleAmount ilike '" + value + "'";			
 				from_gellane = true;
 			}			
-			value = searchDomain.getGelLanes().get(0).getLaneNote();
+			value = searchDomain.getGelLanes().get(0).getLaneNote().replaceAll("'","''");
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand s.laneNote ilike '" + value + "'";				
 				from_gellane = true;
@@ -735,7 +735,7 @@ public class AssayService extends BaseService<AssayDomain> {
 					from_gelband = true;
 					from_gelrow = true;
 				}				
-				value = searchDomain.getGelLanes().get(0).getGelBands().get(0).getBandNote();
+				value = searchDomain.getGelLanes().get(0).getGelBands().get(0).getBandNote().replaceAll("'","''");
 				if (value != null && !value.isEmpty()) {
 					where = where + "\nand gb.bandNote ilike '" + value + "'";				
 					from_gelband = true;
@@ -755,7 +755,7 @@ public class AssayService extends BaseService<AssayDomain> {
 				where = where + "\nand gr.size = " + bigDec;				
 				from_gelrow = true;
 			}
-			value = searchDomain.getGelRows().get(0).getRowNote();
+			value = searchDomain.getGelRows().get(0).getRowNote().replaceAll("'","''");
 			if (value != null && !value.isEmpty()) {
 				where = where + "\nand gr.rowNote ilike '" + value + "'";				
 				from_gelrow = true;
@@ -773,8 +773,8 @@ public class AssayService extends BaseService<AssayDomain> {
 		}
 		
 		if (searchDomain.getAssayNote() != null) {
-			if (searchDomain.getAssayNote().getAssayNote() != null && !searchDomain.getAssayNote().getAssayNote().isEmpty()) {
-				value = searchDomain.getAssayNote().getAssayNote();
+			value = searchDomain.getAssayNote().getAssayNote().replaceAll("'","''");
+			if (value != null && !value.isEmpty()) {
 				where = where + "\nand n.assaynote ilike '" + value + "'";
 				from_assaynote = true;
 			}

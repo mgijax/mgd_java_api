@@ -11,6 +11,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.InSituResultTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -83,6 +84,7 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 		// process in situ results (create, delete, update)
 		
 		Boolean modified = false;
+		String note = "";
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processInSituResults/nothing to process");
@@ -123,7 +125,9 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
 				
 				if (domain.get(i).getResultNote() != null && !domain.get(i).getResultNote().isEmpty()) {
-					entity.setResultNote(domain.get(i).getResultNote());
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getResultNote());
+					note = note.replace("''", "'");
+					entity.setResultNote(note);
 				}
 				else {
 					entity.setResultNote(null);
@@ -173,7 +177,16 @@ public class InSituResultService extends BaseService<InSituResultDomain> {
 				}
 				
 				entity.setSequenceNum(domain.get(i).getSequenceNum());
-				entity.setResultNote(domain.get(i).getResultNote());
+				
+				if (domain.get(i).getResultNote() != null && !domain.get(i).getResultNote().isEmpty()) {
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getResultNote());
+					note = note.replace("''", "'");
+					entity.setResultNote(note);
+				}
+				else {
+					entity.setResultNote(null);
+				}
+				
 				entity.setModification_date(new Date());
 				
 				if (domain.get(i).getStructures() != null && !domain.get(i).getStructures().isEmpty()) {

@@ -13,6 +13,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.GelLaneTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -109,6 +110,7 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 		String gelControlNo = "107080580";
 		int gelRNATypeNA = 107080640;
 		int gelRNATypeNS = 107080641;
+		String note = "";
 		
 		for (int i = 0; i < domain.size(); i++) {
 			
@@ -190,14 +192,18 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setAgeMax(-1);		
 
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
-					entity.setAgeNote(domain.get(i).getAgeNote());
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getAgeNote());
+					note = note.replace("''", "'");
+					entity.setAgeNote(note);
 				}
 				else {
 					entity.setAgeNote(null);					
 				}	
 				
 				if (domain.get(i).getLaneNote() != null && !domain.get(i).getLaneNote().isEmpty()) {
-					entity.setLaneNote(domain.get(i).getLaneNote());
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getLaneNote());
+					note = note.replace("''", "'");
+					entity.setLaneNote(note);
 				}
 				else {
 					entity.setLaneNote(null);					
@@ -297,14 +303,18 @@ public class GelLaneService extends BaseService<GelLaneDomain> {
 				entity.setAgeMax(-1);
 
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
-					entity.setAgeNote(domain.get(i).getAgeNote());
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getAgeNote());
+					note = note.replace("''", "'");
+					entity.setAgeNote(note);
 				}
 				else {
 					entity.setAgeNote(null);					
 				}	
 				
 				if (domain.get(i).getLaneNote() != null && !domain.get(i).getLaneNote().isEmpty()) {
-					entity.setLaneNote(domain.get(i).getLaneNote());
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getLaneNote());
+					note = note.replace("''", "'");
+					entity.setLaneNote(note);
 				}
 				else {
 					entity.setLaneNote(null);					

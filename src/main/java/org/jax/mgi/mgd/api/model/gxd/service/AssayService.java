@@ -179,7 +179,7 @@ public class AssayService extends BaseService<AssayDomain> {
 		// execute persist/insert/send to database
 		assayDAO.persist(entity);
 
-		// process gxd_assaynote
+		// process gxd_assay
 		if (domain.getAssayNote() != null) {
 			if (assayNoteService.process(entity.get_assay_key(), domain.getAssayNote(), user)) {
 				modified = true;

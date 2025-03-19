@@ -18,6 +18,7 @@ import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
 import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -50,6 +51,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 
 		SearchResults<AntigenDomain> results = new SearchResults<AntigenDomain>();
 		Antigen entity = new Antigen();
+		String note = "";
 		
 		log.info("processAntigen/create");
 		
@@ -71,7 +73,9 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			entity.setAntigenNote(null);
 		}
 		else {
-			entity.setAntigenNote(domain.getAntigenNote());
+			note = DecodeString.setDecodeToLatin9(domain.getAntigenNote());
+			note = note.replace("''", "'");			
+			entity.setAntigenNote(note);
 		}
 		
 		entity.setCreatedBy(user);
@@ -102,6 +106,7 @@ public class AntigenService extends BaseService<AntigenDomain> {
 
 		SearchResults<AntigenDomain> results = new SearchResults<AntigenDomain>();
 		Antigen entity = antigenDAO.get(Integer.valueOf(domain.getAntigenKey()));
+		String note = "";
 		
 		log.info("processAntigen/update");
 		
@@ -123,8 +128,9 @@ public class AntigenService extends BaseService<AntigenDomain> {
 			entity.setAntigenNote(null);
 		}
 		else {
-			entity.setAntigenNote(domain.getAntigenNote());
-		}	
+			note = DecodeString.setDecodeToLatin9(domain.getAntigenNote());
+			note = note.replace("''", "'");			
+			entity.setAntigenNote(note);		}	
 		
 		// update antigen source
 		log.info("processAntigen/sourceService.update()");
@@ -239,7 +245,8 @@ public class AntigenService extends BaseService<AntigenDomain> {
 		
 		// notes
 		if (searchDomain.getAntigenNote() != null && !searchDomain.getAntigenNote().isEmpty()) {
-			where = where + "\nand a.antigenNote ilike '" + searchDomain.getAntigenNote() + "'";
+			value = searchDomain.getAntigenNote().replace("''", "'");			
+			where = where + "\nand a.antigenNote ilike '" + value + "'";
 		}
 		
 		// source

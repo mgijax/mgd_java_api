@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.SpecimenTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -87,6 +88,7 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 		// process specimens (create, delete, update)
 		
 		Boolean modified = false;
+		String note = "";
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processSpecimen/nothing to process");
@@ -169,14 +171,18 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setAgeMax(-1);		
 
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
-					entity.setAgeNote(domain.get(i).getAgeNote());
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getAgeNote());
+					note = note.replace("''", "'");
+					entity.setAgeNote(note);
 				}
 				else {
 					entity.setAgeNote(null);					
 				}	
 				
 				if (domain.get(i).getSpecimenNote() != null && !domain.get(i).getSpecimenNote().isEmpty()) {
-					entity.setSpecimenNote(domain.get(i).getSpecimenNote());
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getSpecimenNote());
+					note = note.replace("''", "'");
+					entity.setSpecimenNote(note);					
 				}
 				else {
 					entity.setSpecimenNote(null);					
@@ -241,15 +247,17 @@ public class SpecimenService extends BaseService<SpecimenDomain> {
 				entity.setAgeMax(-1);				
 
 				if (domain.get(i).getAgeNote() != null && !domain.get(i).getAgeNote().isEmpty()) {
-					entity.setAgeNote(domain.get(i).getAgeNote());
-				}
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getAgeNote());
+					note = note.replace("''", "'");
+					entity.setAgeNote(note);				}
 				else {
 					entity.setAgeNote(null);					
 				}
 								
 				if (domain.get(i).getSpecimenNote() != null && !domain.get(i).getSpecimenNote().isEmpty()) {
-					entity.setSpecimenNote(domain.get(i).getSpecimenNote());
-				}
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getSpecimenNote());
+					note = note.replace("''", "'");
+					entity.setSpecimenNote(note);				}
 				else {
 					entity.setSpecimenNote(null);					
 				}

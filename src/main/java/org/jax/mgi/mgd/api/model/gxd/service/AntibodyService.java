@@ -20,6 +20,7 @@ import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -66,6 +67,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = new Antibody();
+		String note = "";
 		
 		log.info("Antibody/create");
 		
@@ -74,8 +76,10 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		
 		log.info("antibody note");
 		// may be null
-		if(domain.getAntibodyNote() !=  null && !domain.getAntibodyNote().isEmpty()) {
-			entity.setAntibodyNote(domain.getAntibodyNote());
+		if(domain.getAntibodyNote() != null && !domain.getAntibodyNote().isEmpty()) {
+			note = DecodeString.setDecodeToLatin9(domain.getAntibodyNote());
+			note = note.replace("''", "'");
+			entity.setAntibodyNote(note);
 		}
 		else {
 			entity.setAntibodyNote(null);
@@ -160,19 +164,20 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 
 		SearchResults<AntibodyDomain> results = new SearchResults<AntibodyDomain>();
 		Antibody entity = antibodyDAO.get(Integer.valueOf(domain.getAntibodyKey()));
+		String note = "";
 		
 		log.info("Antibody/update");
 
 		entity.setAntibodyName(domain.getAntibodyName());
 		
 		log.info("antibody note: " + domain.getAntibodyNote());
-		// may be null
-		if(domain.getAntibodyNote() ==  null || domain.getAntibodyNote().isEmpty()) {
-			entity.setAntibodyNote(null);
+		if(domain.getAntibodyNote() != null && !domain.getAntibodyNote().isEmpty()) {
+			note = DecodeString.setDecodeToLatin9(domain.getAntibodyNote());
+			note = note.replace("''", "'");
+			entity.setAntibodyNote(note);					
 		}
 		else {
-			entity.setAntibodyNote(domain.getAntibodyNote());
-			
+			entity.setAntibodyNote(null);	
 		}
 	    
 		log.info("antibody class: " + domain.getAntibodyClassKey());
@@ -365,7 +370,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		}		
 		//log.info("antibody note: " + searchDomain.getAntibodyNote());
 		if(searchDomain.getAntibodyNote() != null && ! searchDomain.getAntibodyNote().isEmpty()) {
-			where = where + "\n and a.antibodyNote ilike '" + searchDomain.getAntibodyNote() + "'";
+			value = searchDomain.getAntibodyNote().replace("''", "'");
+			where = where + "\n and a.antibodyNote ilike '" + value + "'";
 		}
 		
 		if (searchDomain.getAntigen() != null)  {
@@ -393,8 +399,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 					from_antigen = true;
 				}
 				if (searchDomain.getAntigen().getAntigenNote() != null && ! searchDomain.getAntigen().getAntigenNote().isEmpty()) {
-					//log.info("antigen note: " + searchDomain.getAntigen().getAntigenNote());
-					where = where + "\n and av.antigennote ilike '" + searchDomain.getAntigen().getAntigenNote() + "'";
+					value = searchDomain.getAntigen().getAntigenNote().replace("''", "'");					
+					where = where + "\n and av.antigennote ilike '" + value + "'";
 					from_antigen = true;
 				}
 				if (searchDomain.getAntigen().getProbeSource().getOrganismKey() != null && ! searchDomain.getAntigen().getProbeSource().getOrganismKey().isEmpty()) {

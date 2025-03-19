@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.GelRowTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -81,6 +82,7 @@ public class GelRowService extends BaseService<GelRowDomain> {
 		Boolean modified = false;
 		String cmd;
 		Query query;
+		String note = "";
 		
 		if (rowDomain == null || rowDomain.isEmpty()) {
 			log.info("processGelRow/nothing to process");
@@ -116,7 +118,9 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				}
 				
 				if (rowDomain.get(i).getRowNote() != null && !rowDomain.get(i).getRowNote().isEmpty()) {
-					entity.setRowNote(rowDomain.get(i).getRowNote());
+					note = DecodeString.setDecodeToLatin9(rowDomain.get(i).getRowNote());
+					note = note.replace("''", "'");
+					entity.setRowNote(note);
 				}
 				else {
 					entity.setRowNote(null);					
@@ -163,8 +167,9 @@ public class GelRowService extends BaseService<GelRowDomain> {
 				}
 				
 				if (rowDomain.get(i).getRowNote() != null && !rowDomain.get(i).getRowNote().isEmpty()) {
-					entity.setRowNote(rowDomain.get(i).getRowNote());
-				}
+					note = DecodeString.setDecodeToLatin9(rowDomain.get(i).getRowNote());
+					note = note.replace("''", "'");
+					entity.setRowNote(note);				}
 				else {
 					entity.setRowNote(null);					
 				}

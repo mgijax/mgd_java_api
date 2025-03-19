@@ -12,6 +12,7 @@ import org.jax.mgi.mgd.api.model.gxd.translator.GelBandTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -78,6 +79,7 @@ public class GelBandService extends BaseService<GelBandDomain> {
 		// process gel band (create, delete, update)
 		
 		Boolean modified = false;
+		String note = "";
 		
 		if (domain == null || domain.isEmpty()) {
 			log.info("processGelBand/nothing to process");
@@ -114,7 +116,9 @@ public class GelBandService extends BaseService<GelBandDomain> {
 				entity.setStrength(termDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
 				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
-					entity.setBandNote(domain.get(i).getBandNote());
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getBandNote());
+					note = note.replace("''", "'");
+					entity.setBandNote(note);
 				}
 				else {
 					entity.setBandNote(null);					
@@ -156,7 +160,9 @@ public class GelBandService extends BaseService<GelBandDomain> {
 				entity.setStrength(termDAO.get(Integer.valueOf(domain.get(i).getStrengthKey())));
 				
 				if (domain.get(i).getBandNote() != null && !domain.get(i).getBandNote().isEmpty()) {
-					entity.setBandNote(domain.get(i).getBandNote());
+					note = DecodeString.setDecodeToLatin9(domain.get(i).getBandNote());
+					note = note.replace("''", "'");
+					entity.setBandNote(note);					
 				}
 				else {
 					entity.setBandNote(null);					

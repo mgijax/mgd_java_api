@@ -9,6 +9,7 @@ import org.jax.mgi.mgd.api.model.gxd.entities.AssayNote;
 import org.jax.mgi.mgd.api.model.gxd.translator.AssayNoteTranslator;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.util.Constants;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -71,7 +72,8 @@ public class AssayNoteService extends BaseService<AssayNoteDomain> {
 		// process assay notes (create, delete, update)
 		
 		Boolean modified = false;
-		
+		String note = "";
+
 		if (domain == null) {
 			log.info("processAssayNote/nothing to process");
 			return modified;
@@ -79,13 +81,18 @@ public class AssayNoteService extends BaseService<AssayNoteDomain> {
 				
 		// iterate thru the list of rows in the domain
 		// for each row, determine whether to perform an insert, delete or update
-						
+		
+		if (domain.getAssayNote() != null && !domain.getAssayNote().isEmpty()) {	
+			note = DecodeString.setDecodeToLatin9(domain.getAssayNote());
+			note = note.replace("''", "'");
+		}
+		
 		if (domain.getProcessStatus().equals(Constants.PROCESS_CREATE)) {					
 			log.info("processAssayNote create");							
 			if (domain.getAssayNote() != null && !domain.getAssayNote().isEmpty()) {
 				AssayNote entity = new AssayNote();
 				entity.set_assay_key(parentKey);
-				entity.setAssayNote(domain.getAssayNote());			
+				entity.setAssayNote(note);			
 				entity.setCreation_date(new Date());				
 				entity.setModification_date(new Date());	
 				assayNoteDAO.persist(entity);
@@ -103,7 +110,7 @@ public class AssayNoteService extends BaseService<AssayNoteDomain> {
 		else if (domain.getProcessStatus().equals(Constants.PROCESS_UPDATE)) {
 			log.info("processAssayNote update");
 			AssayNote entity = assayNoteDAO.get(Integer.valueOf(domain.getAssayNoteKey()));		
-			entity.setAssayNote(domain.getAssayNote());			
+			entity.setAssayNote(note);			
 			entity.setModification_date(new Date());
 			assayNoteDAO.update(entity);
 			modified = true;

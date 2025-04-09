@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.jboss.logging.Logger;
 import org.reflections.Reflections;
-import org.reflections.scanners.FieldAnnotationsScanner;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -23,7 +22,7 @@ public abstract class PostgresSQLDAO<T> {
 	
 	protected PostgresSQLDAO(Class<T> myClass) {
 		this.myClass = myClass;
-		Reflections r = new Reflections(myClass.getPackage().getName(), new FieldAnnotationsScanner());
+		Reflections r = new Reflections(myClass.getPackage().getName());
 		
 		Set<Field> fields = r.getFieldsAnnotatedWith(Id.class);
 

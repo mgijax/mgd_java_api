@@ -3,7 +3,6 @@ package org.jax.mgi.mgd.api.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Is a Unix shell command to be run in a Bourne shell (by default).

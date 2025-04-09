@@ -4,6 +4,13 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-25-3
+DATE: 04/09/2025
+STAFF: lec
+wts2-1644/eag-214/mgd_java_api/PostgresSQLDao : FieldsAnnotationScanner has been deprecated
+#        modified:   PostgresSQLDAO.java
+#        modified:   RunCommand.java
+
 TAG: mgd_java_api-6-0-25-2
 TAG: mgd_java_api-6-0-25-1
 DATE: 03/18/2025

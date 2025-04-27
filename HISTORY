@@ -4,6 +4,14 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-25-4
+DATE: 04/27/2025
+STAFF: lec
+wts2-1651/e4g-234/Marker Next Rr Sequence needs updating.
+        modified:   src/main/java/org/jax/mgi/mgd/api/model/mrk/service/MarkerService.java
+        deleted:    src/main/java/org/jax/mgi/mgd/api/model/wks/dao/RosettaDAO.java
+        deleted:    src/main/java/org/jax/mgi/mgd/api/model/wks/entities/Rosetta.java
+
 TAG: mgd_java_api-6-0-25-3
 DATE: 04/09/2025
 STAFF: lec

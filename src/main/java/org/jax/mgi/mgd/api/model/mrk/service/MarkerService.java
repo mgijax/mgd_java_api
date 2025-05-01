@@ -835,8 +835,10 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 		
-		String cmd = "\nselect 'Rr' || (max(substring(symbol from 3)::int) + 1) as nextSequence from mrk_marker where symbol ~ '^Rr[\\d]+$'"
-				+ "\nand substring(symbol from 3)::int <= 695520";
+		//String cmd = "\nselect 'Rr' || (max(substring(symbol from 3)::int) + 1) as nextSequence from mrk_marker where symbol ~ '^Rr[\\d]+$'"
+		//		+ "\nand substring(symbol from 3)::int <= 695520";
+		String cmd = "\nselect 'Rr' || (max(substring(symbol from 3)::int) + 1) as nextSequence from mrk_marker where symbol ~ '^Rr[\\d]+$'";	
+
 		log.info(cmd);
 
 		try {

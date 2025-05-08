@@ -395,10 +395,22 @@ public class MarkerService extends BaseService<MarkerDomain> {
 		List<SlimMarkerDomain> results = new ArrayList<SlimMarkerDomain>();
 
 		String cmd = "";
-		String select = "select distinct m._marker_key, m._marker_type_key, m.symbol, left(m.symbol, 1), substring(m.symbol, '\\d+')::int";
 		String from = "from mrk_marker m";
 		String where = "where m._organism_key";
-		String orderBy = "order by m._marker_type_key, left(m.symbol, 1), substring(m.symbol, '\\d+')::int NULLS FIRST, m.symbol";
+		
+		// split the symbol into a prefixPart and a numericPart (see pgmgddbschema/procedure/ACC_split_create.object)
+		// set numericPart = integer so it will order correctly
+		String select = "with marker as (select distinct m._marker_key, m._marker_type_key, m.symbol, regexp_matches(m.symbol, E'^((.*[^0-9])?)([0-9]*)', 'g') as symbolMatch";
+		String orderBy = ")\nselect _marker_key, _marker_type_key, symbol, symbolMatch[1], "
+			+ "\nCASE"
+        		+ "\nwhen symbolMatch[3] = '' then 0"
+        		+ "\nwhen symbolMatch[3] != '' then symbolMatch[3]::integer"
+			+ "\nELSE"
+        		+ "\n0"
+			+ "\nEND symbol3" 
+			+ "\nfrom marker"
+			+ "\norder by symbolMatch[2], symbol3, symbol";
+
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_editorNote = false;

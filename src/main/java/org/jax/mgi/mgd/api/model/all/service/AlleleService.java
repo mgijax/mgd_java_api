@@ -601,10 +601,8 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		List<SlimAlleleDomain> results = new ArrayList<SlimAlleleDomain>();
 		 
 		String cmd = "";
-		String select = "select distinct a._allele_key, a.symbol, v1.sequenceNum, substring(a.symbol, '\\d+')::int";
 		String from = "from all_allele a, voc_term v1";
 		String where = "where a._allele_status_key = v1._term_key";
-		String orderBy;
 		String value;
 		Boolean from_marker = false;
 		Boolean from_accession = false;
@@ -625,12 +623,26 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_drivergene = false;
 		Boolean from_imagepane = false;
 				
+		String select;
+		String orderBy;
+
 		if (searchDomain.getOrderBy().equals("1")) {
+			select = "select distinct a._allele_key, a.symbol, v1.sequenceNum, substring(a.symbol, '\\d+')::int";
 			orderBy = "order by v1.sequenceNum, a.symbol";
-			
 		}
 		else {
-			orderBy = "order by v1.sequenceNum, substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";	
+        		// split the symbol into a prefixPart and a numericPart (see pgmgddbschema/procedure/ACC_split_create.object)
+        		// set numericPart = integer so it will order correctly
+        		select = "with allele as (select distinct a._allele_key, a.symbol, v1.sequenceNum, regexp_matches(split_part(a.symbol,'<',1), E'^((.*[^0-9])?)([0-9]*)', 'g') as symbolMatch";
+        		orderBy = ")\nselect _allele_key, symbol, sequenceNum, symbolMatch[1], "
+                		+ "\nCASE"
+                		+ "\nwhen symbolMatch[3] = '' then 0"
+                		+ "\nwhen symbolMatch[3] != '' then symbolMatch[3]::integer"
+                		+ "\nELSE"
+                		+ "\n0"
+                		+ "\nEND symbolNumeric"
+                		+ "\nfrom allele"
+                		+ "\norder by sequenceNum, symbolMatch[2], symbolNumeric, symbol";
 		}
 		
 		// if parameter exists, then add to where-clause
@@ -1018,12 +1030,27 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		List<SlimAlleleRefAssocDomain> results = new ArrayList<SlimAlleleRefAssocDomain>();
 		
 		String cmd = "";
-		String select = "select distinct a._allele_key, a.symbol, left(a.symbol, 1), substring(a.symbol, '\\d+')::int";
 		String from = "from all_allele a, voc_term v1, all_variant av";
 		String where = "where a._allele_type_key = v1._term_key"
 				+ "\nand a._allele_key = av._allele_key"
 				+ "\nand av._sourcevariant_key is not null";
-		String orderBy = "order by left(a.symbol, 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";
+
+		//String select = "select distinct a._allele_key, a.symbol, left(a.symbol, 1), substring(a.symbol, '\\d+')::int";
+		//String orderBy = "order by left(a.symbol, 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";
+
+        	// split the symbol into a prefixPart and a numericPart (see pgmgddbschema/procedure/ACC_split_create.object)
+        	// set numericPart = integer so it will order correctly
+        	String select = "with allele as (select distinct a._allele_key, a.symbol, regexp_matches(split_part(a.symbol,'<',1), E'^((.*[^0-9])?)([0-9]*)', 'g') as symbolMatch";
+        	String orderBy = ")\nselect _allele_key, symbol, symbolMatch[1], "
+                	+ "\nCASE"
+                	+ "\nwhen symbolMatch[3] = '' then 0"
+                	+ "\nwhen symbolMatch[3] != '' then symbolMatch[3]::integer"
+                	+ "\nELSE"
+                	+ "\n0"
+                	+ "\nEND symbolNumeric"
+                	+ "\nfrom allele"
+                	+ "\norder by symbolMatch[2], symbolNumeric, symbol";
+
 		String limit = Constants.SEARCH_RETURN_LIMIT;
 		String value;
 		Boolean from_marker = false;

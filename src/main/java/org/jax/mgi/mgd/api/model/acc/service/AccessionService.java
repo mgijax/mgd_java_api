@@ -460,9 +460,8 @@ public class AccessionService extends BaseService<AccessionDomain> {
 		// First search as accession IDs
 		//
 
-		log.info(ids);
+		// replace spaces with ","
 		ids = ids.replaceAll("\\s+", ",");
-		log.info(ids);
 
 		String accids = "'" + String.join("','", ids.split(",")) + "'";
 		cmd = "select aa.*, t.name as typename, d.name as ldbname "

@@ -344,14 +344,11 @@ public class AlleleVariantService extends BaseService<AlleleVariantDomain> {
 		Boolean from_reference = false;
 		Boolean from_alleleReferenceID = false;
 		Boolean from_alleleID = false;
-
-		//String select = "select distinct v._variant_key, a._allele_key, a.symbol, left(a.symbol, 1), substring(a.symbol, '\\d+')::int";
-		//String orderBy = "order by left(a.symbol, 1), substring(a.symbol, '\\d+')::int NULLS FIRST, a.symbol";
 		
-        	// split the symbol into a prefixPart and a numericPart (see pgmgddbschema/procedure/ACC_split_create.object)
-        	// set numericPart = integer so it will order correctly
-        	String select = "with allele as (select distinct v._variant_key, a._allele_key, a.symbol, regexp_matches(split_part(a.symbol,'<',1), E'^((.*[^0-9])?)([0-9]*)', 'g') as symbolMatch";
-        	String orderBy = ")\nselect distinct _variant_key, _allele_key, symbol, symbolMatch[1], "
+        // split the symbol into a prefixPart and a numericPart (see pgmgddbschema/procedure/ACC_split_create.object)
+        // set numericPart = integer so it will order correctly
+        String select = "with allele as (select distinct v._variant_key, a._allele_key, a.symbol, regexp_matches(split_part(a.symbol,'<',1), E'^((.*[^0-9])?)([0-9]*)', 'g') as symbolMatch";
+        String orderBy = ")\nselect distinct _variant_key, _allele_key, symbol, symbolMatch[1], "
                 	+ "\nCASE"
                 	+ "\nwhen symbolMatch[3] = '' then 0"
                 	+ "\nwhen symbolMatch[3] != '' then symbolMatch[3]::integer"

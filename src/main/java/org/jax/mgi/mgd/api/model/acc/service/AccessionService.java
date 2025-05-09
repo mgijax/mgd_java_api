@@ -459,6 +459,11 @@ public class AccessionService extends BaseService<AccessionDomain> {
 
 		// First search as accession IDs
 		//
+
+		log.info(ids);
+		ids = ids.replaceAll("\\s+", ",");
+		log.info(ids);
+
 		String accids = "'" + String.join("','", ids.split(",")) + "'";
 		cmd = "select aa.*, t.name as typename, d.name as ldbname "
 			+ "\nfrom acc_accession a, acc_mgitype t, acc_logicaldb d, acc_accession aa"

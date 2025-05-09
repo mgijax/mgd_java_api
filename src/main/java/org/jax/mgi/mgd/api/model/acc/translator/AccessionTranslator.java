@@ -26,7 +26,7 @@ public class AccessionTranslator extends BaseEntityDomainTranslator<Accession, A
 		domain.setLogicaldb(entity.getLogicaldb().getName());
 
 		if (entity.getLogicaldb().get_logicaldb_key() == 122) {
-			domain.setAkaLogicaldb("(Microarray probesets)");
+			domain.setAkaLogicaldb("(Microarray)");
 		}
 		else {
 			domain.setAkaLogicaldb(null);

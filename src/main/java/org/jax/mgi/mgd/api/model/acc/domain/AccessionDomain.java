@@ -16,6 +16,7 @@ public class AccessionDomain extends BaseDomain {
 	private String accessionKey;
 	private String logicaldbKey;
 	private String logicaldb;
+	private String akaLogicaldb;
 	private String objectKey;
 	private String mgiTypeKey;
 	

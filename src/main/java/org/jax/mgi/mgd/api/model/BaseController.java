@@ -42,6 +42,7 @@ public abstract class BaseController<T extends BaseDomain> {
 	
 	protected User authenticateUser(String username) {
 		User user = userService.getUserByUsername(username);
+		log.info(Constants.AUTHENTICATE_USER + user.getLogin() + "|" + user.getName());
 		return user;
 	}
 

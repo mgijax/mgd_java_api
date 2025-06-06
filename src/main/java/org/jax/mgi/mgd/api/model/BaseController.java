@@ -75,7 +75,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			
 			if (userToken && user != null) {		
 				results = create(object, user);
-				log.info(Constants.AUTHENTICATE_USER + user.getLogin() + "|" + user.getName());
+				log.info(Constants.AUTHENTICATED_USER + user.getLogin() + "|" + user.getName());
 				log.info(Constants.LOG_OUT_DOMAIN);
 				if (results.items != null && !results.items.isEmpty()) {
 					log.info(mapper.writeValueAsString(results.items.get(0)));
@@ -117,7 +117,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			
 			if (userToken && user != null) {		
 				results = update(object, user);
-				log.info(Constants.AUTHENTICATE_USER + user.getLogin() + "|" + user.getName());
+				log.info(Constants.AUTHENTICATED_USER + user.getLogin() + "|" + user.getName());
 				log.info(Constants.LOG_OUT_DOMAIN);
 				if (results.items != null && !results.items.isEmpty()) {
 					log.info(mapper.writeValueAsString(results.items.get(0)));
@@ -155,7 +155,7 @@ public abstract class BaseController<T extends BaseDomain> {
 			
 			if (userToken && user != null) {		
 				results = delete(key, user);
-				log.info(Constants.AUTHENTICATE_USER + user.getLogin() + "|" + user.getName());
+				log.info(Constants.AUTHENTICATED_USER + user.getLogin() + "|" + user.getName());
 				log.info(Constants.LOG_OUT_DOMAIN);
 				if (results.items != null && !results.items.isEmpty()) {
 				    log.info(mapper.writeValueAsString(results.items.size()));

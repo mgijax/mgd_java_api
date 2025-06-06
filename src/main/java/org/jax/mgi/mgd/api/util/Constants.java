@@ -27,7 +27,7 @@ public class Constants {
 	public static String SEARCH_RETURN_LIMIT = "limit 5000";
 
 	// API logging using Logger.info()
-	public static String AUTHENTICATE_USER = "AUTHENTICATE USER: ";
+	public static String AUTHENTICATED_USER = "AUTHENTICATE USER: ";
 	public static String LOG_MGI_API = "LOG_MGI_API|";
 	public static String LOG_FAIL_USERAUTHENTICATION = LOG_MGI_API + "FAIL|USER AUTHENTICATION";
     public static String LOG_IN_JSON = LOG_MGI_API + "IN JSON FROM UI";

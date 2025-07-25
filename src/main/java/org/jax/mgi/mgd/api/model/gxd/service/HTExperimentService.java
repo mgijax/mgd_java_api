@@ -259,7 +259,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 				+ "\nand acc._mgitype_key = 42"
 				+ "\nand acc.preferred = 1 ";
 		String orderBy = "order by acc.prefixpart, acc.numericPart ";
-
+		
 		// primary accession id 
 		value = searchDomain.getPrimaryid();			
 		if (value != null && !value.isEmpty()) {	
@@ -424,6 +424,18 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			where = where + "\nand htev" + Integer.toString(varJoinCount) + "._term_key = " + varDom.getTermKey();
         }
 
+        /*
+        // PUBMED PROPERTY
+        */
+        value = searchDomain.getNewPubmedIds();
+        if (value != null && !value.isEmpty()) {
+        	from = from + ", MGI_Property p";
+        	where = where + "\nand hte._Experiment_key = p._Object_key";
+        	where = where + "\nand p._mgitype_key = 42";
+        	where = where + "\nand p._propertyterm_key = 20475430";
+        	where = where + "\nand p.value = '" + value + "'";
+        }
+        
 		// log for easy copy/paste for troubleshooting
 		cmd = "\n" + select + "\n" + from + "\n" + where + "\n" + orderBy;
 		log.info(cmd);

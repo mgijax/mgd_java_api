@@ -434,7 +434,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
         	where = where + "\nand hte._Experiment_key = p._Object_key";
         	where = where + "\nand p._mgitype_key = 42";
         	where = where + "\nand p._propertyterm_key = 20475430";
-        	where = where + "\nand p.value = ('" + value + "')";
+        	where = where + "\nand p.value in ('" + value + "')";
         }
         
 		// log for easy copy/paste for troubleshooting

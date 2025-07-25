@@ -253,12 +253,13 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		// Building SQL command : select + from + where + orderBy
 		// Other FROM/WHERE clauses will be added, determined by query parameters
 		String cmd = "";
-		String select = "select acc.accid, hte._experiment_key, hte._curationstate_key ";
+		String select = "select distinct acc.accid, hte._experiment_key, hte._curationstate_key, acc.prefixpart, acc.numericPart "
+				+ " ";
 		String from = "from gxd_htexperiment hte, acc_accession acc ";
 		String where = "where hte._experiment_key = acc._object_key " 
 				+ "\nand acc._mgitype_key = 42"
 				+ "\nand acc.preferred = 1 ";
-		String orderBy = "order by acc.prefixpart, acc.numericPart ";
+		String orderBy = "order by prefixpart, numericPart ";
 		
 		// primary accession id 
 		value = searchDomain.getPrimaryid();			

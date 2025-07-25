@@ -429,11 +429,12 @@ public class HTExperimentService extends BaseService<HTDomain> {
         */
         value = searchDomain.getNewPubmedIds();
         if (value != null && !value.isEmpty()) {
+        	value = value.replaceAll("", ",");
         	from = from + ", MGI_Property p";
         	where = where + "\nand hte._Experiment_key = p._Object_key";
         	where = where + "\nand p._mgitype_key = 42";
         	where = where + "\nand p._propertyterm_key = 20475430";
-        	where = where + "\nand p.value = '" + value + "'";
+        	where = where + "\nand p.value = (" + value + ")";
         }
         
 		// log for easy copy/paste for troubleshooting

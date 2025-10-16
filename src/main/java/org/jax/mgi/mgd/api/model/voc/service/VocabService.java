@@ -206,7 +206,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 				orderBy = "order by t.sequencenum";
 			}
 			
-			// cell ontology (_vocab_key = 102)/get priimary id
+			// cell ontology (_vocab_key = 102)/get primary id
 			if (searchDomain.getName().equals("Cell Ontology")) {
 				select = celltypeSelect;
 				from = celltypeFrom;

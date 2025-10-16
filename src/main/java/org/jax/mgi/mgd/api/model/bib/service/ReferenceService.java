@@ -326,7 +326,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String select = "select distinct c.*, r.title"
 				+ "\n, wkfd.haspdf"
 				+ "\n, apt.term as ap_status, got.term as go_status, gxdt.term as gxd_status, gxdhtt.term as gxdht_status"
-				+ "\n, prot.term as pro_status, qtlt.term as qtl_status, tumort.term as tumor_status";
+				+ "\n, qtlt.term as qtl_status, tumort.term as tumor_status";
 		
 		String from = "from bib_citation_cache c, bib_refs r"
 				+ "\n, bib_workflow_data wkfd"
@@ -334,7 +334,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				+ "\n, bib_workflow_status go, voc_term got"
 				+ "\n, bib_workflow_status gxd, voc_term gxdt"
 				+ "\n, bib_workflow_status gxdht, voc_term gxdhtt"
-				+ "\n, bib_workflow_status pro, voc_term prot"
 				+ "\n, bib_workflow_status qtl, voc_term qtlt"
 				+ "\n, bib_workflow_status tumor, voc_term tumort";
 		
@@ -344,7 +343,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				+ "\nand c._refs_key = go._refs_key and go.isCurrent = 1 and go._group_key = 31576666 and go._status_key = got._term_key"
 				+ "\nand c._refs_key = gxd._refs_key and gxd.isCurrent = 1 and gxd._group_key = 31576665 and gxd._status_key = gxdt._term_key"
 				+ "\nand c._refs_key = gxdht._refs_key and gxdht.isCurrent = 1 and gxdht._group_key = 114000000 and gxdht._status_key = gxdhtt._term_key"				
-				+ "\nand c._refs_key = pro._refs_key and pro.isCurrent = 1 and pro._group_key = 78678148 and pro._status_key = prot._term_key"
 				+ "\nand c._refs_key = qtl._refs_key and qtl.isCurrent = 1 and qtl._group_key = 31576668 and qtl._status_key = qtlt._term_key"	
 				+ "\nand c._refs_key = tumor._refs_key and tumor.isCurrent = 1 and tumor._group_key = 31576667 and tumor._status_key = tumort._term_key";
 				
@@ -821,28 +819,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				addToWhere = addToWhere + statusWhereGXDHT + "31576670" + ")\n";
 			}
 			
-			if (searchDomain.getStatus_PRO_Chosen() != null && searchDomain.getStatus_PRO_Chosen() == 1) {
-				addToWhere = addToWhere + statusWherePRO + "31576671" + ")\n";
-			}
-			if (searchDomain.getStatus_PRO_Full_coded() != null && searchDomain.getStatus_PRO_Full_coded() == 1) {	
-				addToWhere = addToWhere + statusWherePRO + "31576674" + ")\n";
-			}
-			if (searchDomain.getStatus_PRO_Indexed() != null && searchDomain.getStatus_PRO_Indexed() == 1) {	
-				addToWhere = addToWhere + statusWherePRO + "31576673" + ")\n";
-			}
-			if (searchDomain.getStatus_PRO_New() != null && searchDomain.getStatus_PRO_New() == 1) {	
-				addToWhere = addToWhere + statusWherePRO + "71027551" + ")\n";
-			}		
-			if (searchDomain.getStatus_PRO_Not_Routed()!= null && searchDomain.getStatus_PRO_Not_Routed() == 1) {
-				addToWhere = addToWhere + statusWherePRO + "31576669" + ")\n";
-			}
-			if (searchDomain.getStatus_PRO_Rejected() != null && searchDomain.getStatus_PRO_Rejected() == 1) {	
-				addToWhere = addToWhere + statusWherePRO + "31576672" + ")\n";
-			}
-			if (searchDomain.getStatus_PRO_Routed() != null && searchDomain.getStatus_PRO_Routed() == 1) {	
-				addToWhere = addToWhere + statusWherePRO + "31576670" + ")\n";
-			}
-			
 			if (searchDomain.getStatus_QTL_Chosen() != null && searchDomain.getStatus_QTL_Chosen() == 1) {
 				addToWhere = addToWhere + statusWhereQTL + "31576671" + ")\n";
 			}
@@ -980,7 +956,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				domain.setGo_status(rs.getString("go_status"));
 				domain.setGxd_status(rs.getString("gxd_status"));
 				domain.setGxdht_status(rs.getString("gxdht_status"));				
-				domain.setPro_status(rs.getString("pro_status"));
 				domain.setQtl_status(rs.getString("qtl_status"));
 				domain.setTumor_status(rs.getString("tumor_status"));
 				domain.setHaspdf(rs.getString("haspdf"));
@@ -1451,8 +1426,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 				ref.setGxd_status(status);
 			} else if (group.equalsIgnoreCase("GXDHT")) {
 				ref.setGxdht_status(status);				
-			} else if (group.equalsIgnoreCase("PRO")) {
-				ref.setPro_status(status);
 			} else if (group.equalsIgnoreCase("QTL")) {
 				ref.setQtl_status(status);
 			} else if (group.equalsIgnoreCase("Tumor")) {
@@ -1648,7 +1621,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		anyChanges = updateWorkflowStatus(entity, WG_GO, domain.getGo_status(), user) || anyChanges;
 		anyChanges = updateWorkflowStatus(entity, WG_GXD, domain.getGxd_status(), user) || anyChanges;
 		anyChanges = updateWorkflowStatus(entity, WG_GXDHT, domain.getGxdht_status(), user) || anyChanges;		
-		anyChanges = updateWorkflowStatus(entity, WG_PRO, domain.getPro_status(), user) || anyChanges;
 		anyChanges = updateWorkflowStatus(entity, WG_QTL, domain.getQtl_status(), user) || anyChanges;
 		anyChanges = updateWorkflowStatus(entity, WG_TUMOR, domain.getTumor_status(), user) || anyChanges;
 
@@ -1680,10 +1652,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 					|| domain.getGxdht_status().equals(WS_INDEXED)
 					|| domain.getGxdht_status().equals(WS_FULLCODED)
 					
-					|| domain.getPro_status().equals(WS_CHOSEN)
-					|| domain.getPro_status().equals(WS_INDEXED)
-					|| domain.getPro_status().equals(WS_FULLCODED)
-
 					|| domain.getQtl_status().equals(WS_CHOSEN)
 					|| domain.getQtl_status().equals(WS_INDEXED)
 					|| domain.getQtl_status().equals(WS_FULLCODED)
@@ -1751,9 +1719,6 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		}		
 		else if (groupAbbrev.equals(WG_GO)) {
 			groupTermKey = 31576666;
-		}
-		else if (groupAbbrev.equals(WG_PRO)) {
-			groupTermKey = 78678148;
 		}
 		else if (groupAbbrev.equals(WG_QTL)) {
 			groupTermKey = 31576668;

@@ -32,7 +32,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 	private String WG_GXDHT = "GXDHT";
 	private String WG_AP = "AP";
 	private String WG_TUMOR = "Tumor";
-	private String WG_PRO = "PRO";
 	private String WG_QTL = "QTL";
 	
 	@Override
@@ -164,10 +163,6 @@ public class ReferenceTranslator extends BaseEntityDomainTranslator<Reference, R
 				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(WG_GXDHT)) {
 					domain.setGxdht_status(domain.getStatusCurrent().get(s).getStatus());
 					domain.setGxdht_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
-				}				
-				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(WG_PRO)) {
-					domain.setPro_status(domain.getStatusCurrent().get(s).getStatus());
-					domain.setPro_statusKey(domain.getStatusCurrent().get(s).getStatusKey());
 				}	
 				else if (domain.getStatusCurrent().get(s).getGroupAbbrev().equals(WG_QTL)) {
 					domain.setQtl_status(domain.getStatusCurrent().get(s).getStatus());

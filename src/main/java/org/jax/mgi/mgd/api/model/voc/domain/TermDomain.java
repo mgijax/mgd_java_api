@@ -59,6 +59,9 @@ public class TermDomain extends BaseDomain {
 	// only for cell type, emapa, and emaps terms
 	// set at the end of GET and search
 	private String annotCount;
+	
+	// only for emapa/gxdhtsamples
+	private String gxdhtSampleCount;
 
 	// only for emapa and emaps terms
 	private String stagesearch;

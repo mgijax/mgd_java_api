@@ -123,6 +123,7 @@ public class TermService extends BaseService<TermDomain> {
 			if (domain.getVocabKey() != null && !domain.getVocabKey().isEmpty()) {
 				addAnnotCount(domain);
 				addEmapInfo(domain);
+				addGXDHTSampleCount(domain);
 			}
 		}	
 		return domain;
@@ -738,6 +739,41 @@ public class TermService extends BaseService<TermDomain> {
 		}
 	}
 
+	@Transactional	
+	// Returns the number of direct gxdhtsamples to the given term.
+	// The vocabKey indicates which kind of term it is:
+	//     90=EMAPA
+	// If vocabKey is not one of these, no action is taken.
+	public void addGXDHTSampleCount(TermDomain term) {
+		String termKey = term.getTermKey();
+		String vocabKey = term.getVocabKey();
+		String cmd;
+		switch (vocabKey) {
+		case "90":
+			// EMAPA
+			cmd = "\nselect count(*) as sampleCt" + 
+				"\nfrom gxd_htsample" +
+				"\nwhere _emapa_key = " + termKey
+				;
+			break;
+		default:
+			return;
+		}
+
+		log.info(cmd);
+		
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				term.setGxdhtSampleCount(rs.getString("sampleCt"));
+			}
+			sqlExecutor.cleanup();						
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void addEmapInfo (TermDomain term) {
 		String termKey = term.getTermKey();
 		String vocabKey = term.getVocabKey();

@@ -742,13 +742,20 @@ public class TermService extends BaseService<TermDomain> {
 	@Transactional	
 	// Returns the number of direct gxdhtsamples to the given term.
 	// The vocabKey indicates which kind of term it is:
-	//     90=EMAPA, 91=EMAPS
+	//     102=cell type, 90=EMAPA, 91=EMAPS
 	// If vocabKey is not one of these, no action is taken.
 	public void addGXDHTSampleCount(TermDomain term) {
 		String termKey = term.getTermKey();
 		String vocabKey = term.getVocabKey();
 		String cmd;
 		switch (vocabKey) {
+		case "102":
+			// CellType
+			cmd = "\nselect count(*) as sampleCt" + 
+				"\nfrom gxd_htsample" +
+				"\nwhere _celltype_term_key = " + termKey
+				;
+			break;		
 		case "90":
 			// EMAPA
 			cmd = "\nselect count(*) as sampleCt" + 

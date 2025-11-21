@@ -37,24 +37,42 @@ public class AllelePairTranslator extends BaseEntityDomainTranslator<AllelePair,
 			domain.setAlleleKey2(String.valueOf(entity.getAllele2().get_allele_key()));
 			domain.setAlleleSymbol2(String.valueOf(entity.getAllele2().getSymbol()));
 		}
+		else {
+			domain.setAlleleKey2("");
+			domain.setAlleleSymbol2("");
+		}
 
 		if (entity.getMarker() != null) {
 			domain.setMarkerKey(String.valueOf(entity.getMarker().get_marker_key()));
 			domain.setMarkerSymbol(String.valueOf(entity.getMarker().getSymbol()));
 			domain.setMarkerChromosome(entity.getMarker().getChromosome());
 			domain.setMarkerAccID(entity.getMarker().getMgiAccessionIds().get(0).getAccID());			
-		}	
+		}
+		else {
+			domain.setMarkerKey("");
+			domain.setMarkerSymbol("");
+			domain.setMarkerChromosome("");
+			domain.setMarkerAccID("");
+		}
 		
 		// may be null
 		if (entity.getCellLine1() != null) {
 			domain.setCellLineKey1(String.valueOf(entity.getCellLine1().get_cellline_key()));
 			domain.setCellLine1(entity.getCellLine1().getCellLine());
 		}
+		else {
+			domain.setCellLineKey1("");
+			domain.setCellLine1("");
+		}
 		
 		// may be null
 		if (entity.getCellLine2() != null) {
 			domain.setCellLineKey2(String.valueOf(entity.getCellLine2().get_cellline_key()));
 			domain.setCellLine2(entity.getCellLine2().getCellLine());
+		}
+		else {
+			domain.setCellLineKey2("");
+			domain.setCellLine2("");			
 		}
 				
 		return domain;

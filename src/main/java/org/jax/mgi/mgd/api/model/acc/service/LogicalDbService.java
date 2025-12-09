@@ -600,7 +600,7 @@ public class LogicalDbService extends BaseService<LogicalDbDomain> {
 				+ "\nunion"
 				+ "\nselect _logicaldb_key, name, 2 as org"
 				+ "\nfrom acc_logicaldb"
-				+ "\nwhere _logicaldb_key in (37,39,40,54,56,57,58,70,71,83,84,87,90,91,93,94,154,161,177,184,188,200,202,206,207,208,213,215,216,217,219,220,221,224,226,232)"
+				+ "\nwhere _logicaldb_key in (37,39,40,54,56,57,58,70,71,83,84,87,90,91,93,94,154,161,177,184,188,200,202,206,207,208,213,215,216,217,219,220,221,224,232)"
 				+ "\norder by org, name";
 		log.info(cmd);
 		// not used:  83, 207, 224, 226

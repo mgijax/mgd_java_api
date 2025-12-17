@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.gxd.dao.AntibodyDAO;
-import org.jax.mgi.mgd.api.model.gxd.dao.AntigenDAO;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyPrepDomain;
 import org.jax.mgi.mgd.api.model.gxd.domain.SlimAntibodyDomain;

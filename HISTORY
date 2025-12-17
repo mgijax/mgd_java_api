@@ -4,6 +4,14 @@
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
 
+TAG: mgd_java_api-6-0-26-?
+DATE: 12/09/2025
+STAFF: lec
+remove logicaldb/searchProbeStrainSet RJ (226)
+per Cindy:  
+Yes, we had hoped to include Janvier in a more complete way, but they don’t publish stock numbers for their strains. 
+We have nothing to enter in the field. We can remove the Name Type RJ if convenient, but there is no hurry.
+
 TAG: mgd_java_api-6-0-26-5
 DATE: 11/21/2025
 STAFF: lec

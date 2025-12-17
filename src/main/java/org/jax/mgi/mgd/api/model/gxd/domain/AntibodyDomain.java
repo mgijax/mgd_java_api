@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jax.mgi.mgd.api.model.BaseDomain;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,9 @@ public class AntibodyDomain extends BaseDomain {
 
 	private String antibodyKey;
 	private String antibodyName;
+	private String regionCovered;
 	private String antibodyNote;
+	private String antigenNote;
 	private String antibodyClassKey;
 	private String antibodyClass;
 	private String antibodyTypeKey;
@@ -29,7 +32,7 @@ public class AntibodyDomain extends BaseDomain {
 	private String accID;
 	private String hasExpression = "0";
 
-	private AntigenDomain antigen;
+	private ProbeSourceDomain probeSource;
 	private List<AntibodyAliasDomain> aliases;
 	private List<AntibodyMarkerDomain> markers;
 	private List<MGIReferenceAssocDomain> refAssocs;	

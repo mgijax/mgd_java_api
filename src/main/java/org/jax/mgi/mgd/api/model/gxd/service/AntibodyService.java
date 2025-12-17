@@ -18,6 +18,9 @@ import org.jax.mgi.mgd.api.model.gxd.translator.SlimAntibodyTranslator;
 import org.jax.mgi.mgd.api.model.mgi.dao.OrganismDAO;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
 import org.jax.mgi.mgd.api.model.mgi.service.MGIReferenceAssocService;
+import org.jax.mgi.mgd.api.model.prb.dao.ProbeSourceDAO;
+import org.jax.mgi.mgd.api.model.prb.domain.ProbeSourceDomain;
+import org.jax.mgi.mgd.api.model.prb.service.ProbeSourceService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
 import org.jax.mgi.mgd.api.util.DecodeString;
@@ -40,7 +43,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	@Inject
 	private OrganismDAO organismDAO;
 	@Inject
-	private AntigenDAO antigenDAO;
+	private ProbeSourceDAO sourceDAO;
 	@Inject
 	private MGIReferenceAssocService referenceAssocService;
 	@Inject
@@ -49,6 +52,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 	private AntibodyMarkerService antibodyMarkerService;
 	@Inject 
 	private AntibodyPrepService antibodyPrepService;
+	@Inject
+	private ProbeSourceService sourceService;
 	
 	private AntibodyTranslator translator = new AntibodyTranslator();
 	private SlimAntibodyTranslator slimtranslator = new SlimAntibodyTranslator();
@@ -74,6 +79,13 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// may not be null
 		entity.setAntibodyName(domain.getAntibodyName());
 		
+		if(domain.getRegionCovered() ==  null || domain.getRegionCovered().isEmpty()) {
+			entity.setRegionCovered(null);
+		}
+		else {
+			entity.setRegionCovered(domain.getRegionCovered());
+		}
+				
 		log.info("antibody note");
 		// may be null
 		if(domain.getAntibodyNote() != null && !domain.getAntibodyNote().isEmpty()) {
@@ -83,6 +95,15 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		}
 		else {
 			entity.setAntibodyNote(null);
+		}
+		
+		if(domain.getAntigenNote() == null || domain.getAntigenNote().isEmpty()) {
+			entity.setAntigenNote(null);
+		}
+		else {
+			note = DecodeString.setDecodeToLatin9(domain.getAntigenNote());
+			note = note.replace("''", "'");			
+			entity.setAntigenNote(note);
 		}
 		
 		log.info("antibody class");
@@ -109,16 +130,17 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		}
 		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
 		
-		log.info("antibody antigen key: " + domain.getAntigen().getAntigenKey());
-		if (domain.getAntigen().getAntigenKey() != null && !domain.getAntigen().getAntigenKey().isEmpty()) {
-			entity.setAntigen(antigenDAO.get(Integer.valueOf(domain.getAntigen().getAntigenKey())));
-		}
-		
 		entity.setCreatedBy(user);
 		entity.setCreation_date(new Date());
 		entity.setModifiedBy(user);
 		entity.setModification_date(new Date());
 		
+		// add antibody source
+		log.info("processAntigen/sourceService.create() agePrefix: " + domain.getProbeSource().getAgePrefix() + " ageStage: " + domain.getProbeSource().getAgeStage());
+		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
+		sourceResults = sourceService.create(domain.getProbeSource(), user);
+		entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));
+				
 		// execute persist/insert/send to database
 		antibodyDAO.persist(entity);
 
@@ -170,6 +192,14 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 
 		entity.setAntibodyName(domain.getAntibodyName());
 		
+		log.info("region covered: " + domain.getRegionCovered());
+		if(domain.getRegionCovered() ==  null || domain.getRegionCovered().isEmpty()) {
+			entity.setRegionCovered(null);
+		}
+		else {
+			entity.setRegionCovered(domain.getRegionCovered());
+		}
+		
 		log.info("antibody note: " + domain.getAntibodyNote());
 		if(domain.getAntibodyNote() != null && !domain.getAntibodyNote().isEmpty()) {
 			note = DecodeString.setDecodeToLatin9(domain.getAntibodyNote());
@@ -179,7 +209,17 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		else {
 			entity.setAntibodyNote(null);	
 		}
-	    
+		
+		log.info("antigene note: " + domain.getAntigenNote());
+		if(domain.getAntigenNote() == null || domain.getAntigenNote().isEmpty()) {
+			entity.setAntigenNote(null);
+		}
+		else {
+			note = DecodeString.setDecodeToLatin9(domain.getAntigenNote());
+			note = note.replace("''", "'");			
+			entity.setAntigenNote(note);		
+		}	
+
 		log.info("antibody class: " + domain.getAntibodyClassKey());
 		// has default if not set
 		if(domain.getAntibodyClassKey() ==  null || domain.getAntibodyClassKey().isEmpty()){
@@ -204,11 +244,12 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		}
 		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
 		
-		log.info("antibody antigen key: " + domain.getAntigen().getAntigenKey());
-		if (domain.getAntigen().getAntigenKey() != null && !domain.getAntigen().getAntigenKey().isEmpty()) {
-			entity.setAntigen(antigenDAO.get(Integer.valueOf(domain.getAntigen().getAntigenKey())));
-		}
-			
+		// update antibody source
+		log.info("processAntigen/sourceService.update()");
+		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
+		sourceResults = sourceService.update(domain.getProbeSource(), user);
+		entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));
+		
 		// process antibody aliases, can be null
 		if (domain.getAliases() != null && !domain.getAliases().isEmpty()) {
 			log.info("Antibody/update aliases");
@@ -342,7 +383,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		Boolean from_reference = false;
 		Boolean from_alias = false;
 		Boolean from_aliasref = false;
-		Boolean from_antigen = false;
+		Boolean from_source = false;
 		Boolean from_marker = false;
 		Boolean do_union = false;
 		
@@ -373,75 +414,73 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			value = searchDomain.getAntibodyNote().replace("''", "'");
 			where = where + "\n and a.antibodyNote ilike '" + value + "'";
 		}
+		// region covered
+		if (searchDomain.getRegionCovered() != null && !searchDomain.getRegionCovered().isEmpty()) {
+			where = where + "\nand a.regionCovered ilike '" + searchDomain.getRegionCovered() + "'";
+		}
+		// notes
+		if (searchDomain.getAntigenNote() != null && !searchDomain.getAntigenNote().isEmpty()) {
+			value = searchDomain.getAntigenNote().replace("''", "'");			
+			where = where + "\nand a.antigenNote ilike '" + value + "'";
+		}
 		
-		if (searchDomain.getAntigen() != null)  {
-			if( searchDomain.getAntigen().getAccID() != null && ! searchDomain.getAntigen().getAccID().isEmpty()) {
-				//log.info("antigen ID is specified");
-				if (! searchDomain.getAntigen().getAccID().startsWith("MGI:")) {
-					where = where + "\nand acc2v.numericPart = '" + searchDomain.getAntigen().getAccID() + "'";
-				}
-				else {
-					where = where + "\nand acc2v.accID ilike '" + searchDomain.getAntigen().getAccID() + "'";
-				}
-				from_antigenaccession = true;
+		// source
+		
+		if (searchDomain.getProbeSource() != null) {
+			 log.info("AntigenService.search has search domain: " + searchDomain.getProbeSource().getTissue());
+
+			// source organism
+			if (searchDomain.getProbeSource().getOrganismKey() != null && !searchDomain.getProbeSource().getOrganismKey().isEmpty()) {
+				where = where + "\nand s._organism_key = " + searchDomain.getProbeSource().getOrganismKey();
+				from_source = true;
 			}
-			else { // no antigen key check for antigen and antigen source attributes
-				//log.info("antigen is not specified, check antigen attributes");
-				if (searchDomain.getAntigen().getAntigenName() != null && ! searchDomain.getAntigen().getAntigenName().isEmpty()) {					
-					//log.info("antigen name: " + searchDomain.getAntigen().getAntigenName());
-					value = searchDomain.getAntigen().getAntigenName().replaceAll("'", "''");
-					where = where + "\n and av.antigenname ilike '" + value + "'";
-					from_antigen = true;
-				}
-				if (searchDomain.getAntigen().getRegionCovered() != null && ! searchDomain.getAntigen().getRegionCovered().isEmpty()) {
-					//log.info("antigen regioncovered: " + searchDomain.getAntigen().getRegionCovered());
-					where = where + "\n and av.regioncovered ilike '" + searchDomain.getAntigen().getRegionCovered()+ "'";
-					from_antigen = true;
-				}
-				if (searchDomain.getAntigen().getAntigenNote() != null && ! searchDomain.getAntigen().getAntigenNote().isEmpty()) {
-					value = searchDomain.getAntigen().getAntigenNote().replace("''", "'");					
-					where = where + "\n and av.antigennote ilike '" + value + "'";
-					from_antigen = true;
-				}
-				if (searchDomain.getAntigen().getProbeSource().getOrganismKey() != null && ! searchDomain.getAntigen().getProbeSource().getOrganismKey().isEmpty()) {
-					where = where + "\n and sv._organism_key = " + searchDomain.getAntigen().getProbeSource().getOrganismKey();
-					from_antigen = true;
-				}
-				if (searchDomain.getAntigen().getProbeSource().getStrainKey() != null && ! searchDomain.getAntigen().getProbeSource().getStrainKey().isEmpty()) {
-					where = where + "\n and sv._strain_key = " + searchDomain.getAntigen().getProbeSource().getStrainKey();
-					from_antigen = true;
-				}
-				if (searchDomain.getAntigen().getProbeSource().getTissueKey() != null && ! searchDomain.getAntigen().getProbeSource().getTissueKey().isEmpty()) {
-					where = where + "\n and sv._tissue_key = " + searchDomain.getAntigen().getProbeSource().getTissueKey();
-					from_antigen = true;
-				}
-				if (searchDomain.getAntigen().getProbeSource().getDescription() != null && ! searchDomain.getAntigen().getProbeSource().getDescription().isEmpty()) {
-					where = where + "\n and sv.description = '" + searchDomain.getAntigen().getProbeSource().getDescription() + "'";
-					from_antigen = true;
-				}
-				// cell line key is actually a VOC_Term._term_key
-				//log.info("antigen celline key : " + searchDomain.getAntigen().getProbeSource().getCellLineKey());
-				if (searchDomain.getAntigen().getProbeSource().getCellLineKey() != null && ! searchDomain.getAntigen().getProbeSource().getCellLineKey().isEmpty()) {
-					where = where + "\n and sv._cellline_key = " + searchDomain.getAntigen().getProbeSource().getCellLineKey();
-					from_antigen = true;
-				}
-				if (searchDomain.getAntigen().getProbeSource().getGenderKey() != null && ! searchDomain.getAntigen().getProbeSource().getGenderKey().isEmpty()) {
-					where = where + "\n and sv._gender_key = " + searchDomain.getAntigen().getProbeSource().getGenderKey();
-					from_antigen = true;
-				}
-				String ageSearch = "";
-				if (searchDomain.getAntigen().getProbeSource().getAgePrefix() != null && ! searchDomain.getAntigen().getProbeSource().getAgePrefix().isEmpty() ) {
-					ageSearch = searchDomain.getAntigen().getProbeSource().getAgePrefix();
-				}
-				if (searchDomain.getAntigen().getProbeSource().getAgeStage() != null && ! searchDomain.getAntigen().getProbeSource().getAgeStage().isEmpty() ) {
-					ageSearch = ageSearch + "%" + searchDomain.getAntigen().getProbeSource().getAgeStage();
-				}			
-				if (ageSearch.length() > 0) {
-					where = where + "\nand sv.age ilike '%" + ageSearch + "%'";
-					from_antigen = true;	
-				}		
+			
+			// source strain
+			if (searchDomain.getProbeSource().getStrain() != null && !searchDomain.getProbeSource().getStrain().isEmpty()) {
+				//where = where + "\nand s._strain_key = " + searchDomain.getProbeSource().getStrainKey();
+				where = where + "\nand s.strain ilike '" + searchDomain.getProbeSource().getStrain() + "'";
+				from_source = true;
 			}
-		}	
+			
+			// source tissue
+			if (searchDomain.getProbeSource().getTissue() != null && !searchDomain.getProbeSource().getTissue().isEmpty()) {
+				//where = where + "\nand s._Tissue_key = " + searchDomain.getProbeSource().getTissueKey();
+				where = where + "\nand s.tissue ilike '" + searchDomain.getProbeSource().getTissue() + "'";
+				from_source = true;
+			}
+			
+			// source tissue description
+			if (searchDomain.getProbeSource().getDescription() != null && !searchDomain.getProbeSource().getDescription().isEmpty()) {
+				where = where + "\nand s.description ilike '" + searchDomain.getProbeSource().getDescription() + "'";
+				from_source = true;
+			}
+			
+			// source cell line
+			if (searchDomain.getProbeSource().getCellLine() != null  && !searchDomain.getProbeSource().getCellLine().isEmpty() ) {
+				where = where + "\nand s.cellline ilike '" + searchDomain.getProbeSource().getCellLine() + "'";
+				from_source = true;
+			}
+			
+			// source gender
+			if (searchDomain.getProbeSource().getGenderKey() != null && ! searchDomain.getProbeSource().getGenderKey().isEmpty() ) {
+				where = where + "\nand s._gender_key = " + searchDomain.getProbeSource().getGenderKey();
+				from_source = true;
+			}
+			
+			// source age
+			String ageSearch = "";
+			if (searchDomain.getProbeSource().getAgePrefix() != null && ! searchDomain.getProbeSource().getAgePrefix().isEmpty() ) {
+				ageSearch = searchDomain.getProbeSource().getAgePrefix();
+			}
+			if (searchDomain.getProbeSource().getAgeStage() != null && ! searchDomain.getProbeSource().getAgeStage().isEmpty() ) {
+				ageSearch = ageSearch + "%" + searchDomain.getProbeSource().getAgeStage();
+			}			
+			if (ageSearch.length() > 0) {
+				where = where + "\nand s.age ilike '%" + ageSearch + "%'";
+				from_source = true;	
+			}
+		}
+			
 		
 		// create/mode by/date
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
@@ -557,10 +596,9 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			from = from + ", gxd_antibodyaliasref_view aref";
 			where = where + "\nand a._antibody_key = aref._antibody_key";
 		}
-		if (from_antigen == true) {
-			from = from + ", gxd_antigen_view av, prb_source sv";
-			where = where + "\nand a._antigen_key = av._antigen_key";
-			where = where + "\nand av._source_key = sv._source_key";
+		if (from_source == true) {
+			from = from + ", prb_source_view s";
+			where = where + "\nand a._source_key = s._source_key";
 		}
 		if (from_marker == true) {
 			from = from + ", gxd_antibodymarker_view mv";
@@ -661,11 +699,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 				domain.setAntibodyType(adomain.getAntibodyType());
 				domain.setAntibodyOrganism(adomain.getOrganism());
 				domain.setAntibodyNote(adomain.getAntibodyNote());
-				domain.setAntigenID(adomain.getAntigen().getAccID());
-				domain.setAntigenName(adomain.getAntigen().getAntigenName());			
-				domain.setAntigenOrganism(adomain.getAntigen().getProbeSource().getOrganism());
-				domain.setAntigenNote(adomain.getAntigen().getAntigenNote());
-				domain.setRegionCovered(adomain.getAntigen().getRegionCovered());
+				domain.setAntigenNote(adomain.getAntigenNote());
+				domain.setRegionCovered(adomain.getRegionCovered());
 	 
 				List<String> markerIDs = new ArrayList<String>();
 				List<String> markerSymbols = new ArrayList<String>();
@@ -734,11 +769,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 				domain.setAntibodyType(adomain.getAntibodyType());
 				domain.setAntibodyOrganism(adomain.getOrganism());
 				domain.setAntibodyNote(adomain.getAntibodyNote());
-				domain.setAntigenID(adomain.getAntigen().getAccID());
-				domain.setAntigenName(adomain.getAntigen().getAntigenName());			
-				domain.setAntigenOrganism(adomain.getAntigen().getProbeSource().getOrganism());
-				domain.setAntigenNote(adomain.getAntigen().getAntigenNote());
-				domain.setRegionCovered(adomain.getAntigen().getRegionCovered());
+				domain.setAntigenNote(adomain.getAntigenNote());
+				domain.setRegionCovered(adomain.getRegionCovered());
 	 
 				List<String> markerIDs = new ArrayList<String>();
 				List<String> markerSymbols = new ArrayList<String>();

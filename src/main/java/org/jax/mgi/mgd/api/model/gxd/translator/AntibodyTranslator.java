@@ -10,12 +10,14 @@ import org.jax.mgi.mgd.api.model.gxd.domain.AntibodyMarkerDomain;
 import org.jax.mgi.mgd.api.model.gxd.entities.Antibody;
 import org.jax.mgi.mgd.api.model.mgi.domain.MGIReferenceAssocDomain;
 import org.jax.mgi.mgd.api.model.mgi.translator.MGIReferenceAssocTranslator;
+import org.jax.mgi.mgd.api.model.prb.translator.ProbeSourceTranslator;
 import org.jboss.logging.Logger;
 
 public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, AntibodyDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-	
+	private ProbeSourceTranslator probeSourceTranslator = new ProbeSourceTranslator();
+
 	@Override
 	protected AntibodyDomain entityToDomain(Antibody entity) {
 
@@ -23,7 +25,9 @@ public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, Ant
 
 		domain.setAntibodyKey(String.valueOf(entity.get_antibody_key()));
 		domain.setAntibodyName(entity.getAntibodyName());
+		domain.setRegionCovered(entity.getRegionCovered());
 		domain.setAntibodyNote(entity.getAntibodyNote());
+		domain.setAntigenNote(entity.getAntigenNote());			
 		domain.setAntibodyClassKey(String.valueOf(entity.getAntibodyClass().get_term_key()));
 		domain.setAntibodyClass(entity.getAntibodyClass().getTerm());
 		domain.setAntibodyTypeKey(String.valueOf(entity.getAntibodyType().get_term_key()));
@@ -43,9 +47,9 @@ public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, Ant
 		}
 
 		// at most one probeSource
-		if (entity.getAntigen() != null) {
-			AntigenTranslator antigenTranslator = new AntigenTranslator();
-			domain.setAntigen(antigenTranslator.translate(entity.getAntigen()));
+		if (entity.getProbeSource() != null) {
+			domain.setProbeSource(probeSourceTranslator.translate(entity.getProbeSource()));
+			log.info("AntibodyTranslator probeSource agePrefix: " + domain.getProbeSource().getAgePrefix() + " ageStage: " + domain.getProbeSource().getAgeStage());
 		}
 
 		// aliases

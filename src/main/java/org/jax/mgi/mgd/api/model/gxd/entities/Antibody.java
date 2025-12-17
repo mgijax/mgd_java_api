@@ -11,6 +11,7 @@ import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
+import org.jax.mgi.mgd.api.model.prb.entities.ProbeSource;
 import org.jax.mgi.mgd.api.model.voc.entities.Term;
 
 import jakarta.persistence.Entity;
@@ -38,6 +39,8 @@ public class Antibody extends BaseEntity {
 	@Schema(name="primary key")	
 	private int _antibody_key;
 	private String antibodyName;
+	private String regionCovered;
+	private String antigenNote;
 	private String antibodyNote;
 	private Date creation_date;
 	private Date modification_date;
@@ -55,16 +58,16 @@ public class Antibody extends BaseEntity {
 	private Organism organism;
 
 	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="_source_key", referencedColumnName="_source_key")
+	private ProbeSource probeSource;
+	
+	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_createdby_key", referencedColumnName="_user_key")
 	private User createdBy;
 
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_modifiedby_key", referencedColumnName="_user_key")
 	private User modifiedBy;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="_antigen_key", referencedColumnName="_antigen_key")
-	private Antigen antigen;
 		
 	// mgi accession ids only
 	@OneToMany()

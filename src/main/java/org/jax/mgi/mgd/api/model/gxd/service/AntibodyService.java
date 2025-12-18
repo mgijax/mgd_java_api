@@ -700,7 +700,8 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 				domain.setAntibodyNote(adomain.getAntibodyNote());
 				domain.setAntigenNote(adomain.getAntigenNote());
 				domain.setRegionCovered(adomain.getRegionCovered());
-	 
+				domain.setAntigenOrganism(adomain.getProbeSource().getOrganism());
+				
 				List<String> markerIDs = new ArrayList<String>();
 				List<String> markerSymbols = new ArrayList<String>();
 				for (int i = 0; i < adomain.getMarkers().size(); i++) {

@@ -16,8 +16,6 @@ public class SummaryAntibodyDomain extends BaseDomain {
 	private String antibodyOrganism;
 	private String antibodyNote;
 	private String aliases;
-	private String antigenID;
-	private String antigenName;
 	private String regionCovered;
 	private String antigenOrganism;
 	private String antigenNote;

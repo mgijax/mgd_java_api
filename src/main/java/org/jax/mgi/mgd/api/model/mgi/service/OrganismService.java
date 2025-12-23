@@ -271,7 +271,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	
 	@Transactional	
 	public List<OrganismDomain> searchAntigen() {
-		// for antigen module organism pick list
+		// for antigen organism pick list used in Antibody module
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
 		String cmd = "select _organism_key, commonname, 0 as org\n" + 

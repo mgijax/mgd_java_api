@@ -135,7 +135,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		entity.setModification_date(new Date());
 		
 		// add antibody source
-		log.info("processAntigen/sourceService.create() agePrefix: " + domain.getProbeSource().getAgePrefix() + " ageStage: " + domain.getProbeSource().getAgeStage());
+		log.info("processAntibody/sourceService.create() agePrefix: " + domain.getProbeSource().getAgePrefix() + " ageStage: " + domain.getProbeSource().getAgeStage());
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = sourceService.create(domain.getProbeSource(), user);
 		entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));
@@ -244,7 +244,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		entity.setOrganism(organismDAO.get(Integer.valueOf(domain.getOrganismKey())));
 		
 		// update antibody source
-		log.info("processAntigen/sourceService.update()");
+		log.info("processAntibody/sourceService.update()");
 		SearchResults<ProbeSourceDomain> sourceResults = new SearchResults<ProbeSourceDomain>();
 		sourceResults = sourceService.update(domain.getProbeSource(), user);
 		entity.setProbeSource(sourceDAO.get(Integer.valueOf(sourceResults.items.get(0).getSourceKey())));
@@ -378,7 +378,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		String orderBy = "order by antibodyName";
 		String value;
 		Boolean from_accession = false;
-		Boolean from_antigenaccession = false;
 		Boolean from_reference = false;
 		Boolean from_alias = false;
 		Boolean from_aliasref = false;
@@ -426,7 +425,7 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 		// source
 		
 		if (searchDomain.getProbeSource() != null) {
-			 log.info("AntigenService.search has search domain: " + searchDomain.getProbeSource().getTissue());
+			 log.info("AntibodyService.search has search domain: " + searchDomain.getProbeSource().getTissue());
 
 			// source organism
 			if (searchDomain.getProbeSource().getOrganismKey() != null && !searchDomain.getProbeSource().getOrganismKey().isEmpty()) {
@@ -480,7 +479,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			}
 		}
 			
-		
 		// create/mode by/date
 		String cmResults[] = DateSQLQuery.queryByCreationModification("a", searchDomain.getCreatedBy(), searchDomain.getModifiedBy(), searchDomain.getCreation_date(), searchDomain.getModification_date());
 		if (cmResults.length > 0) {
@@ -578,11 +576,6 @@ public class AntibodyService extends BaseService<AntibodyDomain> {
 			from = from + ", gxd_antibody_acc_view acc";
 			where = where + "\nand a._antibody_key = acc._object_key"; 
 		}
-		if (from_antigenaccession == true) {
-			from = from + ", gxd_antibodyantigen_view acc2, gxd_antigen_acc_view acc2v";
-			where = where + "\nand a._antibody_key = acc2._antibody_key";
-			where = where + "\nand acc2._antigen_key = acc2v._object_key";
-		}		
 		if (from_reference == true) {
             from = from + ", mgi_reference_antibody_view ref";
             where = where + "\nand a._antibody_key = ref._object_key";

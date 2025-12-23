@@ -914,7 +914,7 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 				"\nand ps._strain_key = s._strain_key" + 
 				"\nunion" + 
 				"\nselect distinct s.strain" + 
-				"\nfrom prb_strain s, prb_source ps, gxd_antigen p" + 
+				"\nfrom prb_strain s, prb_source ps, gxd_antibody p" + 
 				"\nwhere p._source_key = ps._Source_key" + 
 				"\nand ps._strain_key = s._strain_key" + 
 				"\n)" + 

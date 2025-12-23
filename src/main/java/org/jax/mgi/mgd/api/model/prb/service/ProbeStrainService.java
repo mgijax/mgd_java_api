@@ -902,8 +902,8 @@ public class ProbeStrainService extends BaseService<ProbeStrainDomain> {
 	}	
 
 	@Transactional	
-	public SearchResults<String> getStrainListProbeAntigen() {
-		// generate SQL command to return a list of distinct strains probe/antigen
+	public SearchResults<String> getStrainListProbeAntibody() {
+		// generate SQL command to return a list of distinct strains probe/antibody
 		
 		List<String> results = new ArrayList<String>();
 

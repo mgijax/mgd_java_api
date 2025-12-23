@@ -150,14 +150,14 @@ public class ProbeStrainController extends BaseController<ProbeStrainDomain> {
 	}
 
 	@GET
-	@Operation(description = "get list of strains for probes/antigen")
-	@Path("/getStrainListProbeAntigen")
+	@Operation(description = "get list of strains for probes/antibody")
+	@Path("/getStrainListProbeAntibody")
 	public SearchResults<String> getStrainListProbeAntigen() {
 	
 		SearchResults<String> results = null;
 
 		try {
-			results = probeStrainService.getStrainListProbeAntigen();
+			results = probeStrainService.getStrainListProbeAntibody();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

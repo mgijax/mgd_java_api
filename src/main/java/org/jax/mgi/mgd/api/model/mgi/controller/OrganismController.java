@@ -90,14 +90,14 @@ public class OrganismController extends BaseController<OrganismDomain> {
 	}
 	
 	@POST
-	@Operation(description = "Search for organisms Antigen module")
+	@Operation(description = "Search for Antigen organisms in Antibody module")
 	@Path("/searchAntigen")
 	public List<OrganismDomain> searchAntigen() {
 		return organismService.searchAntigen();
 	}
 	
 	@POST
-	@Operation(description = "Search for organisms Antibody module")
+	@Operation(description = "Search for Antibody organisms in Antibody module")
 	@Path("/searchAntibody")
 	public List<OrganismDomain> searchAntibody() {
 		return organismService.searchAntibody();

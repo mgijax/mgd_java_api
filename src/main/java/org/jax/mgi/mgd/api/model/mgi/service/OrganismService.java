@@ -308,7 +308,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	
 	@Transactional	
 	public List<OrganismDomain> searchAntibody() {
-		// for antigen module organism pick list
+		// for antigen module organism pick list used in Antibody module
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
 //        1 | mouse, laboratory

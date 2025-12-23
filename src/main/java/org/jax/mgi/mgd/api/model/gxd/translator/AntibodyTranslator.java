@@ -73,7 +73,7 @@ public class AntibodyTranslator extends BaseEntityDomainTranslator<Antibody, Ant
 			MGIReferenceAssocTranslator refAssocTranslator = new MGIReferenceAssocTranslator();
 			Iterable<MGIReferenceAssocDomain> i = refAssocTranslator.translateEntities(entity.getRefAssocs());
 			domain.setRefAssocs(IteratorUtils.toList(i.iterator()));
-			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocType));
+			domain.getRefAssocs().sort(Comparator.comparing(MGIReferenceAssocDomain::getRefAssocType).thenComparingInt(MGIReferenceAssocDomain::getJnum));
 		}
 		
 		return domain;

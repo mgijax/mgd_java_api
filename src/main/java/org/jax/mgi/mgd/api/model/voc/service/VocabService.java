@@ -249,6 +249,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 			// 174 = Allele Inducible
 			// 180 = GXD Antibody Type
 			// 187 = GXD color
+			// 192 = GXD Index Note
 			if (searchDomain.getVocabKey().equals("39")
 					|| searchDomain.getVocabKey().equals("42")
 					|| searchDomain.getVocabKey().equals("37") 

@@ -202,7 +202,7 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getName().equals("GXD HT Sample")
 					|| searchDomain.getName().equals("GXD Index Assay")
 					|| searchDomain.getName().equals("GXD Index Stages")
-					|| searchDomain.getName().equals("GXD Note")
+					|| searchDomain.getName().equals("GXD Index Note")
 					) {
 				orderBy = "order by t.sequencenum";
 			}
@@ -260,7 +260,8 @@ public class VocabService extends BaseService<VocabularyDomain> {
 					|| searchDomain.getVocabKey().equals("161")	
 					|| searchDomain.getVocabKey().equals("174")	
 					|| searchDomain.getVocabKey().equals("180")		
-					|| searchDomain.getVocabKey().equals("187")																
+					|| searchDomain.getVocabKey().equals("187")	
+					|| searchDomain.getVocabKey().equals("192")																
 					) {
 				orderBy = "order by t.sequenceNum";
 			}

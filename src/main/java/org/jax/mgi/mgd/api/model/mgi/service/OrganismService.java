@@ -385,19 +385,19 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		String cmd = "select s.*, 0 as org\n" + 
 				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
 				"where s._Organism_key = t._Organism_key\n" +
-				"and t._MGIType_key = 43" +
+				"and t._MGIType_key = 43\n" +
 				"and s.commonname = 'mouse, laboratory'\n" + 
 				"union\n" + 
 				"select s.*, 1 as org\n" + 
 				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
 				"where s._Organism_key = t._Organism_key\n" +
-				"and t._MGIType_key = 43" +
+				"and t._MGIType_key = 43\n" +
 				"and s.commonname = 'human'\n" + 
 				"union\n" + 
 				"select s.*, 2 as org\n" + 
 				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
 				"where s._Organism_key = t._Organism_key\n" +
-				"and t._MGIType_key = 43" +
+				"and t._MGIType_key = 43\n" +
 				"and s.commonname not in ('mouse, laboratory', 'human')\n" + 
 				"order by org, commonname";
 		log.info(cmd);

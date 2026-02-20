@@ -271,7 +271,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	
 	@Transactional	
 	public List<OrganismDomain> searchAntigen() {
-		// for antigen organism pick list used in Antibody module
+		// for antigen module organism pick list
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
 		String cmd = "select _organism_key, commonname, 0 as org\n" + 
@@ -308,7 +308,7 @@ public class OrganismService extends BaseService<OrganismDomain> {
 	
 	@Transactional	
 	public List<OrganismDomain> searchAntibody() {
-		// for antigen module organism pick list used in Antibody module
+		// for antigen module organism pick list
 		List<OrganismDomain> results = new ArrayList<OrganismDomain>();
 
 //        1 | mouse, laboratory
@@ -382,10 +382,24 @@ public class OrganismService extends BaseService<OrganismDomain> {
 		// for gxd ht sample module organism pick list
 		List<SlimOrganismDomain> results = new ArrayList<SlimOrganismDomain>();
 
-		String cmd ="select s.*\n" + 
+		String cmd = "select s.*, 0 as org\n" + 
 				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
 				"where s._Organism_key = t._Organism_key\n" +
-				"and t._MGIType_key = 43";
+				"and t._MGIType_key = 43" +
+				"and s.commonname = 'mouse, laboratory'\n" + 
+				"union\n" + 
+				"select s.*, 1 as org\n" + 
+				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
+				"where s._Organism_key = t._Organism_key\n" +
+				"and t._MGIType_key = 43" +
+				"and s.commonname = 'human'\n" + 
+				"union\n" + 
+				"select s.*, 2 as org\n" + 
+				"from MGI_Organism s, MGI_Organism_MGIType t\n" + 
+				"where s._Organism_key = t._Organism_key\n" +
+				"and t._MGIType_key = 43" +
+				"and s.commonname not in ('mouse, laboratory', 'human')\n" + 
+				"order by org, commonname";
 		log.info(cmd);
 
 		try {

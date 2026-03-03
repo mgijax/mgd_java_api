@@ -1503,7 +1503,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 				domain.setAlleleKey(rs.getString("_allele_key"));
 				domain.setSymbol(rs.getString("symbol"));
 				domain.setName(rs.getString("name"));
-				domain.setAlleleType(rs.getString("alleletype"));
+				domain.setStrain(rs.getString("strain"));			domain.setAlleleType(rs.getString("alleletype"));
 				domain.setAlleleStatus(rs.getString("status"));
 				domain.setTransmission(rs.getString("transmission"));
 				domain.setDiseases(rs.getString("diseases"));

@@ -5,7 +5,7 @@
 #                    are being downloaded from.
 "
 
-TAG: mgd_java_api-6-0-27-3
+TAG: mgd_java_api-6-0-27-4
 DATE: 03/03/2026
 STAFF: lec
 wts2-1816/Images added in the MGD Image Module get default association in the Allele Module as primary=yes

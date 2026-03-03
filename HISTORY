@@ -3,6 +3,11 @@
 #                    the product directory. This is likely due to a directory
 #                    with the same name existing at the site where the files
 #                    are being downloaded from.
+"
+TAG: mgd_java_api-6-0-27-3
+DATE: 03/03/2026
+STAFF: lec
+wts2-1818/Adding strain of origin column on the PWI allele summary page
 
 TAG: mgd_java_api-6-0-27-2
 DATE: 02/20/2026

@@ -1664,7 +1664,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\nand a._allele_status_key = astatus._term_key "
 		+ "\nand a._transmission_key = trans._term_key "
 		+ "\nand a._mode_key = mode._term_key "
-		+ "\nand a._strain = ps._strain_key "
+		+ "\nand a._strain_key = ps._strain_key "
 		+ "\nand a._allele_key = aa._object_key "
 		+ "\nand aa._mgitype_key = 11 "
 		+ "\nand aa._logicaldb_key = 1 "

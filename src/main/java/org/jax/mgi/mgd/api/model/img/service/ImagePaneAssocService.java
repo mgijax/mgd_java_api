@@ -114,6 +114,40 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 		
 	}	
 	
+	@Transactional	
+	public Integer getIsPrimaryByAllele(Integer key) {
+		// generate SQL command to set isPrimary (1|0) based on Allele key
+		
+		List<ImagePaneAssocDomain> results = new ArrayList<ImagePaneAssocDomain>();
+
+		String cmd = "\nselect * from img_imagepane_assoc"
+				+ "\nwhere _object_key = " + key
+				+ "\nand _mgitype_key = 11";
+		
+		log.info(cmd);
+
+		try {
+			ResultSet rs = sqlExecutor.executeProto(cmd);
+			while (rs.next()) {
+				ImagePaneAssocDomain domain = new ImagePaneAssocDomain();	
+				domain = translator.translate(imagePaneAssocDAO.get(rs.getInt("_assoc_key")));
+				imagePaneAssocDAO.clear();
+				results.add(domain);
+			}
+			sqlExecutor.cleanup();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (results.size() == 0) {
+			return 1;
+		}
+				
+		return 0;
+		
+	}	
+	
 	@Transactional
 	public Boolean process(String parentKey, List<ImagePaneAssocDomain> domain, User user) {
 		// process image pane associations (create, delete, update)
@@ -268,12 +302,17 @@ public class ImagePaneAssocService extends BaseService<ImagePaneAssocDomain> {
 
 		// add all image pane association objects
 		for (int i = 0; i < aresults.size(); i++) {
+			Integer alleleKey = Integer.valueOf(aresults.get(i).getAlleleKey());
+			
+			log.info("get isPrimary by Allele");
+			Integer isPrimary = getIsPrimaryByAllele(alleleKey);
+
 			log.info("updateAlleleAssoc/create: " + aresults.get(i).getAlleleKey());
 			ImagePaneAssoc entity = new ImagePaneAssoc();	
 			entity.setImagePane(imagePaneDAO.get(Integer.valueOf(imageDomain.getImagePanes().get(0).getImagePaneKey())));				
 			entity.setMgiType(mgiTypeDAO.get(11));
-			entity.set_object_key(Integer.valueOf(aresults.get(i).getAlleleKey()));
-			entity.setIsPrimary(1);			
+			entity.set_object_key(alleleKey);
+			entity.setIsPrimary(isPrimary);			
 			entity.setCreatedBy(user);
 			entity.setCreation_date(new Date());
 			entity.setModifiedBy(user);

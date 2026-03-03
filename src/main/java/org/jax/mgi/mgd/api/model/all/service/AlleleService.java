@@ -1686,6 +1686,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
                     		{"Name", "name"},
                     		{"Synonyms", "synonyms"},
                     		{"Transmission", "transmission"},
+                    		{"Strain of Origin", "strain"},
                     		{"Allele Status", "status"},
                     		{"Generation Type", "alleletype"},
                     		{"Attributes", "attrs"},

@@ -1648,7 +1648,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		+ "\n    when p.pheno is null then n.pheno "
 		+ "\n    else p.pheno "
 		+ "\n  end as pheno "
-		+ "\nfrom all_allele a, "
+		+ "\nfrom all_allele a "
 		+ "\n      left outer join allelediseases ad on a._allele_key = ad._allele_key "
 		+ "\n      left outer join allelesynonyms s  on a._allele_key = s._allele_key "
 		+ "\n      left outer join alleleattrs atrs  on a._allele_key = atrs._allele_key "

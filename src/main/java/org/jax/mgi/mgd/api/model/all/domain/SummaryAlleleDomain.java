@@ -15,6 +15,7 @@ public class SummaryAlleleDomain extends BaseDomain {
 	private String alleleType;
 	private String alleleStatus;	
 	private String transmission;
+	private String strain;
 	private String diseases;
 	private String pheno;	
 	private String synonyms;

@@ -8,6 +8,12 @@
 TAG: mgd_java_api-6-0-27-3
 DATE: 03/03/2026
 STAFF: lec
+wts2-1816/Images added in the MGD Image Module get default association in the Allele Module as primary=yes
+	modified: src/main/java/org/jax/mgi/mgd/api/model/img/service/ImagePaneAssocService.java
+
+TAG: mgd_java_api-6-0-27-3
+DATE: 03/03/2026
+STAFF: lec
 wts2-1818/Adding strain of origin column on the PWI allele summary page
 
 TAG: mgd_java_api-6-0-27-2

@@ -21,6 +21,7 @@ import org.jax.mgi.mgd.api.model.mgi.service.NoteService;
 import org.jax.mgi.mgd.api.model.voc.dao.TermDAO;
 import org.jax.mgi.mgd.api.util.Constants;
 import org.jax.mgi.mgd.api.util.DateSQLQuery;
+import org.jax.mgi.mgd.api.util.DecodeString;
 import org.jax.mgi.mgd.api.util.SearchResults;
 import org.jboss.logging.Logger;
 
@@ -60,6 +61,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 				
 		log.info("processHTExperiment/update");
 
+		String decodedText;
 		SearchResults<HTDomain> results = new SearchResults<HTDomain>();
 		HTExperiment entity = htExperimentDAO.get(domain.get_experiment_key());
 		
@@ -68,7 +70,9 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setName(null);
 		}
 		else {
-			entity.setName(domain.getName());
+			decodedText = DecodeString.setDecodeToLatin9(domain.getName());
+			decodedText = "'" + decodedText + "'";
+			entity.setName(decodedText);
 		}
 		
 		// description
@@ -76,7 +80,9 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setDescription(null);
 		}
 		else {
-			entity.setDescription(domain.getDescription());
+			decodedText = DecodeString.setDecodeToLatin9(domain.getDescription());
+			decodedText = "'" + decodedText + "'";
+			entity.setDescription(decodedText);
 		}
 
 		// set initial curation user/dates when samples are created

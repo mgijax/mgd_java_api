@@ -70,8 +70,9 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setName(null);
 		}
 		else {
-			decodedText = DecodeString.setDecodeToLatin9(domain.getName());
-			entity.setName(decodedText);
+			//decodedText = DecodeString.setDecodeToLatin9(domain.getName());
+			//entity.setName(decodedText);
+			entity.setName(domain.getName());
 		}
 		
 		// description
@@ -79,8 +80,9 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			entity.setDescription(null);
 		}
 		else {
-			decodedText = DecodeString.setDecodeToLatin9(domain.getDescription());
-			entity.setDescription(decodedText);
+			//decodedText = DecodeString.setDecodeToLatin9(domain.getDescription());
+			//entity.setDescription(decodedText);
+			entity.setDescription(domain.getDescription());			
 		}
 
 		// set initial curation user/dates when samples are created

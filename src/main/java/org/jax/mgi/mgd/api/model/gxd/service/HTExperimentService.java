@@ -71,7 +71,6 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 		else {
 			decodedText = DecodeString.setDecodeToLatin9(domain.getName());
-			decodedText = "'" + decodedText + "'";
 			entity.setName(decodedText);
 		}
 		
@@ -81,7 +80,6 @@ public class HTExperimentService extends BaseService<HTDomain> {
 		}
 		else {
 			decodedText = DecodeString.setDecodeToLatin9(domain.getDescription());
-			decodedText = "'" + decodedText + "'";
 			entity.setDescription(decodedText);
 		}
 

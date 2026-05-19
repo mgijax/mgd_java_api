@@ -198,7 +198,7 @@ public class HTExperimentService extends BaseService<HTDomain> {
 			
 	        // indicates the experiment has samples that are used to create bioreplicates for the RNA-Seq load.
 			String cmd = "select case when exists (select 1 from mgi_setmember s, acc_accession a" + 
-					"\nwhere s._set_key = 1057" + 
+					"\nwhere s._set_key in (1057,1061)" + 
 					"\nand s._object_key = a._object_key" + 
 					"\nand a._mgitype_key = 42" + 
 					"\nand a._logicaldb_key = 189" +

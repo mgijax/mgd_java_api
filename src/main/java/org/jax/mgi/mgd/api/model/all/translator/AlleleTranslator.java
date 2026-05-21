@@ -210,12 +210,6 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		}
 
 		// at most one note
-		if (entity.getProidNote() != null && !entity.getProidNote().isEmpty()) {
-			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getProidNote());
-			domain.setProidNote(note.iterator().next());
-		}
-
-		// at most one note
 		if (entity.getCreNote() != null && !entity.getCreNote().isEmpty()) {
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getCreNote());
 			domain.setCreNote(note.iterator().next());

@@ -190,12 +190,6 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1032")
 	private List<Note> inducibleNote;
 
-	//    1036 | Associated PRO IDs
-	@OneToMany()
-	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1036")
-	private List<Note> proidNote;
-
 	//    1040 | User (Cre)
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)

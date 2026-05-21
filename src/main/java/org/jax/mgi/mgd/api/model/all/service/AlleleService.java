@@ -348,6 +348,9 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		if (noteService.process(domain.getAlleleKey(), domain.getMolecularNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
+		if (noteService.process(domain.getAlleleKey(), domain.getMolecularIMPCNote(), mgiTypeKey, user)) {
+			modified = true;
+		}		
 		if (noteService.process(domain.getAlleleKey(), domain.getNomenNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
@@ -610,6 +613,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_displayclip = false;
 		Boolean from_generalNote = false;
 		Boolean from_molecularNote = false;
+		Boolean from_molecularIMPCNote = false;		
 		Boolean from_nomenNote = false;
 		Boolean from_inducibleNote = false;
 		Boolean from_proidNote = false;
@@ -773,6 +777,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand note2.note ilike '" + value + "'" ;
 			from_molecularNote = true;
 		}
+		if (searchDomain.getMolecularIMPCNote() != null && !searchDomain.getMolecularIMPCNote().getNoteChunk().isEmpty()) {
+			value = searchDomain.getMolecularIMPCNote().getNoteChunk().replace("'",  "''");
+			where = where + "\nand note9.note ilike '" + value + "'" ;
+			from_molecularIMPCNote = true;
+		}			
 		if (searchDomain.getNomenNote() != null && !searchDomain.getNomenNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getNomenNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note3.note ilike '" + value + "'" ;
@@ -946,6 +955,11 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a._allele_key = note2._object_key";
 			where = where + "\nand note2._notetype_key = 1021";
 		}
+		if (from_molecularIMPCNote == true) {
+			from = from + ", mgi_note_allele_view note9";
+			where = where + "\nand a._allele_key = note9._object_key";
+			where = where + "\nand note9._notetype_key = 1053";
+		}		
 		if (from_nomenNote == true) {
 			from = from + ", mgi_note_allele_view note3";
 			where = where + "\nand a._allele_key = note3._object_key";

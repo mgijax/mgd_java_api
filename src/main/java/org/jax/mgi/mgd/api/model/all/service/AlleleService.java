@@ -233,7 +233,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getMolecularNote(), mgiTypeKey, user);
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getNomenNote(), mgiTypeKey, user);
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getInducibleNote(), mgiTypeKey, user);
-		noteService.process(String.valueOf(entity.get_allele_key()), domain.getProidNote(), mgiTypeKey, user);
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getCreNote(), mgiTypeKey, user);
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getIkmcNote(), mgiTypeKey, user);
 		noteService.process(String.valueOf(entity.get_allele_key()), domain.getProjectidNote(), mgiTypeKey, user);
@@ -355,9 +354,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			modified = true;
 		}
 		if (noteService.process(domain.getAlleleKey(), domain.getInducibleNote(), mgiTypeKey, user)) {
-			modified = true;
-		}
-		if (noteService.process(domain.getAlleleKey(), domain.getProidNote(), mgiTypeKey, user)) {
 			modified = true;
 		}
 		if (noteService.process(domain.getAlleleKey(), domain.getCreNote(), mgiTypeKey, user)) {
@@ -616,7 +612,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		Boolean from_molecularIMPCNote = false;		
 		Boolean from_nomenNote = false;
 		Boolean from_inducibleNote = false;
-		Boolean from_proidNote = false;
 		Boolean from_ikmcNote = false;
 		Boolean from_creNote = false;
 		Boolean from_projectidNote = false;
@@ -792,11 +787,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand note4.note ilike '" + value + "'" ;
 			from_inducibleNote = true;
 		}		
-		if (searchDomain.getProidNote() != null && !searchDomain.getProidNote().getNoteChunk().isEmpty()) {
-			value = searchDomain.getProidNote().getNoteChunk().replace("'",  "''");
-			where = where + "\nand note5.note ilike '" + value + "'" ;
-			from_proidNote = true;
-		}				
 		if (searchDomain.getIkmcNote() != null && !searchDomain.getIkmcNote().getNoteChunk().isEmpty()) {
 			value = searchDomain.getIkmcNote().getNoteChunk().replace("'",  "''");
 			where = where + "\nand note6.note ilike '" + value + "'" ;
@@ -970,11 +960,6 @@ public class AlleleService extends BaseService<AlleleDomain> {
 			where = where + "\nand a._allele_key = note4._object_key";
 			where = where + "\nand note4._notetype_key = 1032";
 		}			
-		if (from_proidNote == true) {
-			from = from + ", mgi_note_allele_view note5";
-			where = where + "\nand a._allele_key = note5._object_key";
-			where = where + "\nand note5._notetype_key = 1036";
-		}
 		if (from_ikmcNote == true) {
 			from = from + ", mgi_note_allele_view note6";
 			where = where + "\nand a._allele_key = note6._object_key";

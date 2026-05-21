@@ -30,7 +30,8 @@ import org.jboss.logging.Logger;
 public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleDomain> {
 
 	protected Logger log = Logger.getLogger(getClass());
-	
+	private NoteTranslator noteTranslator = new NoteTranslator();		
+
 	@Override
 	protected AlleleDomain entityToDomain(Allele entity) {
 		
@@ -180,128 +181,56 @@ public class AlleleTranslator extends BaseEntityDomainTranslator<Allele, AlleleD
 		
 		// at most one note
 		if (entity.getGeneralNote() != null && !entity.getGeneralNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getGeneralNote());
-			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = "";
-			// merge all notes into the first note
-			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk() + " ";
-			}
-			domain.setGeneralNote(note.iterator().next());			
-			domain.getGeneralNote().setNoteChunk(allNotes);
+			domain.setGeneralNote(note.iterator().next());
 		}
 		
 		// at most one note
 		if (entity.getMolecularNote() != null && !entity.getMolecularNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMolecularNote());
-			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = "";
-			// merge all notes into the first note
-			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk() + " ";
-			}
 			domain.setMolecularNote(note.iterator().next());
-			domain.getMolecularNote().setNoteChunk(allNotes);
 		}
 		
 		// at most one note
 		if (entity.getMolecularIMPCNote() != null && !entity.getMolecularIMPCNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getMolecularIMPCNote());
-			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = "";
-			// merge all notes into the first note
-			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk() + " ";
-			}
 			domain.setMolecularIMPCNote(note.iterator().next());
-			domain.getMolecularIMPCNote().setNoteChunk(allNotes);
 		}
 
 		// at most one note
 		if (entity.getNomenNote() != null && !entity.getNomenNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getNomenNote());
-			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = "";
-			// merge all notes into the first note
-			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk() + " ";
-			}			
 			domain.setNomenNote(note.iterator().next());
-			domain.getNomenNote().setNoteChunk(allNotes);
 		}
 		
 		// at most one note
 		if (entity.getInducibleNote() != null && !entity.getInducibleNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getInducibleNote());
-			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = "";
-			// merge all notes into the first note
-			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk() + " ";
-			}			
 			domain.setInducibleNote(note.iterator().next());
-			domain.getInducibleNote().setNoteChunk(allNotes);
 		}
 
 		// at most one note
 		if (entity.getProidNote() != null && !entity.getProidNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getProidNote());
-			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = "";
-			// merge all notes into the first note
-			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk() + " ";
-			}			
 			domain.setProidNote(note.iterator().next());
-			domain.getProidNote().setNoteChunk(allNotes);
 		}
 
 		// at most one note
 		if (entity.getCreNote() != null && !entity.getCreNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getCreNote());
-			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = "";
-			// merge all notes into the first note
-			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk() + " ";
-			}			
 			domain.setCreNote(note.iterator().next());
-			domain.getCreNote().setNoteChunk(allNotes);
 		}
 		
 		// at most one note
 		if (entity.getIkmcNote() != null && !entity.getIkmcNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getIkmcNote());
-			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = "";
-			// merge all notes into the first note
-			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk() + " ";
-			}		
 			domain.setIkmcNote(note.iterator().next());
-			domain.getIkmcNote().setNoteChunk(allNotes);
 		}
 		
 		// at most one note
 		if (entity.getProjectidNote() != null && !entity.getProjectidNote().isEmpty()) {
-			NoteTranslator noteTranslator = new NoteTranslator();
 			Iterable<NoteDomain> note = noteTranslator.translateEntities(entity.getProjectidNote());
-			List<NoteDomain> noteDomain = (IteratorUtils.toList(note.iterator()));
-			String allNotes = "";
-			// merge all notes into the first note
-			for (int i = 0; i < noteDomain.size(); i++) {
-				allNotes += noteDomain.get(i).getNoteChunk() + " ";
-			}		
 			domain.setProjectidNote(note.iterator().next());
-			domain.getProjectidNote().setNoteChunk(allNotes);
 		}
 		
 		return domain;

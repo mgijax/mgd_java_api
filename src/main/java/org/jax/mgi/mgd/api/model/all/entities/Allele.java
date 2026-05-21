@@ -172,6 +172,12 @@ public class Allele extends BaseEntity {
 	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1021")
 	private List<Note> molecularNote;
 
+	//    1053 | Molecular
+	@OneToMany()
+	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
+	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1053")
+	private List<Note> molecularIMPCNote;
+	
 	//    1022 | Nomenclature
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)

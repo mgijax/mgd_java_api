@@ -88,6 +88,7 @@ public class AlleleDomain extends BaseDomain {
 	private MarkerNoteDomain detailClip;
 	private NoteDomain generalNote;
 	private NoteDomain molecularNote;
+	private NoteDomain molecularIMPCNote;
 	private NoteDomain nomenNote;
 	private NoteDomain inducibleNote;
 	private NoteDomain proidNote;

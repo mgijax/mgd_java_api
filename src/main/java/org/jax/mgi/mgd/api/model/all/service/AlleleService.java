@@ -623,7 +623,7 @@ public class AlleleService extends BaseService<AlleleDomain> {
 		String orderBy;
 
 		if (searchDomain.getOrderBy().equals("1")) {
-			select = "select distinct a._allele_key, a.symbol, v1.sequenceNum, substring(a.symbol, '\\d+')::int";
+			select = "select distinct a._allele_key, a.symbol, v1.sequenceNum, regexp_replace(symbol, '^([^[:digit:]]*).*$', '\\1') as symbolMatch";
 			orderBy = "order by v1.sequenceNum, a.symbol";
 		}
 		else {

@@ -1,3 +1,9 @@
+TAG: mgd_java_api-6-0-29-2
+DATE: 08/10/2026
+STAFF: lec
+wts2-1882/Search in Allele Module doesn’t work for J:267911 and some its attached alleles
+	modified:  src/main/java/org/jax/mgi/mgd/api/model/all/service/AlleleService.java
+
 TAG: mgd_java_api-6-0-29-1
 DATE: 07/14/2026
 STAFF: lec

@@ -141,6 +141,10 @@ public class ImageSubmissionService extends BaseService<ImageSubmissionDomain> {
 		// call stored procedure to attach files (pixid) to image stub
 		// and to set xdim, ydim coordinates
 		
+		// needs to be converted to save pdf into basepath (see lib_py_littriage/Pdfpath.py/getPdfpath)
+		// PROJECT_DIR_GROUPING = 1000
+		// basepath = int(nextPixKey / PROJECT_DIR_GROUPING) * PROJECT_DIR_GROUPING
+		
 		log.info("imageSubmission/submit/begin");
 		
 		SearchResults<ImageSubmissionDomain> results = new SearchResults<ImageSubmissionDomain>();		

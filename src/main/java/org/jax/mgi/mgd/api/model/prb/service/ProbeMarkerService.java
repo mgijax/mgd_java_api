@@ -129,14 +129,7 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 				entity.set_probe_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
 				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-				
-				if (domain.get(i).getRelationship() == "(none)") {
-					entity.setRelationship(null);
-				}
-				else {
-					entity.setRelationship(domain.get(i).getRelationship());
-				}
-				
+				entity.setRelationship(domain.get(i).getRelationship());
 				entity.setCreatedBy(user);
 				entity.setModifiedBy(user);
 				entity.setCreation_date(new Date());
@@ -159,14 +152,7 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 				entity.set_probe_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
 				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-				
-				if (domain.get(i).getRelationship() == "(none)") {
-					entity.setRelationship(null);
-				}
-				else {
-					entity.setRelationship(domain.get(i).getRelationship());
-				}
-				
+				entity.setRelationship(domain.get(i).getRelationship());
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 				probeDAO.update(entity);

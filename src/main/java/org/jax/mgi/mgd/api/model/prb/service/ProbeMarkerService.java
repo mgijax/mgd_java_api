@@ -106,7 +106,6 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 		// process probe marker (create, delete, update)
 		
 		Boolean modified = false;
-		String relationship = null;
 		
 		log.info("processProbeMarker");
 

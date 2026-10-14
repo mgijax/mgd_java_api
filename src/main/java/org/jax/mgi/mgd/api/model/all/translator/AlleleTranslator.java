@@ -1,7 +1,6 @@
 package org.jax.mgi.mgd.api.model.all.translator;
 
 import java.util.Comparator;
-import java.util.List;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.jax.mgi.mgd.api.model.BaseEntityDomainTranslator;

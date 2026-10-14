@@ -106,6 +106,7 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 		// process probe marker (create, delete, update)
 		
 		Boolean modified = false;
+		String relationship = null;
 		
 		log.info("processProbeMarker");
 
@@ -122,6 +123,13 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
         	if (domain.get(i).getMarkerKey() == null || domain.get(i).getMarkerKey().isEmpty()) {
         		return modified;
         	}
+        	
+        	if (domain.get(i).getRelationship() == "(none)") {
+        		relationship = null;
+        	}
+        	else {
+        		relationship = domain.get(i).getRelationship();
+        	}
         			
 			if (domain.get(i).getProcessStatus().equals(Constants.PROCESS_CREATE)) {								
 				log.info("processProbeMarker/create");
@@ -129,7 +137,7 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 				entity.set_probe_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
 				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-				entity.setRelationship(domain.get(i).getRelationship());
+				entity.setRelationship(relationship);
 				entity.setCreatedBy(user);
 				entity.setModifiedBy(user);
 				entity.setCreation_date(new Date());
@@ -152,7 +160,7 @@ public class ProbeMarkerService extends BaseService<ProbeMarkerDomain> {
 				entity.set_probe_key(Integer.valueOf(parentKey));
 				entity.setMarker(markerDAO.get(Integer.valueOf(domain.get(i).getMarkerKey())));
 				entity.setReference(referenceDAO.get(Integer.valueOf(domain.get(i).getRefsKey())));
-				entity.setRelationship(domain.get(i).getRelationship());
+				entity.setRelationship(relationship);
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 				probeDAO.update(entity);

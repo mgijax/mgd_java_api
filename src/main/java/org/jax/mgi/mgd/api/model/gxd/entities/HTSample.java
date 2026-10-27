@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
 import org.jax.mgi.mgd.api.model.mgi.entities.Organism;
@@ -95,7 +95,7 @@ public class HTSample extends BaseEntity {
 	// notes
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_sample_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 43 and `_notetype_key` = 1048")
+	@SQLRestriction("`_mgitype_key` = 43 and `_notetype_key` = 1048")
 	private List<Note> notes;
 
 }

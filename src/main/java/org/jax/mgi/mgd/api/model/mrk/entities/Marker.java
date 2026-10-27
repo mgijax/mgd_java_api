@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
@@ -83,37 +83,37 @@ public class Marker extends BaseEntity {
 	// Editor/Coordinator
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1004")
+	@SQLRestriction("`_mgitype_key` = 2 and `_notetype_key` = 1004")
 	private List<Note> editorNote;
 	
 	// Sequence
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1009")
+	@SQLRestriction("`_mgitype_key` = 2 and `_notetype_key` = 1009")
 	private List<Note> sequenceNote;
 	
 	//Marker Revision
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1030")
+	@SQLRestriction("`_mgitype_key` = 2 and `_notetype_key` = 1030")
 	private List<Note> revisionNote;
 	
 	// Strain-Specific Marker
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1035")
+	@SQLRestriction("`_mgitype_key` = 2 and `_notetype_key` = 1035")
 	private List<Note> strainNote;
 	
 	// Location
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1049")
+	@SQLRestriction("`_mgitype_key` = 2 and `_notetype_key` = 1049")
 	private List<Note> locationNote;
 
 	// GO
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_notetype_key` = 1002")
+	@SQLRestriction("`_mgitype_key` = 2 and `_notetype_key` = 1002")
 	private List<Note> goNote;
 	
 	// marker detail clip note
@@ -125,54 +125,54 @@ public class Marker extends BaseEntity {
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` = 1")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 2 and `_logicaldb_key` = 1")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
 	// editable only accession ids for mouse
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` in (8,9)")
-	@OrderBy(clause ="accid")
+	@SQLRestriction("`_mgitype_key` = 2 and `_logicaldb_key` in (8,9)")
+	@SQLOrder("accid")
 	private List<Accession> editAccessionIdsMouse;
 	
 	// editable only accession ids for non-mouse
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` in (8,9,55,114)")
-	@OrderBy(clause ="accid")
+	@SQLRestriction("`_mgitype_key` = 2 and `_logicaldb_key` in (8,9,55,114)")
+	@SQLOrder("accid")
 	private List<Accession> editAccessionIdsNonMouse;
 	
 	// non-editable accession ids for mouse
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,117,118)")
-	@OrderBy(clause ="accid")
+	@SQLRestriction("`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,117,118)")
+	@SQLOrder("accid")
 	private List<Accession> nonEditAccessionIdsMouse;
 	
 	// non-editable accession ids for non-mouse
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,114,117,118)")
-	@OrderBy(clause ="accid")
+	@SQLRestriction("`_mgitype_key` = 2 and `_logicaldb_key` not in (1,8,9,114,117,118)")
+	@SQLOrder("accid")
 	private List<Accession> nonEditAccessionIdsNonMouse;
 	
 	@OneToMany()
 	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
-	@OrderBy(clause="sequenceNum")
+	@SQLOrder("sequenceNum")
 	private List<MarkerHistory> history;
 	
 	// mouse synonyms only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2 and `_synonymtype_key` in (1004,1005,1006,1007)")
-	@OrderBy(clause="_synonymtype_key, synonym")
+	@SQLRestriction("`_mgitype_key` = 2 and `_synonymtype_key` in (1004,1005,1006,1007)")
+	@SQLOrder("_synonymtype_key, synonym")
 	private List<MGISynonym> synonyms;
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 2")
-	@OrderBy(clause="_refassoctype_key")
+	@SQLRestriction("`_mgitype_key` = 2")
+	@SQLOrder("_refassoctype_key")
 	private List<MGIReferenceAssoc> refAssocs;
 
 	@OneToMany()
@@ -193,23 +193,23 @@ public class Marker extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@OrderBy(clause="marker1")
+	@SQLOrder("marker1")
 	private List<RelationshipMarkerQTLInteraction> qtlInteractionToGene;
 
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_annottype_key` = 1011")	
+	@SQLRestriction("`_annottype_key` = 1011")	
 	private List<Annotation> featureTypes;
 
 	@OneToMany()
 	@JoinColumn(name="_marker_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="qualifier = 'D'")	
+	@SQLRestriction("qualifier = 'D'")	
 	private List<MarkerMCVCache> featureTypesDirect;
 	
 	// GO term annotations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_annottype_key` = 1000")
+	@SQLRestriction("`_annottype_key` = 1000")
 	private List<Annotation> goAnnots;
 
 	// GO Tracking
@@ -220,19 +220,19 @@ public class Marker extends BaseEntity {
 	// Biotypes
 	@OneToMany()
 	@JoinColumn(name="_marker_key", insertable=false, updatable=false)
-	@Where(clause="rawbiotype is not null")
+	@SQLRestriction("rawbiotype is not null")
 	private List<SeqMarkerCache> biotypes;
 	
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_category_key` in (1002)")
+	@SQLRestriction("`_category_key` in (1002)")
 	private List<RelationshipFearByMarker> clusterHasMember;
 	
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_marker_key", insertable=false, updatable=false)
-	@Where(clause="`_category_key` in (1013)")
+	@SQLRestriction("`_category_key` in (1013)")
 	private List<RelationshipFearByMarker> regulatesExpression;
 	
 }

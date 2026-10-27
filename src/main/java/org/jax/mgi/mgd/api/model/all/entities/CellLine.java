@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -66,7 +66,7 @@ public class CellLine extends BaseEntity {
 	// editable only accession ids
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_cellline_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 28")
-	@OrderBy(clause ="accid")
+	@SQLRestriction("`_mgitype_key` = 28")
+	@SQLOrder("accid")
 	private List<Accession> editAccessionIds;	
 }

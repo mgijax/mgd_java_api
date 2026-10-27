@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIProperty;
@@ -51,14 +51,14 @@ public class HTExperiment extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 42 and `_logicaldb_key` = 189")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 42 and `_logicaldb_key` = 189")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> primaryIDs;
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 42 and `_logicaldb_key` = 190")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 42 and `_logicaldb_key` = 190")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> secondaryIDs;
 
 	@OneToOne(fetch=FetchType.LAZY)
@@ -104,14 +104,14 @@ public class HTExperiment extends BaseEntity {
 	// notes
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 42 and `_notetype_key` = 1047")
+	@SQLRestriction("`_mgitype_key` = 42 and `_notetype_key` = 1047")
 	private List<Note> notes;
 
 	// properties
 	@OneToMany
 	@JoinColumn(name="_object_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 42")
-	@OrderBy(clause="_propertyterm_key desc, sequenceNum")
+	@SQLRestriction("`_mgitype_key` = 42")
+	@SQLOrder("_propertyterm_key desc, sequenceNum")
 	private List<MGIProperty> properties;
 
 	// experiment variables
@@ -122,7 +122,7 @@ public class HTExperiment extends BaseEntity {
 	// samples
 	@OneToMany()
 	@JoinColumn(name="_experiment_key", referencedColumnName="_experiment_key", insertable=false, updatable=false)
-	@OrderBy(clause="name")
+	@SQLOrder("name")
 	private List<HTSample> samples;
 
 }

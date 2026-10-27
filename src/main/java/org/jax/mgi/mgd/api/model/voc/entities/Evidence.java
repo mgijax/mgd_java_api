@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
@@ -61,7 +61,7 @@ public class Evidence extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_annotevidence_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 25")
+	@SQLRestriction("`_mgitype_key` = 25")
 	private List<Note> allNotes;
 	
 }

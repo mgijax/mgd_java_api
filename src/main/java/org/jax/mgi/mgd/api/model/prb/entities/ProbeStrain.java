@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
@@ -70,27 +70,27 @@ public class ProbeStrain extends BaseEntity {
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 10 and `_logicaldb_key` = 1")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 10 and `_logicaldb_key` = 1")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
 	// other accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 10 and `_logicaldb_key` != 1")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 10 and `_logicaldb_key` != 1")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> otherAccessionIds;
 	
 	// Strain Attributes
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_annottype_key` = 1009")
+	@SQLRestriction("`_annottype_key` = 1009")
 	private List<Annotation> attributes;	
 
 	// Needs Review
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_annottype_key` = 1008")
+	@SQLRestriction("`_annottype_key` = 1008")
 	private List<Annotation> needsReview;	
 	
 	// Markers
@@ -106,37 +106,37 @@ public class ProbeStrain extends BaseEntity {
 	//Synonyms
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 10")
+	@SQLRestriction("`_mgitype_key` = 10")
 	private List<MGISynonym> synonyms;
 
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 10")
-	@OrderBy(clause="_refassoctype_key")
+	@SQLRestriction("`_mgitype_key` = 10")
+	@SQLOrder("_refassoctype_key")
 	private List<MGIReferenceAssoc> refAssocs;
 	
 	// Strain Origin
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1011")
+	@SQLRestriction("`_mgitype_key` = 10 and `_notetype_key` = 1011")
 	private List<Note> strainOriginNote;
 
 	// IMPC Colony ID
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1012")
+	@SQLRestriction("`_mgitype_key` = 10 and `_notetype_key` = 1012")
 	private List<Note> impcNote;
 	
 	// Nomenclature
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1013")
+	@SQLRestriction("`_mgitype_key` = 10 and `_notetype_key` = 1013")
 	private List<Note> nomenNote;
 
 	// Mutant Cell Line of Origin
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 10 and `_notetype_key` = 1038")
+	@SQLRestriction("`_mgitype_key` = 10 and `_notetype_key` = 1038")
 	private List<Note> mclNote;
 
 }

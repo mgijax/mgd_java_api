@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 
@@ -50,8 +50,8 @@ public class MGISetMember extends BaseEntity {
 	// genotype accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_object_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 12 and `_logicaldb_key` = 1")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 12 and `_logicaldb_key` = 1")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> genotypeAccessionIds;
 
 }

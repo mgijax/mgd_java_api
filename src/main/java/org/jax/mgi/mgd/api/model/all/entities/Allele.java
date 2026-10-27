@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
@@ -109,27 +109,27 @@ public class Allele extends BaseEntity {
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_logicaldb_key` = 1 and preferred = 1")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 11 and `_logicaldb_key` = 1 and preferred = 1")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
 	// other accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_logicaldb_key` != 1")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 11 and `_logicaldb_key` != 1")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> otherAccessionIds;
 	
 	// reference associations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11")
+	@SQLRestriction("`_mgitype_key` = 11")
 	private List<MGIReferenceAssoc> refAssocs;
 
 	// synonyms
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11")
+	@SQLRestriction("`_mgitype_key` = 11")
 	private List<MGISynonym> synonyms;
 	
 	// molecular mutations
@@ -140,7 +140,7 @@ public class Allele extends BaseEntity {
 	// allele/subtype annotations(aka allele attributes)
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_annottype_key` = 1014")
+	@SQLRestriction("`_annottype_key` = 1014")
 	private List<Annotation> subtypeAnnots;
 
 	// allele/mutant cell lines
@@ -156,79 +156,79 @@ public class Allele extends BaseEntity {
 	// image pane associations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11")
-	@OrderBy(clause="isPrimary asc")
+	@SQLRestriction("`_mgitype_key` = 11")
+	@SQLOrder("isPrimary asc")
 	private List<ImagePaneAssocView> imagePaneAssocs;
 	
 	//  1020 | General
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1020")
+	@SQLRestriction("`_mgitype_key` = 11 and `_notetype_key` = 1020")
 	private List<Note> generalNote;
 
 	//    1021 | Molecular
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1021")
+	@SQLRestriction("`_mgitype_key` = 11 and `_notetype_key` = 1021")
 	private List<Note> molecularNote;
 
 	//    1053 | Molecular
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1053")
+	@SQLRestriction("`_mgitype_key` = 11 and `_notetype_key` = 1053")
 	private List<Note> molecularIMPCNote;
 	
 	//    1022 | Nomenclature
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1022")
+	@SQLRestriction("`_mgitype_key` = 11 and `_notetype_key` = 1022")
 	private List<Note> nomenNote;
 
 	//    1032 | Inducible
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1032")
+	@SQLRestriction("`_mgitype_key` = 11 and `_notetype_key` = 1032")
 	private List<Note> inducibleNote;
 
 	//    1040 | User (Cre)
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1040")
+	@SQLRestriction("`_mgitype_key` = 11 and `_notetype_key` = 1040")
 	private List<Note> creNote;
 
 	//    1041 | IKMC Allele Colony Name
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1041")
+	@SQLRestriction("`_mgitype_key` = 11 and `_notetype_key` = 1041")
 	private List<Note> ikmcNote;
 
 	//    1052 | Additional Project IDs
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 11 and `_notetype_key` = 1052")
+	@SQLRestriction("`_mgitype_key` = 11 and `_notetype_key` = 1052")
 	private List<Note> projectidNote;
 	
 	// DO term annotations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_annottype_key` = 1021")
+	@SQLRestriction("`_annottype_key` = 1021")
 	private List<Annotation> doAnnots;
 	
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_category_key` in (1003)")
+	@SQLRestriction("`_category_key` in (1003)")
 	private List<RelationshipFearByAllele> mutationInvolves;	
 
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_category_key` in (1004)")
+	@SQLRestriction("`_category_key` in (1004)")
 	private List<RelationshipFearByAllele> expressesComponents;	
 	
 	// Fear relationships
 	@OneToMany()
 	@JoinColumn(name="_object_key_1", referencedColumnName="_allele_key", insertable=false, updatable=false)
-	@Where(clause="`_category_key` in (1006)")
+	@SQLRestriction("`_category_key` in (1006)")
 	private List<RelationshipFearByAllele> driverComponents;		
 }

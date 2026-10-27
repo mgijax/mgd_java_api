@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
@@ -72,8 +72,8 @@ public class Antibody extends BaseEntity {
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_antibody_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 6 and `_logicaldb_key` = 1")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 6 and `_logicaldb_key` = 1")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 
 	// antibody alias
@@ -89,7 +89,7 @@ public class Antibody extends BaseEntity {
 	// reference associations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_antibody_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 6")
+	@SQLRestriction("`_mgitype_key` = 6")
 	private List<MGIReferenceAssoc> refAssocs;
 
 }

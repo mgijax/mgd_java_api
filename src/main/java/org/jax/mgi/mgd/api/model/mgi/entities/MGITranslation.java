@@ -3,7 +3,7 @@ package org.jax.mgi.mgd.api.model.mgi.entities;
 import java.util.Date;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.all.entities.AlleleCellLineDerivation;
 import org.jax.mgi.mgd.api.model.all.entities.CellLine;
@@ -50,41 +50,41 @@ public class MGITranslation extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_cellline_key", insertable=false, updatable=false)
-	@Where(clause="translationType.`_mgitype_key` = 28")
+	@SQLRestriction("translationType.`_mgitype_key` = 28")
 	private CellLine cellLine;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_derivation_key", insertable=false, updatable=false)
-	@Where(clause="translationType.`_mgitype_key` = 36")
+	@SQLRestriction("translationType.`_mgitype_key` = 36")
 	private AlleleCellLineDerivation derivation;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_sample_key", insertable=false, updatable=false)
-	@Where(clause="translationType.`_mgitype_key` = 43")
+	@SQLRestriction("translationType.`_mgitype_key` = 43")
 	private HTSample htSample;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_organism_key", insertable=false, updatable=false)
-	@Where(clause="translationType.`_mgitype_key` = 20")
+	@SQLRestriction("translationType.`_mgitype_key` = 20")
 	private Organism organism;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_source_key", insertable=false, updatable=false)
-	@Where(clause="translationType.`_mgitype_key` = 5")
+	@SQLRestriction("translationType.`_mgitype_key` = 5")
 	private ProbeSource source;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_strain_key", insertable=false, updatable=false)
-	@Where(clause="translationType.`_mgitype_key` = 10")
+	@SQLRestriction("translationType.`_mgitype_key` = 10")
 	private ProbeStrain strain;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_tissue_key", insertable=false, updatable=false)
-	@Where(clause="translationType.`_mgitype_key` = 24")
+	@SQLRestriction("translationType.`_mgitype_key` = 24")
 	private ProbeTissue tissue;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause="translationType.`_mgitype_key` = 13")
+	@SQLRestriction("translationType.`_mgitype_key` = 13")
 	private Term term;
 }

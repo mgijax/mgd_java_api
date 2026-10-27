@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.img.entities.ImagePaneAssocView;
@@ -72,33 +72,33 @@ public class Genotype extends BaseEntity {
 	// Combination Type 1
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 12 and `_notetype_key` = 1016")
+	@SQLRestriction("`_mgitype_key` = 12 and `_notetype_key` = 1016")
 	private List<Note> alleleDetailNote;
 	
 	// General
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 12 and `_notetype_key` = 1027")
+	@SQLRestriction("`_mgitype_key` = 12 and `_notetype_key` = 1027")
 	private List<Note> generalNote;
 	
 	// Private Curatorial
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 12 and `_notetype_key` = 1028")
+	@SQLRestriction("`_mgitype_key` = 12 and `_notetype_key` = 1028")
 	private List<Note> privateCuratorialNote;
 	
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 12 and `_logicaldb_key` = 1")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 12 and `_logicaldb_key` = 1")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
 	// resource identification initiative accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 12 and `_logicaldb_key` = 179")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 12 and `_logicaldb_key` = 179")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> resourceIdentifierAccessionIds;
 	
 	// allele pairs
@@ -109,26 +109,26 @@ public class Genotype extends BaseEntity {
 	// image pane associations
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 12")
-	@OrderBy(clause="isPrimary asc")
+	@SQLRestriction("`_mgitype_key` = 12")
+	@SQLOrder("isPrimary asc")
 	private List<ImagePaneAssocView> imagePaneAssocs;
     
 	// mp term annotations
 	@OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-    @Where(clause="`_annottype_key` = 1002")
+    @SQLRestriction("`_annottype_key` = 1002")
     private List<Annotation> mpAnnots;
 	
 	// MP Header by Genotype
 	@OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-    @Where(clause="`_annottype_key` = 1002")
+    @SQLRestriction("`_annottype_key` = 1002")
     private List<AnnotationHeader> mpHeaders;
 		
 	// DO term annotations
 	@OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_genotype_key", insertable=false, updatable=false)
-    @Where(clause="`_annottype_key` = 1020")
+    @SQLRestriction("`_annottype_key` = 1020")
     private List<Annotation> doAnnots;
 	
 }

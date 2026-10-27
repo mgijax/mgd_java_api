@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
@@ -93,7 +93,7 @@ public class ProbeSource extends BaseEntity {
 	// accession ids
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_source_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 5")
+	@SQLRestriction("`_mgitype_key` = 5")
 	private List<Accession> accessionIds;
 	
 }

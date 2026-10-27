@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.SQLOrder;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import jakarta.persistence.Entity;
@@ -46,8 +46,8 @@ public class ImagePane extends BaseEntity {
 	// image pane associations
 	@OneToMany()
 	@JoinColumn(name="_imagepane_key", insertable=false, updatable=false)
-	//@Where(clause="`_mgitype_key` in (11, 12)")
-	@OrderBy(clause="isPrimary desc")
+	//@Where("`_mgitype_key` in (11, 12)")
+	@SQLOrder("isPrimary desc")
 	private List<ImagePaneAssoc> paneAssocs;
 
 }

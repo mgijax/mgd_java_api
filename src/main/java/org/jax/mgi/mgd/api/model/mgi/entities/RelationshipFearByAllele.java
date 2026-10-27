@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.concurrent.Immutable;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 
 import jakarta.persistence.Entity;
@@ -55,6 +55,6 @@ public class RelationshipFearByAllele extends BaseEntity {
 	//  1042 | Relationship
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_relationship_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 40 and `_notetype_key` = 1042")
+	@SQLRestriction("`_mgitype_key` = 40 and `_notetype_key` = 1042")
 	private List<Note> note;		
 }

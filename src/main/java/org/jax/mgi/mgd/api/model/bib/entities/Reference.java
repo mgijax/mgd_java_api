@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
@@ -79,20 +79,20 @@ public class Reference extends BaseEntity {
 	// mgi accession ids only
 	@OneToMany()	
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` = 1")
+	@SQLRestriction("`_mgitype_key` = 1 and `_logicaldb_key` = 1")
 	@OrderBy("prefixPart desc, preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
 	// editable only accession ids
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 1 and `_logicaldb_key` in (1, 29, 65, 185)")
+	@SQLRestriction("`_mgitype_key` = 1 and `_logicaldb_key` in (1, 29, 65, 185)")
 	@OrderBy("accid")
 	private List<Accession> editAccessionIds;
 
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 1")
+	@SQLRestriction("`_mgitype_key` = 1")
 	@OrderBy("_logicaldb_key, preferred desc")
 	private List<Accession> accessionIDs;
 
@@ -103,7 +103,7 @@ public class Reference extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`iscurrent` = 1")	
+	@SQLRestriction("`iscurrent` = 1")	
 	private List<ReferenceWorkflowStatus> workflowStatusCurrent;
 	
 	// workflow relevance
@@ -116,10 +116,10 @@ public class Reference extends BaseEntity {
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
 	private List<ReferenceWorkflowTag> workflowTags;
 	
-	// only interested in workflow data where extracted text section = 'body' (48804490)
+	// only interested in workflow data SQLRestriction extracted text section = 'body' (48804490)
 	@OneToMany()
 	@JoinColumn(name="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`_extractedtext_key` = 48804490")
+	@SQLRestriction("`_extractedtext_key` = 48804490")
 	private List<ReferenceWorkflowData> workflowData;
 	
 	// at most one note
@@ -140,7 +140,7 @@ public class Reference extends BaseEntity {
 	// reference allele associations : alleles (11)
 	@OneToMany()
 	@JoinColumn(name="_refs_key", referencedColumnName="_refs_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` in (11)")
+	@SQLRestriction("`_mgitype_key` in (11)")
 	@OrderBy("_refassoctype_key")
 	private List<MGIReferenceAssoc> alleleAssocs;
 	

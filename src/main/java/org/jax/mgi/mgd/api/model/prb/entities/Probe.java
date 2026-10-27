@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
@@ -78,8 +78,8 @@ public class Probe extends BaseEntity {
 	// mgi accession ids only
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 3 and `_logicaldb_key` = 1")
-	@OrderBy(clause="preferred desc, accID")
+	@SQLRestriction("`_mgitype_key` = 3 and `_logicaldb_key` = 1")
+	@SQLOrder("preferred desc, accID")
 	private List<Accession> mgiAccessionIds;
 	
 	// markers
@@ -100,7 +100,7 @@ public class Probe extends BaseEntity {
 	// Raw Sequence note
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_probe_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 3 and `_notetype_key` = 1037")
+	@SQLRestriction("`_mgitype_key` = 3 and `_notetype_key` = 1037")
 	private List<Note> rawsequenceNote;
 	
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIReferenceAssoc;
 import org.jax.mgi.mgd.api.model.mgi.entities.Note;
@@ -67,12 +67,12 @@ public class AlleleVariant extends BaseEntity {
 	
     @OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
-    @Where(clause="`_annottype_key` = 1026")
+    @SQLRestriction("`_annottype_key` = 1026")
     private List<Annotation> variantTypes;
 
     @OneToMany()
     @JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
-    @Where(clause="`_annottype_key` = 1027")
+    @SQLRestriction("`_annottype_key` = 1027")
     private List<Annotation> variantEffects;
 
     @OneToMany()
@@ -82,19 +82,19 @@ public class AlleleVariant extends BaseEntity {
 	// Curator
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 45 and `_notetype_key` = 1050")
+	@SQLRestriction("`_mgitype_key` = 45 and `_notetype_key` = 1050")
 	private List<Note> curatorNote;
 
 	// Public
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 45 and `_notetype_key` = 1051")
+	@SQLRestriction("`_mgitype_key` = 45 and `_notetype_key` = 1051")
 	private List<Note> publicNote;
 	
 	// References
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_variant_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 45")
+	@SQLRestriction("`_mgitype_key` = 45")
 	private List<MGIReferenceAssoc> refAssocs;
 	
 }

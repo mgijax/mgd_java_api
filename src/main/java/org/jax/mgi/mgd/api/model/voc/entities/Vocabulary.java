@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.SQLOrder;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.LogicalDB;
 import org.jax.mgi.mgd.api.model.bib.entities.ReferenceCitationCache;
@@ -46,7 +46,7 @@ public class Vocabulary extends BaseEntity {
 
 	@OneToMany()
 	@JoinColumn(name="_vocab_key", referencedColumnName="_vocab_key")
-	@OrderBy(clause ="sequenceNum")
+	@SQLOrder("sequenceNum")
 	private List<Term> terms;
 	
 	@OneToMany()

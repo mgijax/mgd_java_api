@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.mgi.entities.MGIKeyValue;
 import org.jax.mgi.mgd.api.model.mgi.entities.User;
@@ -49,7 +49,7 @@ public class HTRawSample extends BaseEntity {
 	// key value pairs
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_rawsample_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 47 ")
+	@SQLRestriction("`_mgitype_key` = 47 ")
 	private List<MGIKeyValue> keyValuePairs;
 
 }

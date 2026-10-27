@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLOrder;
+import org.hibernate.annotations.SQLRestriction;
 import org.jax.mgi.mgd.api.model.BaseEntity;
 import org.jax.mgi.mgd.api.model.acc.entities.Accession;
 import org.jax.mgi.mgd.api.model.dag.entities.DagNode;
@@ -60,37 +60,37 @@ public class Term extends BaseEntity {
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 13 and preferred = 1")
+	@SQLRestriction("`_mgitype_key` = 13 and preferred = 1")
 	private List<Accession> accessionIds;
 
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause="`_mgitype_key` = 13 and preferred = 0")
+	@SQLRestriction("`_mgitype_key` = 13 and preferred = 0")
 	private List<Accession> accessionSecondaryIds;
 	
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause="`_dag_key` in (1,2,3)")
+	@SQLRestriction("`_dag_key` in (1,2,3)")
 	private List<DagNode> goDagNodes;
 
 	// all synonyms
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause ="`_mgitype_key` = 13")
-	@OrderBy(clause ="_synonymtype_key, synonym")
+	@SQLRestriction("`_mgitype_key` = 13")
+	@SQLOrder("_synonymtype_key, synonym")
 	private List<MGISynonym> synonyms;
 	
 	// for 'MGI-GORel'
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause ="`_mgitype_key` = 13 and `_synonymtype_key` = 1034")
-	@OrderBy(clause ="_synonymtype_key, synonym")
+	@SQLRestriction("`_mgitype_key` = 13 and `_synonymtype_key` = 1034")
+	@SQLOrder("_synonymtype_key, synonym")
 	private List<MGISynonym> goRelSynonyms;
 
 	// 'exact' synonyms
 	@OneToMany()
 	@JoinColumn(name="_object_key", referencedColumnName="_term_key", insertable=false, updatable=false)
-	@Where(clause ="`_mgitype_key` = 13 and `_synonymtype_key` = 1017")
-	@OrderBy(clause ="_synonymtype_key, synonym")
+	@SQLRestriction("`_mgitype_key` = 13 and `_synonymtype_key` = 1017")
+	@SQLOrder("_synonymtype_key, synonym")
 	private List<MGISynonym> exactSynonyms;
 }

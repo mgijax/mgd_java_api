@@ -3,6 +3,7 @@ package org.jax.mgi.mgd.api.model;
 import java.lang.reflect.Field;
 import java.util.Set;
 
+import org.hibernate.engine.spi.SessionImplementor;
 import org.jboss.logging.Logger;
 import org.reflections.Reflections;
 
@@ -57,11 +58,6 @@ public abstract class PostgresSQLDAO<T> {
 		return model;
 	}
 
-	public T delete(T model) {
-		entityManager.remove(model);
-		return model;
-	}
-
 	/* Persist object o to the database
 	 * Sometimes we need to persist a sub-object before it can be added to a collection in a parent object;
 	 * this method facilitates that initial save of the sub-object.
@@ -69,13 +65,26 @@ public abstract class PostgresSQLDAO<T> {
 	public void persist(Object o) {
 		entityManager.persist(o);
 	}
-
+	
 	/* Remove object o from the database.  Make sure it has already been removed from any relationships.
-	 */
-	public void remove(Object o) {
-		entityManager.remove(o);
+	 */	
+	public void remove(T model) {
+	    long start = System.nanoTime();
+	    try {
+	        T managed = entityManager.contains(model) ? model : entityManager.merge(model);
+	        SessionImplementor session = entityManager.unwrap(SessionImplementor.class);
+	        HibernateDeleteCompatibility.removeReferences(session, managed);
+	        entityManager.remove(managed);
+	        log.infof("DAO auto remove [%s]: total=%d ms",
+	            model.getClass().getSimpleName(),
+	            (System.nanoTime() - start) / 1_000_000);
+	    } catch (Exception e) {
+	        log.errorf(e, "DAO remove [%s] failed after %d ms", model.getClass().getSimpleName(),
+	            (System.nanoTime() - start) / 1_000_000);
+	        throw e;
+	    }
 	}
-
+	
 	/* Refresh object o from the database.
 	 */
 	public void refresh(Object o) {

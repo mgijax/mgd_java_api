@@ -15,6 +15,7 @@ import org.jax.mgi.mgd.api.model.BaseService;
 import org.jax.mgi.mgd.api.model.acc.domain.AccessionDomain;
 import org.jax.mgi.mgd.api.model.acc.service.AccessionService;
 import org.jax.mgi.mgd.api.model.bib.dao.ReferenceDAO;
+import org.jax.mgi.mgd.api.model.bib.dao.ReferenceWorkflowTagDAO;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceSearchDomain;
 import org.jax.mgi.mgd.api.model.bib.domain.ReferenceWorkflowDataDomain;
@@ -56,6 +57,8 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 	@Inject
 	private ReferenceDAO referenceDAO;
+	@Inject
+	private ReferenceWorkflowTagDAO referenceWorkflowTagDAO;	
 //	@Inject
 //	private ReferenceWorkflowDataDAO wfDataDAO;
 	@Inject
@@ -1829,7 +1832,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 
 		// remove existing tag that is no longer in the list
 		for (ReferenceWorkflowTag rwTag : toDelete) {
-			referenceDAO.remove(rwTag);
+			referenceWorkflowTagDAO.remove(rwTag);
 		}
 
 		// add new tags
@@ -1888,7 +1891,7 @@ public class ReferenceService extends BaseService<ReferenceDomain> {
 		String lowerTag = rdTag.toLowerCase().trim();
 		for (ReferenceWorkflowTag refTag : entity.getWorkflowTags()) {
 			if (lowerTag.equals(refTag.getTagTerm().getTerm().toLowerCase()) ) {
-				referenceDAO.remove(refTag);
+				referenceWorkflowTagDAO.remove(refTag);
 				entity.setModifiedBy(user);
 				entity.setModification_date(new Date());
 				referenceDAO.persist(entity);

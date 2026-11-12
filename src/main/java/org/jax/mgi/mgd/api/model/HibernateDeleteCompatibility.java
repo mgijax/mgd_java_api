@@ -97,23 +97,8 @@ public class HibernateDeleteCompatibility {
                     JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
                     // Cannot determine the relationship without @JoinColumn.
                     if (joinColumn == null) continue;
-                    // foreignKey: column in the child table referencing the parent.
-                    // referencedKey: column in the parent table referenced by the child.
-                    String foreignKey = joinColumn.name();
-                    String referencedKey = joinColumn.referencedColumnName();
-                    // Both column names must be explicitly available for comparison.
-                    if (foreignKey.isEmpty() || referencedKey.isEmpty()) continue;
                     log.info("  owner " + ownerClass.getSimpleName() + ": " + deletedClass.getSimpleName());
                     try {
-                        // Find the Java fields corresponding to the database columns, including inherited fields.
-                        Field deletedKeyField = findColumnField(deletedClass, foreignKey);
-                        Field ownerKeyField = findColumnField(ownerClass, referencedKey);
-                        // Make the fields accessible for reflection. Skip if either field cannot be accessed.
-                        if (!deletedKeyField.trySetAccessible() || !ownerKeyField.trySetAccessible()) continue;
-                        // Compare the child's foreign-key value with the parent's referenced-key value.
-                        // If they differ, this parent does not own the deleted child.
-                        if (!Objects.equals(deletedKeyField.get(deletedEntity), ownerKeyField.get(owner))) continue;
-                        // Allow reflection access to the parent collection field.
                         if (!field.trySetAccessible()) continue;
                         // Get the actual collection from the parent entity.
                         Object value = field.get(owner);
@@ -121,8 +106,7 @@ public class HibernateDeleteCompatibility {
                         if (value == null) continue;
                         // Initialize the Hibernate collection if it is lazy-loaded so its elements can be inspected.
                         Hibernate.initialize(value);
-                        log.info("  deletedKeyField: " + deletedKeyField.getName());
-                        log.info("  ownerKeyField: " + ownerKeyField.getName());
+              
                         // Handle collection-based @OneToMany associations.
                         if (value instanceof Collection<?> collection) {
                             // Iterate through the collection so matching elements can be removed safely.
@@ -131,7 +115,7 @@ public class HibernateDeleteCompatibility {
                                 Object element = elements.next();
                                 // Compare entity type and persistent identifier, handling different objects representing the same database entity.
                                 if (sameEntity(session, element, deletedEntity)) {
-                                    log.infof("  Removing %s from %s.%s", deletedClass.getSimpleName(), ownerClass.getSimpleName(), field.getName());
+                                    log.infof("  removing %s from %s.%s", deletedClass.getSimpleName(), ownerClass.getSimpleName(), field.getName());
                                     // Remove the deleted child from the parent's in-memory collection.
                                     elements.remove();
                                 }
@@ -147,29 +131,6 @@ public class HibernateDeleteCompatibility {
             }
         }
     }
-	
-	/**
-	 * Determines whether two objects represent the same persistent entity.
-	 *
-	 * <p>First compares Java object identity, then compares Hibernate entity
-	 * types and persistent identifiers.</p>
-	 *
-	 * @param session the current Hibernate session
-	 * @param first first entity
-	 * @param second second entity
-	 * @return true if both objects represent the same persistent entity
-	 */	
-	private static Field findColumnField(Class<?> entityClass, String columnName) {
-	    while (entityClass != null && entityClass != Object.class) {
-	        for (Field field : entityClass.getDeclaredFields()) {
-	            Column column = field.getAnnotation(Column.class);
-	            String name = column != null && !column.name().isEmpty() ? column.name() : field.getName();
-	            if (name.equalsIgnoreCase(columnName)) return field;
-	        }
-	        entityClass = entityClass.getSuperclass();
-	    }
-	    throw new IllegalStateException("Cannot find column: " + columnName);
-	}
 
 	/**
 	 * Finds the Java field corresponding to a database column.

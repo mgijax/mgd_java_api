@@ -24,7 +24,7 @@ import jakarta.persistence.OneToMany;
  * Provides compatibility cleanup for Hibernate entity deletion.
  *
  * <p>When a child entity is deleted, Hibernate may leave the deleted entity
- * in a parent's in-memory @OneToMany collection. This helper removes the
+ * in a parent's in-memory OneToMany collection. This helper removes the
  * deleted entity from collections belonging to other managed entities in
  * the current Hibernate persistence context.</p>
  *
@@ -34,14 +34,10 @@ import jakarta.persistence.OneToMany;
  * 
  * see: https://discourse.hibernate.org/t/instance-save-transient-before/10293?utm_source=chatgpt.com
  *
- * <p>Two cleanup strategies are provided:</p>
+ * <p>Strategy:</p>
  * <ul>
- *   <li>{@link #removeReferences(SessionImplementor, Object)}:
- *       Uses @OneToMany and @JoinColumn mapping metadata to identify
+ *   <li>Uses OneToMany and JoinColumn mapping metadata to identify
  *       matching parent-child relationships.</li>
- *   <li>{@link #removeReferences2(SessionImplementor, Object)}:
- *       Scans managed entities and removes matching objects from
- *       initialized collections and maps.</li>
  * </ul>
  *
  * <p>NOTE: This is an in-memory persistence-context cleanup mechanism.
@@ -52,10 +48,10 @@ public class HibernateDeleteCompatibility {
     private static final Logger log = Logger.getLogger(HibernateDeleteCompatibility.class);
 
     /**
-     * Removes a deleted child entity from matching @OneToMany parent collections
+     * Removes a deleted child entity from matching OneToMany parent collections
      * in the current Hibernate persistence context.
      *
-     * This method uses @OneToMany and @JoinColumn mapping metadata to identify
+     * This method uses OneToMany and JoinColumn mapping metadata to identify
      * parent-child relationships, compares foreign-key values, and removes the
      * deleted child from the corresponding in-memory collection.
      *
@@ -63,8 +59,8 @@ public class HibernateDeleteCompatibility {
      * @param deletedEntity the child entity being deleted
      */
     public static void removeReferences(SessionImplementor session, Object deletedEntity) {
-        // Nothing to clean up if the deleted entity is null.
         if (deletedEntity == null) return;
+
         // Resolve the actual entity class, including when the deleted entity is represented by a Hibernate proxy.
         Class<?> deletedClass = getEntityClass(deletedEntity);
         // Get all entities currently managed by this Hibernate persistence context.
@@ -72,6 +68,7 @@ public class HibernateDeleteCompatibility {
         // Copy managed entities into a separate list before processing to avoid modifying the persistence-context iterator.
         List<Object> managedEntities = new ArrayList<>();
         while (iterator.hasNext()) managedEntities.add(iterator.next());
+        
         // Examine every managed entity as a potential parent of the deleted entity.
         for (Object owner : managedEntities) {
             // Do not inspect the deleted entity itself as a parent.
@@ -178,7 +175,7 @@ public class HibernateDeleteCompatibility {
 	 * Finds the Java field corresponding to a database column.
 	 *
 	 * <p>Searches the specified entity class and its superclasses.
-	 * Uses @Column.name when available; otherwise uses the Java field name.</p>
+	 * Uses Column.name when available; otherwise uses the Java field name.</p>
 	 *
 	 * @param entityClass entity class to inspect
 	 * @param columnName database column name

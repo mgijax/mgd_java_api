@@ -70,19 +70,14 @@ public abstract class PostgresSQLDAO<T> {
 	 */	
 	public void remove(T model) {
 	    long start = System.nanoTime();
-	    try {
-	        T managed = entityManager.contains(model) ? model : entityManager.merge(model);
-	        SessionImplementor session = entityManager.unwrap(SessionImplementor.class);
-	        HibernateDeleteCompatibility.removeReferences(session, managed);
-	        entityManager.remove(managed);
-	        log.infof("DAO auto remove [%s]: total=%d ms",
-	            model.getClass().getSimpleName(),
-	            (System.nanoTime() - start) / 1_000_000);
-	    } catch (Exception e) {
-	        log.errorf(e, "DAO remove [%s] failed after %d ms", model.getClass().getSimpleName(),
-	            (System.nanoTime() - start) / 1_000_000);
-	        throw e;
-	    }
+        T managed = entityManager.contains(model) ? model : entityManager.merge(model);
+        SessionImplementor session = entityManager.unwrap(SessionImplementor.class);
+        HibernateDeleteCompatibility.removeReferences(session, managed);
+        
+        entityManager.remove(managed);
+        
+        log.infof("DAO auto remove [%s]: total=%d ms",model.getClass().getSimpleName(),
+            (System.nanoTime() - start) / 1_000_000);
 	}
 	
 	/* Refresh object o from the database.

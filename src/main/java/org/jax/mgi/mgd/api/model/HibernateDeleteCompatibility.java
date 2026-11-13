@@ -21,26 +21,25 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 
 /**
- * Provides compatibility cleanup for Hibernate entity deletion.
+ * Provides compatibility handling for Hibernate entity deletion.
  *
- * <p>When a child entity is deleted, Hibernate may leave the deleted entity
- * in a parent's in-memory OneToMany collection. This helper removes the
- * deleted entity from collections belonging to other managed entities in
- * the current Hibernate persistence context.</p>
+ * <p>When a child entity is deleted, Hibernate may leave a stale reference
+ * to that entity in a parent's in-memory OneToMany collection. This helper
+ * removes the deleted entity from matching collections of other managed
+ * entities in the current Hibernate persistence context.</p>
  *
- * <p>This restores the previous collection-cleanup behavior expected by
- * the application and prevents stale references from remaining in managed
- * parent objects.</p>
- * 
- * see: https://discourse.hibernate.org/t/instance-save-transient-before/10293?utm_source=chatgpt.com
+ * <p>The cleanup uses OneToMany and JoinColumn mapping metadata to identify
+ * parent-child relationships and remove the corresponding references.</p>
  *
- * <p>Strategy:</p>
- * <ul>
- *   <li>Uses OneToMany and JoinColumn mapping metadata to identify
- *       matching parent-child relationships.</li>
- * </ul>
+ * <p>This restores the collection-cleanup behavior expected by the application
+ * and prevents stale references from causing transient entity or persistence
+ * errors during subsequent Hibernate operations.</p>
  *
- * <p>NOTE: This is an in-memory persistence-context cleanup mechanism.
+ * <p>Related discussion:
+ * https://discourse.hibernate.org/t/instance-save-transient-before/10293
+ * </p>
+ *
+ * <p><b>Note:</b> This is an in-memory persistence-context cleanup mechanism.
  * It does not replace database foreign-key handling, cascading deletes,
  * or Hibernate entity removal.</p>
  */
@@ -63,6 +62,7 @@ public class HibernateDeleteCompatibility {
 
         // Resolve the actual entity class, including when the deleted entity is represented by a Hibernate proxy.
         Class<?> deletedClass = getEntityClass(deletedEntity);
+        
         // Get all entities currently managed by this Hibernate persistence context.
         Iterator<Object> iterator = session.getPersistenceContextInternal().managedEntitiesIterator();
         // Copy managed entities into a separate list before processing to avoid modifying the persistence-context iterator.
